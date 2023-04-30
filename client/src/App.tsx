@@ -4,9 +4,10 @@ import './App.css';
 
 
 interface User {
-  email: String,
-  username: String,
-  password: String
+  _id: string,
+  email: string,
+  username: string,
+  password: string
 }
 
 type Users = User[]
@@ -18,9 +19,7 @@ function App() {
     try {
       const response = await fetch("http://localhost:5000/api/users/all")
       const result = await response.json();
-      console.log(result);
-      setUsers(result);
-      console.log('users :>> ', users);
+      setUsers(result.users);
     } catch (error) {
       console.log(error)
     }
@@ -34,8 +33,8 @@ function App() {
     <div className="App">
       <h1>Hellooo!!!!</h1>
       {users && users.map((user) => {
-        console.log('user.username :>> ', user.username);
-        return <p>{user.username}</p>
+
+        return <p key={user._id}>{user.username}</p>
       })}
     </div>
   );

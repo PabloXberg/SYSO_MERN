@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import * as dotenv from "dotenv";
 dotenv.config();
 import userRouter from "./routes/userRoutes.js";
+import sketchRouter from "./routes/sketchRoutes.js";
 
 import cors from "cors";
 
@@ -33,6 +34,7 @@ mongoose
 // });
 
 app.use("/api/users", userRouter);
+app.use("/api/sketches", sketchRouter);
 
 // const helloFunction = (req, res) => {
 //   res.send({message: 'Hallo Pablo!!!', example: [1, 2, 3, 4, 5]})
