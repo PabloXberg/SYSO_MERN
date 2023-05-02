@@ -4,23 +4,26 @@ import * as dotenv from "dotenv";
 dotenv.config();
 import userRouter from "./routes/userRoutes.js";
 import sketchRouter from "./routes/sketchRoutes.js";
-
+import cloudinaryConfig from "./config/cloudinary.js";
 import cors from "cors";
 
 
 const app = express();
 const port = process.env.PORT || 5000;
 
-
-app.use(express.json());
-app.use(
+const setMiddlewares = () => {
+  app.use(express.json());
+  app.use(
   express.urlencoded({
     extended: true,
   })
-);
-app.use(cors());
+  );
+  app.use(cors());
+  cloudinaryConfig();
+}
 
-mongoose
+const connectMongoose = () => {
+  mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
     app.listen(port, () => {
@@ -28,19 +31,14 @@ mongoose
     });
   })
   .catch((err) => console.log(err));
+}
 
-// app.listen(port, () => {
-//   console.log("Server is running on port: " + port);
-// });
+const connectRoutes = () => {
+  app.use("/api/users", userRouter);
+  app.use("/api/sketches", sketchRouter);
+}
 
-app.use("/api/users", userRouter);
-app.use("/api/sketches", sketchRouter);
 
-// const helloFunction = (req, res) => {
-//   res.send({message: 'Hallo Pablo!!!', example: [1, 2, 3, 4, 5]})
-// }
-
- 
-// app.get('/test', (req, res) => {
-//   res.send({message: 'Hallo Pablo!!!', example: [1, 2, 3, 4, 5]})
-// });
+setMiddlewares();
+connectMongoose();
+connectRoutes();

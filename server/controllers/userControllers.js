@@ -1,4 +1,5 @@
 import UserModel from "../models/userModels.js";
+import imageUpload from "../utils/imageManagement.js";
 
 
 const testingRoute = (req, res) => {
@@ -32,17 +33,28 @@ const getUser = async(req, res) => {
  }
 
 const createUser = async (req, res) => {
-  console.log(req.body);
+  if (!req.body.email || !req.body.password || !req.body.username) {
+    return res.status(406).json({ error: "Please fill out all fields" })
+  }
+
+  const avatar = await imageUpload(req.file, "user_avatar")
+
+  // console.log('avatar.public_id :>> ', avatar.public_id);
+  // let avatar_public_id = "Avatar_default"
+  // avatar.public_id ? avatar_public_id = avatar.public_id : avatar_public_id = "Default_avatar";
+
   const newUser = new UserModel({
     // email: req.body.email,
     // username: req.body.username,
     // password: req.body.password   SE PUEDEN AGREGAR CADA UNO; O SPREDOPERATOR COMO ESTA ABAJO
+    ...req.body,
+    avatar: avatar
+    // ,avatar_public_id: avatar.public_id
+  });
 
-    ...req.body
-  })
   try {
     const registeredUser = await newUser.save();
-    res.status(200).json ({message: "Succeswfully Registered", newUser: registeredUser})
+    res.status(200).json ({message: "Succesfully Registered", newUser: registeredUser})
   } catch (error) {
     console.log(error);
     res.status(500).jason("Something went wrong...")
@@ -53,7 +65,7 @@ const createUser = async (req, res) => {
          try {
             const updatedUser = await UserModel.findByIdAndUpdate(req.params.id, req.body, { new: true });
            res.status(200).json(updatedUser);
-           message("Update Suxccessfully!!!!")
+           message("Update Successfully!!!!")
     	}catch(e) {
             console.log(e);
             res.status(500).send(e.message);

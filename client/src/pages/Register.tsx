@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 
 type Props = {}
-
+type Avatar = undefined | File
 // interface FormData{
 //     email: string,
 //     password:string,
@@ -11,28 +11,31 @@ const Register = (props: Props) => {
     const [formData, setFormData] = useState({
         email: "",
         password: "",
-        username: ""                  
-    } )
+        username: "",
+        avatar: ""
+    });
     
-  const handleChange = (e: { target: { name: any; value: any } }) => {
+  const handleChange = (e: { target: { name: any; value: any} }) => {
         setFormData({...formData, [e.target.name]: e.target.value})
     }
 
     const handleSubmit = async(e: { preventDefault: () => void }) => {
         e.preventDefault();
-        console.log('formData :>> ', formData);
-        const myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+        // console.log('formData :>> ', formData);
+        // const myHeaders = new Headers();
+        // myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+        // const urlencoded = new URLSearchParams(); // URL ENCODED HAVE TO BE STRINGS (NOT FOR FILES)
 
-        const urlencoded = new URLSearchParams();
-        urlencoded.append("email", formData.email);
-        urlencoded.append("username", formData.username);
-        urlencoded.append("password", formData.password);
+        const submitData = new FormData()
+        submitData.append("email", formData.email);
+        submitData.append("username", formData.username);
+        submitData.append("password", formData.password);
+        submitData.append("avatar", formData.avatar);
 
         const requestOptions = {
             method: 'POST',
-            headers: myHeaders,
-            body: urlencoded,
+            // headers: myHeaders
+            body: submitData,
         };
         try {
             
@@ -47,8 +50,14 @@ const Register = (props: Props) => {
         }
     }
 
-   
 //    const response = await fetch(`${process.env.REACT_APP_BASE_URL}api/users/new`, requestOptions) // PARA CAMBIAR EL FETCH ARRIBA POR UNA VARIABLE GLOBAL 
+
+    const handleFile = (e: any) => {
+        // console.log(typeof e.target.files[0]);
+        setFormData({ ...formData, avatar: e.target.files[0] });
+    }
+   
+
 
     return (
       
@@ -58,7 +67,8 @@ const Register = (props: Props) => {
           <form onSubmit={handleSubmit}>
               <input type='email' name='email' placeholder='email' onChange={handleChange} />
               <input type='password' name='password' placeholder='password' onChange={handleChange}/>
-              <input type='text' name='username' placeholder='username'onChange={handleChange} />
+                <input type='text' name='username' placeholder='username' onChange={handleChange} />
+                <input type='file' name ='avatar' accept="image/png, image/jpeg, image/jpg" onChange={handleFile}/>
               <button type='submit'>Register!</button>
           </form>
     </div>
