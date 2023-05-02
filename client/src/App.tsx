@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Register from './pages/Register';
 
 
 interface User {
@@ -30,13 +32,21 @@ function App() {
   },[])
   
   return (
-    <div className="App">
+    <> <div className="App">
       <h1>Hellooo!!!!</h1>
       {users && users.map((user) => {
 
         return <p key={user._id}>{user.username}</p>
       })}
     </div>
+      <BrowserRouter>
+        <Routes>
+          <Route path='register' element={<Register/>} />
+        </Routes>
+      
+      </BrowserRouter>
+    </>
+   
   );
 }
 

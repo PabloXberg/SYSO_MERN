@@ -29,7 +29,37 @@ const getUser = async(req, res) => {
         res.status(500).json({error:"Something went wrong..."})
         console.log(error);
     }
-    
+ }
+
+const createUser = async (req, res) => {
+  console.log(req.body);
+  const newUser = new UserModel({
+    // email: req.body.email,
+    // username: req.body.username,
+    // password: req.body.password   SE PUEDEN AGREGAR CADA UNO; O SPREDOPERATOR COMO ESTA ABAJO
+
+    ...req.body
+  })
+  try {
+    const registeredUser = await newUser.save();
+    res.status(200).json ({message: "Succeswfully Registered", newUser: registeredUser})
+  } catch (error) {
+    console.log(error);
+    res.status(500).jason("Something went wrong...")
+  }
 }
 
-export {testingRoute, getUsers, getUser}
+ const updateUser = async(req, res) => {
+         try {
+            const updatedUser = await UserModel.findByIdAndUpdate(req.params.id, req.body, { new: true });
+           res.status(200).json(updatedUser);
+           message("Update Suxccessfully!!!!")
+    	}catch(e) {
+            console.log(e);
+            res.status(500).send(e.message);
+    }
+
+    }
+
+
+export {testingRoute, getUsers, getUser, createUser, updateUser}

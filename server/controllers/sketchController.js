@@ -3,7 +3,7 @@ import SketchModel from "../models/sketchModel.js";
 
 const getAllSketches = async(req,res) => {
 try {
-    const sketch = await SketchModel.find().populate("owner");
+    const sketch = await SketchModel.find().populate({path:"owner", select: ["email", "username"]});
     res.status(200).json(sketch)
 } catch (error) {
     console.log(error);
