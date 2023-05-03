@@ -12,6 +12,7 @@
   "author": "PabloXberg",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.0",
     "cloudinary": "^1.36.3",
     "concurrently": "^8.0.1",
     "cors": "^2.8.5",
