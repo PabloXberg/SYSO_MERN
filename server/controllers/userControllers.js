@@ -1,6 +1,7 @@
 import UserModel from "../models/userModels.js";
 import imageUpload from "../utils/imageManagement.js";
 import { encryptPassword, verifyPassword } from "../utils/bcrypt.js";
+import { generateToken } from "../utils/jwt.js";
 
 const testingRoute = (req, res) => {
   res.send('testing route....')
@@ -86,12 +87,15 @@ const loginUser = async (req,res) => {
              res.status(406).json({ error: "password doesn't match" })
           }
           if (verified) {
+            const token = generateToken(existingUser);
              res.status(200).json({
                verified: true,
+               token: token,
                user: {
                  _id: existingUser._id,
+                //  email: existingUser.email,
                  username: existingUser.username,
-                 pets: existingUser.pets,
+                 sketchs: existingUser.sketchs,
                  avatar: existingUser.avatar
                }
                
@@ -104,5 +108,8 @@ const loginUser = async (req,res) => {
   }
 
 }
+
+
+
 
 export {testingRoute, getUsers, getUser, createUser, updateUser, loginUser}
