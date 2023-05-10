@@ -61,15 +61,15 @@ export const AuthContextProvider = ({children} : {children: ReactNode}) => {
     try {
       const response = await fetch(`${process.env.REACT_APP_BASE_URL}users/login`, requestOptions);
 
-      console.log(response);
-      console.log('process.env.REACT_APP_BASE_URL :>> ', process.env.REACT_APP_BASE_URL);
+      // console.log(response);
+      // console.log('process.env.REACT_APP_BASE_URL :>> ', process.env.REACT_APP_BASE_URL);
       if (response.ok) {
         const result = await response.json() as fetchResult
         if (result.user) {
           setUser(true);
           console.log(result.user)
           localStorage.setItem("token", result.token);
-          localStorage.setItem("my name", "Pablo")
+          // localStorage.setItem("my name", "Pablo")
         }
         console.log(result);
       } else {

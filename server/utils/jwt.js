@@ -5,15 +5,16 @@ dotenv.config();
 const generateToken = (existingUser) => {
 
     const payload = {
-        sub: existingUser._id,
-        msg: "MADAFAKAS"
+        email: existingUser.email,
+        avatar: existingUser.avatar,
+        msg: "Normal User"
     }
     
-    const option = {
-        expiresIn: "7d",
+    const options = {
+        expiresIn: "30d",
     }
 
-    const token = jwt.sign(payload, process.env.JWT_SECRET, option); {
+    const token = jwt.sign(payload, process.env.JWT_SECRET, options); {
         return token
         
     };
