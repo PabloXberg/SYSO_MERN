@@ -44,7 +44,7 @@ export const AuthContext = createContext<AuthContextType>(initialAuth);
 
 export const AuthContextProvider = ({children} : {children: ReactNode}) => {
   const [user, setUser] = useState<User | null>(null);
-  console.log("active user : ", user)
+  // console.log("active user : ", user)
   const [error, setError] = useState<Error | null>(null);
 
   const login = async(email: string, password: string) => {
@@ -66,7 +66,7 @@ export const AuthContextProvider = ({children} : {children: ReactNode}) => {
       if (response.ok) {
         const result = await response.json() as fetchResult
         if (result.user) {
-          // setUser(true);
+          setUser(result.user);
           console.log(result.user)
           localStorage.setItem("token", result.token);
    
@@ -84,7 +84,7 @@ export const AuthContextProvider = ({children} : {children: ReactNode}) => {
   }
 
   const logout = () => {
-    // setUser(false);
+    setUser(null);
     localStorage.removeItem("token");
   }
 
@@ -92,11 +92,33 @@ export const AuthContextProvider = ({children} : {children: ReactNode}) => {
     const token = localStorage.getItem("token");
     if (token) {
       console.log("There is a token")
+      fetchActiveUser(token);
       // setUser(true)
     } else {
       console.log("There is no token")
-      // setUser(false)
+      setUser(null)
     }
+  }
+
+const fetchActiveUser = async (token: string) => {
+    const  myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${token}`);
+  
+  
+    const requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+  };
+try {
+  const response = await fetch(`${process.env.REACT_APP_BASE_URL}users/active`, requestOptions);
+  const result = await response.json();
+  console.log("active user result", result)
+  setUser(result)
+ 
+} catch (error) {
+  console.log('error :>> ', error);
+}
+
   }
 
   useEffect(() => {

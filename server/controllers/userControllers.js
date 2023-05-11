@@ -62,9 +62,10 @@ const createUser = async (req, res) => {
   }
 }
 
- const updateUser = async(req, res) => {
+const updateUser = async (req, res) => {
+  const activeUser = req.user;
          try {
-            const updatedUser = await UserModel.findByIdAndUpdate(req.params.id, req.body, { new: true });
+            const updatedUser = await UserModel.findByIdAndUpdate(activeUser._id, req.body, { new: true });
            res.status(200).json(updatedUser);
            message("Update Successfully!!!!")
     	}catch(e) {

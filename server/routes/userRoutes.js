@@ -10,7 +10,7 @@ userRouter.get("/id/:id", getUser)
 userRouter.get("/active", jwtAuth, getActiveUser)
 
 userRouter.post("/new", multerUploads.single("avatar"), createUser)
-userRouter.post("/update/:id", updateUser)
+userRouter.post("/update", jwtAuth, updateUser)
 userRouter.post("/login", loginUser)
 
 export default userRouter
