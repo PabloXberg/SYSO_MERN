@@ -6,6 +6,7 @@ import userRouter from "./routes/userRoutes.js";
 import sketchRouter from "./routes/sketchRoutes.js";
 import cloudinaryConfig from "./config/cloudinary.js";
 import cors from "cors";
+import passportConfig from "./config/passport.js";
 
 
 const app = express();
@@ -20,6 +21,7 @@ const setMiddlewares = () => {
   );
   app.use(cors());
   cloudinaryConfig();
+  passportConfig();
 }
 
 const connectMongoose = () => {

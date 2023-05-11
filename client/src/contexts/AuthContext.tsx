@@ -19,7 +19,7 @@ interface fetchFailed {
 }
 
 interface AuthContextType {
-  user: boolean,
+  user: User | null,
   error: Error | null,
   login(email: string, password: string): void,
   logout(): void
@@ -30,7 +30,7 @@ interface AuthContextType {
 // export const AuthContext = createContext<AuthContextType>(null!); // less recommended
 
 const initialAuth: AuthContextType = {
-  user: false,
+  user: null,
   error: null,
   login: () => {
     throw new Error('login not implemented.');
@@ -43,7 +43,7 @@ const initialAuth: AuthContextType = {
 export const AuthContext = createContext<AuthContextType>(initialAuth);
 
 export const AuthContextProvider = ({children} : {children: ReactNode}) => {
-  const [user, setUser] = useState<boolean>(false);
+  const [user, setUser] = useState<User | null>(null);
   console.log("active user : ", user)
   const [error, setError] = useState<Error | null>(null);
 
@@ -66,10 +66,10 @@ export const AuthContextProvider = ({children} : {children: ReactNode}) => {
       if (response.ok) {
         const result = await response.json() as fetchResult
         if (result.user) {
-          setUser(true);
+          // setUser(true);
           console.log(result.user)
           localStorage.setItem("token", result.token);
-          // localStorage.setItem("my name", "Pablo")
+   
         }
         console.log(result);
       } else {
@@ -84,7 +84,7 @@ export const AuthContextProvider = ({children} : {children: ReactNode}) => {
   }
 
   const logout = () => {
-    setUser(false);
+    // setUser(false);
     localStorage.removeItem("token");
   }
 
@@ -92,10 +92,10 @@ export const AuthContextProvider = ({children} : {children: ReactNode}) => {
     const token = localStorage.getItem("token");
     if (token) {
       console.log("There is a token")
-      setUser(true)
+      // setUser(true)
     } else {
       console.log("There is no token")
-      setUser(false)
+      // setUser(false)
     }
   }
 
