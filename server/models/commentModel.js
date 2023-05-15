@@ -1,13 +1,13 @@
 import mongoose from 'mongoose';
 
-const sketchSchema = new mongoose.Schema({
+const commentSchema = new mongoose.Schema({
   name: { type: String, required: true },
   comment: { type: String, required: true },
   likes: [{ type: String }],
-  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "comment" }],
+  sketchs: [{ type: mongoose.Schema.Types.ObjectId, ref: "sketche" }],
   owner: { type: mongoose.Schema.Types.ObjectId, ref:"user" }
 }, { timestamps: true });
 
-const SketchModel = mongoose.model("sketche", sketchSchema);
+const CommentModel = mongoose.model("comment", commentSchema);
 
-export default SketchModel
+export default CommentModel

@@ -1,10 +1,22 @@
 import mongoose from 'mongoose';
 
+// const userSchema = new mongoose.Schema({
+//   email: { type: String, required: true, unique:true },
+//   username: String,
+//   password: { type: String, required: true },
+//   sketchs: [{ type: mongoose.Schema.Types.ObjectId, ref: "sketche" }],
+//   avatar: { type: String, default: "https://res.cloudinary.com/dhaezmblt/image/upload/v1683021517/user_avatar/placeholder_fc6szz.png" }
+//   // ,avatar_public_id: { type: String , default: "Default_Avatar"}
+
+// }, { timestamps: true });
+
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique:true },
   username: String,
   password: { type: String, required: true },
   sketchs: [{ type: mongoose.Schema.Types.ObjectId, ref: "sketche" }],
+  likes: [{ type: String }],
+  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "comment" }],
   avatar: { type: String, default: "https://res.cloudinary.com/dhaezmblt/image/upload/v1683021517/user_avatar/placeholder_fc6szz.png" }
   // ,avatar_public_id: { type: String , default: "Default_Avatar"}
 
