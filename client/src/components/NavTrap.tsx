@@ -19,7 +19,7 @@ console.log('user :>> ', user);
   return (
     <Navbar bg="dark" variant="dark" expand="lg">
       <Container fluid>
-        <Navbar.Brand href="/">Share Yor Sketch</Navbar.Brand>
+        <Navbar.Brand href="/">Share Your Sketch Online</Navbar.Brand>
   
                       
         

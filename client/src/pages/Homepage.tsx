@@ -6,7 +6,12 @@ interface User {
   _id: Key | null | undefined
   email: String,
   username: String,
-  password: String
+  password: String,
+  info: String,
+  sketchs: [],
+  likes: [],
+  comments:[]
+
 }
 
 type Users = User[]
@@ -39,8 +44,8 @@ const Homepage = (props: Props) => {
   }
 
   useEffect(() => {
-    getUsers();
-    getUserById();
+    // getUsers();
+    // getUserById();
   }, [])
 
   return (

@@ -14,6 +14,7 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique:true },
   username: String,
   password: { type: String, required: true },
+  info: String,
   sketchs: [{ type: mongoose.Schema.Types.ObjectId, ref: "sketche" }],
   likes: [{ type: String }],
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "comment" }],

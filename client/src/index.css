@@ -12,3 +12,9 @@ code {
     monospace;
 }
 
+.cardcontainer {
+  display: flex;
+  flex-wrap: wrap;
+  /* gap: 70px; */
+
+}
