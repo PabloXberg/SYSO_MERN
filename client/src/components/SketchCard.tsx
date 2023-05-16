@@ -1,59 +1,14 @@
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import React, { Key, useEffect, useState } from 'react'
-
-// type Props = {}
-
-interface User {
-  _id: Key | null | undefined
-  email: String,
-  username: String,
-  password: String,
-  info: String,
-  sketchs: [],
-  likes: [],
-  comments:[]
-}
-
-interface Sketch {
-  _id: Key | null | undefined
-  name: String,
-  owner: String,
-  comment: String,
-  url: String,
-  likes: [],
-  comments:[]
-}
-
+import React from 'react'
 
 function SketchCard(props: any) {
-
-    const [user, setUser] = useState<User | null>(null);
-    const [sketch, setsketch] = useState<Sketch | null>(null);
-    
+   
     console.log('props SketchesCard:>> ', props);
     
     // const datum = props.createdAt;
     // const shortdatum = datum.substring(0, 10);
   
-  
-  //   const getUserById = async() => {
-  //    const user_ID = props.props.owner
-  //    try {
-  //       const response = await fetch(`http://localhost:5000/api/users/id/${user_ID}`);
-  //       const result = await response.json();
-  //       console.log("single user:", result);
-  //       setUser(result);
-  //   } catch (error) {
-  //       console.log(error)
-  //   }
-  // }
-
-
-  useEffect(() => {
-    // getUserById();
-    }, [])
-
   return (
     <Card style={{ width: '18rem', height:'auto' }}>
       <Card.Img variant="top" alt ="Sketch" src={props.props.url} />
