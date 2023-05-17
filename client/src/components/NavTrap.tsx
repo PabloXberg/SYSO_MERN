@@ -14,7 +14,7 @@ import '../index.css';
 function NavStrap() {
 
 const { user, login, logout } = useContext(AuthContext);
-console.log('user :>> ', user);
+
 
   return (
     <Navbar bg="dark" variant="dark" expand="lg">

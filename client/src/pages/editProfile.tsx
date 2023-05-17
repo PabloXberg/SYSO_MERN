@@ -4,6 +4,7 @@ import Form from 'react-bootstrap/Form';
 import { AuthContext } from '../contexts/AuthContext';
 import { Image } from 'react-bootstrap';
 import '../index.css'
+import Modal from 'react-bootstrap/Modal';
 
 type Props = {}
 
@@ -68,72 +69,116 @@ const EditProfile = (props: Props) => {
     }
   }
 
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   return (
-    <div className="updateuser">
-      <div className="avatar">
+    <>
+      <div className="updateuser">
+        <div className="avatar">
 
-        <Form>
+          <Form>
 
-          <Image alt='User Avatar' style={{border: "black 2px solid",padding:"5px" ,borderRadius: "50%", width: "20rem", height: "auto"}} src={avatarPreview ? avatarPreview : user?.avatar} />
-          <br />
+            <Image alt='User Avatar' style={{border: "black 2px solid",padding:"5px" ,borderRadius: "50%", width: "20rem", height: "auto"}} src={avatarPreview ? avatarPreview : user?.avatar} />
+            <br />
 
-         {/* eslint-disable-next-line react/jsx-pascal-case */}
-         <input style={{padding: "1rem"}} type='file' name='loading...' accept= 'image/jpg, image/jpeg, image/png' onChange={handleFile} />
+          {/* eslint-disable-next-line react/jsx-pascal-case */}
+          <input style={{padding: "1rem"}} type='file' name='loading...' accept= 'image/jpg, image/jpeg, image/png' onChange={handleFile} />
 
-        </Form>
+          </Form>
 
-      </div>
+        </div>
 
-      <div className="dataform">
+        <div className="dataform">
 
-            <Form onSubmit={handleSubmit}>
-                <Form.Group className="mb-3" controlId="formBasicEmail">
-                  <Form.Label >Email address</Form.Label>
-                  <Form.Control type='email' name='email' placeholder={user?.email}  onChange={handleChange}/>
-                  <Form.Text className="text-muted">
-                    <i>Required</i><br /><br />
-                  </Form.Text>
+              <Form onSubmit={handleSubmit}>
+                  <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Label >Email address</Form.Label>
+                    <Form.Control type='email' name='email' placeholder={user?.email}  onChange={handleChange}/>
+                    <Form.Text className="text-muted">
+                      <i>Required</i><br /><br />
+                    </Form.Text>
 
+                    
+                    <Form.Label >User Name:</Form.Label>
+                  <Form.Control  name='username' placeholder={user?.username}  onChange={handleChange}/>
+                    <Form.Text className="text-muted">
+                      <i>Required</i><br /><br />
+                    </Form.Text>
                   
-                  <Form.Label >User Name:</Form.Label>
-                <Form.Control  name='username' placeholder={user?.username}  onChange={handleChange}/>
-                  <Form.Text className="text-muted">
-                    <i>Required</i><br /><br />
-                  </Form.Text>
-                
-                  <Form.Label >Personal Info:</Form.Label>
-                  <Form.Control type="email" placeholder={user?.info}  onChange={handleChange}/>
-                  {/* <Form.Text className="text-muted">
-                    We'll never share your email with anyone else.
-                  </Form.Text> */}
-                </Form.Group>
-    {/* 
-          <Form.Group className="mb-3" controlId="formBasicPassword">
-            <Form.Label>Password</Form.Label>
-            <Form.Control disabled type="password" placeholder="Password" />
-          </Form.Group> */}
-        
-          {/* <Form.Group className="mb-3" controlId="formBasicCheckbox">
-            <Form.Check type="checkbox" label="Check me out" />
-          </Form.Group> */}
-          <div className="botones">
-                <Button variant="primary" type="submit" disabled>
-              change password
+                    <Form.Label >Personal Info:</Form.Label>
+                    <Form.Control type="email" placeholder={user?.info}  onChange={handleChange}/>
+                    {/* <Form.Text className="text-muted">
+                      We'll never share your email with anyone else.
+                    </Form.Text> */}
+                  </Form.Group>
+  
+            {/* <Form.Group className="mb-3" controlId="formBasicCheckbox">
+              <Form.Check type="checkbox" label="Check me out" />
+            </Form.Group> */}
+            <div className="botones">
+                  <Button variant="dark" onClick={handleShow}>
+                change password
+                </Button>
+                  <Button variant="success" type="submit" >
+                  Save
               </Button>
-                <Button variant="success" type="submit" >
-                Save
-              </Button>
-          </div> 
-        
-        
+              
+              <Modal
+          show={show}
+          onHide={handleClose}
+          backdrop="static"
+          keyboard={false}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Change Password</Modal.Title>
+          </Modal.Header>
+                <Modal.Body>
+                  
+                <Form.Group className="mb-3" controlId="formBasicPassword">
+                    <Form.Label className="text-muted"><i>Old Password</i></Form.Label>
+                    <Form.Control type="password" placeholder="Old Password" /> <br />
+                    <Form.Label className="text-muted"><i>New Password</i></Form.Label>
+                    <Form.Control type="password" placeholder="New Password" /><br />
+                    <Form.Label className="text-muted"><i>Repeat New Password</i></Form.Label>
+                    <Form.Control type="password" placeholder="Repeat New Password" />
+                  </Form.Group>
+                  
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button variant="danger" onClick={handleClose}>
+                      Close
+                    </Button>
+                    <Button variant="success">Save</Button>
+                  </Modal.Footer>
+                </Modal>
+            </div> 
+          
+          
 
-        </Form>
+          </Form>
+        </div>
+
+
+      </div>
+    
+      <div className="misfavoritos" id = "misfavoritos" >
+      <h1 style={{ textAlign: "center" }}>My Sketches</h1>
+      <div className="sketchcontainer">
+
+
       </div>
 
+      </div>
 
-    </div>
-   
+      <div className="missketches" id="missketches">
+
+
+      </div>
+      
+  </>
   );
 }
 

@@ -1,8 +1,10 @@
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import React from 'react'
+import React, { useContext } from 'react'
+import { AuthContext } from '../contexts/AuthContext';
 
 function SketchCard(props: any) {
+const { user, login, logout } = useContext(AuthContext);
    
     console.log('props SketchesCard:>> ', props);
     
@@ -18,7 +20,7 @@ function SketchCard(props: any) {
           {props.props.comment ? props.props.comment : "Hier we can see some info about the Sketch"}
         </Card.Text>
         {/* <Button variant="primary">Details</Button> */}
-              <Card.Footer className="text-muted"><i>Created by: </i> <Card.Link href="#"><b>{props.props.owner.username}</b></Card.Link></Card.Footer>
+              <Card.Footer className="text-muted"><i>Created by: </i> <Card.Link href="#"><b>{props.props.owner.username ? props.props.owner.username : user?.username }</b></Card.Link></Card.Footer>
               {/* <Card.Footer className="text-muted"><i>Registered on: {shortdatum}</i></Card.Footer>     ME FALTA AGREGAR EL TIMESTAP CUANDO TENGA LA OPCION DE UPLOAD A NEW IMAGE*/} 
       </Card.Body>
     </Card>

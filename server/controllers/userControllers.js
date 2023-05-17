@@ -77,7 +77,7 @@ const updateUser = async (req, res) => {
 const loginUser = async (req,res) => {
 // console.log('req.body :>> ', req.body);
      try {
-        const existingUser = await UserModel.findOne({ email: req.body.email });
+        const existingUser = await UserModel.findOne({ email: req.body.email }).populate("sketchs");
         if (!existingUser) {
           res.status(404).json({error: "No user found"})
           return;

@@ -2,6 +2,7 @@ import { ReactNode, createContext, useEffect, useState } from "react"
 
 
 interface User {
+  _id: String | null | undefined
   email?: string,
   username: string,
   avatar: string,
@@ -107,16 +108,17 @@ const fetchActiveUser = async (token: string) => {
     const  myHeaders = new Headers();
   myHeaders.append("Authorization", `Bearer ${token}`);
   
-  
-    const requestOptions = {
+  const requestOptions = {
       method: 'GET',
       headers: myHeaders,
   };
+
 try {
   const response = await fetch(`${process.env.REACT_APP_BASE_URL}users/active`, requestOptions);
   const result = await response.json();
   console.log("active user result", result)
   setUser(result)
+  return result;
  
 } catch (error) {
   console.log('error :>> ', error);
@@ -129,7 +131,7 @@ try {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, error }}>
+    <AuthContext.Provider value={{ user, login, logout,  error }}>
       { children }
     </AuthContext.Provider>
   )
