@@ -15,6 +15,26 @@ code {
 .cardcontainer {
   display: flex;
   flex-wrap: wrap;
+
   /* gap: 70px; */
 
 }
+
+.updateuser {
+justify-content: space-between;
+border: solid 2px black;
+display: grid;
+grid-template-columns: 2fr 6fr;
+padding: 2rem;
+
+}
+
+.avatar{
+align-self: flex-start;
+
+}
+
+.dataform{
+  align-self: flex-end;
+}
+

@@ -48,7 +48,7 @@ const createUser = async (req, res) => {
     // email: req.body.email,
     // username: req.body.username,
     ...req.body,
-    password: encryptedPassword,  
+    password: encryptedPassword,
     avatar: avatar
     // ,avatar_public_id: avatar.public_id
   });
@@ -94,9 +94,12 @@ const loginUser = async (req,res) => {
                token: token,
                user: {
                  _id: existingUser._id,
-                //  email: existingUser.email,
+                 email: existingUser.email,
                  username: existingUser.username,
                  sketchs: existingUser.sketchs,
+                 likes: existingUser.likes,
+                 comments: existingUser.comments,
+                 info: existingUser.info,
                  avatar: existingUser.avatar
                }
                
@@ -115,8 +118,11 @@ const getActiveUser = async (req, res) => {
     _id: req.user._id,
     email: req.user.email,
     username: req.user.username,
-    avatar: req.user.avatar,
-    sketchs: req.user.sketchs
+    info: req.user.info,  
+    sketchs: req.user.sketchs,
+    likes: req.user.likes,
+    comments: req.user.comments,
+    avatar: req.user.avatar
     })
 
   // res.send(req.user)

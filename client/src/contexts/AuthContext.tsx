@@ -5,7 +5,10 @@ interface User {
   email?: string,
   username: string,
   avatar: string,
-  sketchs: string[]
+  sketchs: string[],
+  likes: string[],
+  comments: string[],
+  info:string
 }
 
 interface fetchResult {
