@@ -64,6 +64,11 @@ const createUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   const activeUser = req.user;
+    if (!req.body.email || !req.body.username) {
+    return res.status(406).json({ error: "Please fill out all fields" })
+  }
+
+  const avatar = await imageUpload(req.file, "user_avatar")
          try {
             const updatedUser = await UserModel.findByIdAndUpdate(activeUser._id, req.body, { new: true });
            res.status(200).json(updatedUser);
