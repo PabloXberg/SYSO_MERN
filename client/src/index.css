@@ -54,3 +54,30 @@ justify-content: space-between;
 
   padding: 2rem;
 }
+
+
+.background-image {
+  background-image: url('../images/NewLOGOnegro.jpg');
+background-size: 60%;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+    background-color: black;
+}
+
+.background-image:hover {
+  background-image: url('../images/LogoShare.png');
+background-size: 60%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: black;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}

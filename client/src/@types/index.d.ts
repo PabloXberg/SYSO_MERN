@@ -4,6 +4,7 @@ interface SubmitRegisterData {
   email: string,
   password: string,
   username: string,
+  info: string | Blob,
   avatar: Avatar
 }
 

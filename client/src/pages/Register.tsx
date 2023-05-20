@@ -8,6 +8,7 @@ const Register = (props: Props) => {
     email: "",
     password: "",
     username: "",
+    info:"",
     avatar: ""
   });
   const [loading, setLoading] = useState(false);

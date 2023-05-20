@@ -163,20 +163,10 @@ const EditProfile = (props: Props) => {
 
 
       </div>
-    
-      <div className="misfavoritos" id = "misfavoritos" >
-      <h1 style={{ textAlign: "center" }}>My Sketches</h1>
-      <div className="sketchcontainer">
+      <div className="background-image">
+        
 
-
-      </div>
-
-      </div>
-
-      <div className="missketches" id="missketches">
-
-
-      </div>
+    </div>
       
   </>
   );

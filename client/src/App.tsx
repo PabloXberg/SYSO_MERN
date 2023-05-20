@@ -18,22 +18,25 @@ import EditProfile from './pages/editProfile';
 function App() {
 
   return (
-    <AuthContextProvider>
-      <BrowserRouter>
-        <NavStrap/>
-        <Routes>
-          <Route path='/' element={ <Homepage />} />
-          <Route path='register' element={ <Register /> } />
-          <Route path='login' element={<Login />} />
-          <Route path='events' element={<Events />} />
-          <Route path='sketches' element={<Sketches />} />
-          <Route path='users' element={<UsersPage />} />
-          <Route path='mysketchs' element={<MySketchs />} />
-          <Route path='myfav' element={<MyFav />} />
-          <Route path='edit' element={ <EditProfile /> } />
-        </Routes>
-      </BrowserRouter>
-    </AuthContextProvider>
+    <div > 
+          <AuthContextProvider>
+              <BrowserRouter>
+                <NavStrap/>
+                  <Routes>
+                    <Route path='/' element={ <Homepage />} />
+                    <Route path='register' element={ <Register /> } />
+                    <Route path='login' element={<Login />} />
+                    <Route path='events' element={<Events />} />
+                    <Route path='sketches' element={<Sketches />} />
+                    <Route path='users' element={<UsersPage />} />
+                    <Route path='mysketchs' element={<MySketchs />} />
+                    <Route path='myfav' element={<MyFav />} />
+                    <Route path='edit' element={ <EditProfile /> } />
+                  </Routes>
+              </BrowserRouter>
+          </AuthContextProvider>
+    </div>
+
   );
 }
 

@@ -1,4 +1,5 @@
 import React, { Key, useEffect, useState } from 'react'
+import '../../src/index.css'
 
 type Props = {}
 
@@ -49,17 +50,18 @@ const Homepage = (props: Props) => {
   }, [])
 
   return (
-    <div></div>
-    // <> <div className="App">
-    //   <h1>Hellooo!!!!</h1>
-    //   {users && users.map((user) => {
-
-    //     return <p key={user._id}>{user.username}</p>
-    //   })}
-    // </div>
+    
+    <> <div className="background-image">
+    
+    
+    
+    </div>
                   
-    // </>
-  );
+   </>
+   )
+
+ 
+
 }
 
 export default Homepage
