@@ -34,6 +34,14 @@ height: auto;
 align-self: flex-start;
 
 }
+.avatarRegister {
+  
+  Display:flex;
+  flex-direction: row;
+  align-self: center;
+
+
+}
 
 .dataform{
   align-self: flex-end;
@@ -80,4 +88,17 @@ background-size: 60%;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+
+.userRegisterModal{
+
+  width: 80rem;
+  justify-content: space-between;
+  border: solid 2px black;
+  display: grid;
+  grid-template-columns: 2fr 6fr;
+  padding: 2rem;
+  height: auto;
+
 }
