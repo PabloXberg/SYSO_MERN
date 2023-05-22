@@ -92,7 +92,6 @@ background-size: 60%;
 
 
 .userRegisterModal{
-
   width: 80rem;
   justify-content: space-between;
   border: solid 2px black;
@@ -102,3 +101,76 @@ background-size: 60%;
   height: auto;
 
 }
+
+.modal-container {
+    position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+  background-color: rgba(0, 0, 0, 0.733);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+width: auto;
+      height: auto;
+      background-color: #fff;
+      border: solid 3px orange;
+      border-radius: 20px;
+
+      padding-top: 2%; 
+    /*  box-shadow: 10px;
+      box-shadow: 10px green; */
+    
+}
+
+.modal-content {
+  width: 400px;
+  height: 650px;
+  background-color: #fff;
+
+  border-radius: 20px;
+  align-items: center;
+  justify-self: center;
+  padding-top: 2%;
+  box-shadow: 10px;
+  box-shadow: 10px green;
+}
+
+.modal-body {
+
+  background-color: #fff;
+
+  border-radius: 20px;
+  align-items: center;
+  justify-self: center;
+  padding-top: 2%;
+  box-shadow: 10px;
+  box-shadow: 10px green;
+}
+
+.modal-header,
+.modal-footer {
+  /* padding: 10px; */
+  font-size: 20px;
+  box-shadow: 10px green;
+}
+
+.modal-picture {
+  box-shadow: 20%;
+  max-width: 20rem;
+  max-height: 20rem;
+  border-radius: 50%;
+  align-items: center;
+
+  justify-self: center;
+
+}
+
+.modal-title {
+  margin: 0;
+}
+
+
+

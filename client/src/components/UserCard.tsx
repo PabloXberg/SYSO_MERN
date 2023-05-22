@@ -1,11 +1,13 @@
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
+import SketchModal from '../components/SketchModal';
+import { useState } from 'react';
 
 function UserCard(props: any) {
 
   const datum = props.props.createdAt;
   const shortdatum = datum.substring(0, 10);
-
+   const [show, setShow] = useState(false);
 
   return (
   
@@ -18,12 +20,12 @@ function UserCard(props: any) {
         <Card.Text>
           {props.props.info ? props.props.info : "Hier we can see some info about the User"}
           </Card.Text>
-          <Card.Link href="#"><i>Sketchs</i></Card.Link>
+          <Card.Link style={{cursor: "pointer"}} onClick={()=>setShow(true)} ><i>Sketchs</i></Card.Link>
           <Card.Footer className="text-muted"><i>Registered on: {shortdatum}</i></Card.Footer>
         {/* <Button variant="primary">Details</Button> */}
       </Card.Body>
     </Card>
-    
+    <SketchModal style={{cursor: "pointer"}} onClose={()=> setShow(false)} show={show} character={props.props} />
     </div>
       
     

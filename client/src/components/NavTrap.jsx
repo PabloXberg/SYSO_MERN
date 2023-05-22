@@ -93,7 +93,7 @@ function NavStrap() {
   return (
     <Navbar bg="dark" variant="dark" expand="lg">
       <Container fluid>
-        <Navbar.Brand href="/">Share Your Sketch Online</Navbar.Brand>
+        <Navbar.Brand style={{cursor: "pointer"}} href="/">Share Your Sketch Online</Navbar.Brand>
                         
                <div style={{ display: "flex", gap: "1em" }}>
                           
@@ -136,8 +136,8 @@ function NavStrap() {
                           </div>
                               :
                       <div style={{ display: "flex", gap: "1em" }}>{
-                          <><Navbar.Brand onClick={handleShowRegister}>Register</Navbar.Brand>
-                            <Navbar.Brand onClick={handleShowLogin}>Login!</Navbar.Brand></>
+                          <><Navbar.Brand style={{cursor: "pointer"}} onClick={handleShowRegister}>Register</Navbar.Brand>
+                            <Navbar.Brand style={{cursor: "pointer"}} onClick={handleShowLogin}>Login!</Navbar.Brand></>
 
               // MODAL PARA LOGIN DE USUSARIO
             }

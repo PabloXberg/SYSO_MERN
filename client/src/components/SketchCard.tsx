@@ -1,11 +1,12 @@
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { AuthContext } from '../contexts/AuthContext';
+import UserModal from '../components/UserModal'
 
 function SketchCard(props: any) {
 const { user, login, logout } = useContext(AuthContext);
-   
+   const [show, setShow] = useState(false);
     console.log('props SketchesCard:>> ', props);
     
     // const datum = props.createdAt;
@@ -20,9 +21,10 @@ const { user, login, logout } = useContext(AuthContext);
           {props.props.comment ? props.props.comment : "Hier we can see some info about the Sketch"}
         </Card.Text>
         {/* <Button variant="primary">Details</Button> */}
-              <Card.Footer className="text-muted"><i>Created by: </i> <Card.Link href="#"><b>{props.props.owner.username ? props.props.owner.username : user?.username }</b></Card.Link></Card.Footer>
+              <Card.Footer style={{cursor: "pointer"}} className="text-muted"><i>Created by: </i> <Card.Link onClick={()=>setShow(true)}><b>{props.props.owner.username ? props.props.owner.username : user?.username }</b></Card.Link></Card.Footer>
               {/* <Card.Footer className="text-muted"><i>Registered on: {shortdatum}</i></Card.Footer>     ME FALTA AGREGAR EL TIMESTAP CUANDO TENGA LA OPCION DE UPLOAD A NEW IMAGE*/} 
       </Card.Body>
+      <UserModal style={{cursor: "pointer"}} onClose={()=> setShow(false)} show={show} character={props.props} />
     </Card>
   );
 }
