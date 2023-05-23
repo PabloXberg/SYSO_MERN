@@ -1,5 +1,6 @@
 import React, { Key, useEffect, useState } from 'react'
 import '../../src/index.css'
+import { InstagramEmbed } from 'react-social-media-embed';
 
 type Props = {}
 
@@ -32,17 +33,19 @@ const Homepage = (props: Props) => {
     }
   }
 
-  const getUserById = async() => {
-    const id = "6447a2bc1362e69f068f823b";
-    try {
-      const response = await fetch(`http://localhost:5000/api/users/id/${id}`);
-      const result = await response.json();
-      console.log("single user:", result);
-      setUser(result);
-    } catch (error) {
-      console.log(error)
-    }
-  }
+
+  // +++++++++++ PARA BUSCAR UN USUARIO EN PARTICULAR
+  // const getUserById = async() => {
+  //   const id = "6447a2bc1362e69f068f823b";
+  //   try {
+  //     const response = await fetch(`http://localhost:5000/api/users/id/${id}`);
+  //     const result = await response.json();
+  //     console.log("single user:", result);
+  //     setUser(result);
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // }
 
   useEffect(() => {
     // getUsers();
@@ -53,8 +56,11 @@ const Homepage = (props: Props) => {
     
     <> <div className="background-image">
     
-    
-    
+      {/* <div style={{ display: 'flex', justifyContent: 'center' }}>
+        
+      <InstagramEmbed url="https://www.instagram.com/p/Cr5F6xMtbmm/" width={"100%"} />
+    </div>
+     */}
     </div>
                   
    </>

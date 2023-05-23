@@ -80,8 +80,8 @@ const updateUser = async (req, res) => {
 }
   try {
     const updatedUser = await UserModel.findByIdAndUpdate(req.user._id, infoToUpdate, { new: true });
-    res.status(200).json(updatedUser);
-     message("Update Successfully!!!!")
+    res.status(200).json(updatedUser); // QUITAR EL PASSWORD DE ESTE OBJETO ANTES DE MANDARLO PARA EL FRONT END
+    // Y SI QUIERO PUEDO MANDAR UN MENSAJE DE "Update Successfully!!!!"; AUNQUE CREO QUE EN EL FRONT END YA HAY UNO
 
   } catch (error) {
     console.log('error :>> ', error);
