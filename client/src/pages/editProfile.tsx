@@ -6,6 +6,7 @@ import { Image } from 'react-bootstrap';
 import '../index.css'
 import Modal from 'react-bootstrap/Modal';
 
+
 type Props = {}
 
 
@@ -42,9 +43,16 @@ const EditProfile = (props: Props) => {
     }
   }
   
-  const handleSubmit = async(e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+    const user_ID = user?._id
+
+    const myHeaders = new Headers();
+    const token = localStorage.getItem("token")
+    myHeaders.append("Authorization", `Bearer ${token}`);
+
+
     const submitData = new FormData();
     submitData.append("email", formData.email);
     submitData.append("username", formData.username);
@@ -54,17 +62,21 @@ const EditProfile = (props: Props) => {
 
     const requestOptions = {
       method: 'POST',
+      headers: myHeaders,
       body: submitData,
     };
+
     try {
-      const response = await fetch(`${process.env.REACT_APP_BASE_URL}users/update`, requestOptions);
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}users/update/${user_ID}`, requestOptions);
       const result = await response.json();
       console.log(result);
-      alert("Success! Check console.");
+      alert("Success!!! User Updated");
       setLoading(false);
+
+      
     } catch (error) {
       console.log(error)
-      alert("Something went wrong - check console")
+      alert("Something went wrong - Try again...")
       setLoading(false);
     }
   }
@@ -103,13 +115,13 @@ const EditProfile = (props: Props) => {
 
                     
                     <Form.Label >User Name:</Form.Label>
-                  <Form.Control  name='username' placeholder={user?.username}  onChange={handleChange}/>
+                  <Form.Control type="text"  name='username' placeholder={user?.username}  onChange={handleChange}/>
                     <Form.Text className="text-muted">
                       <i>Required</i><br /><br />
                     </Form.Text>
                   
                     <Form.Label >Personal Info:</Form.Label>
-                    <Form.Control type="email" placeholder={user?.info}  onChange={handleChange}/>
+                    <Form.Control type="text"name='info' placeholder={user?.info}  onChange={handleChange}/>
                     {/* <Form.Text className="text-muted">
                       We'll never share your email with anyone else.
                     </Form.Text> */}

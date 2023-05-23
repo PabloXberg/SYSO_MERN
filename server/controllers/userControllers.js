@@ -9,7 +9,13 @@ const testingRoute = (req, res) => {
 
 const getUsers = async(req, res) => {
   try { 
-    const users = await UserModel.find().populate("sketchs");
+    const users = await UserModel.find().populate({
+      path: 'sketchs',
+      populate: {
+        path: 'owner'
+      }
+    });
+
     res.status(200).json({msg: "Success!", users});
   } catch (e) {
       res.status(500).json({error: "Something went wrong..."});
@@ -20,9 +26,8 @@ const getUsers = async(req, res) => {
 const getUser = async(req, res) => {
 
   const params = req.params;
-  console.log(params); // should show {id: bla bla bla}
+  // console.log(params);  should show {id: bla bla bla}
   const id = req.params.id // will show just "bla bla bla"
-  console.log('id :>> ', id);
   
     try {
         const user = await UserModel.findById(id).populate("sketchs");
@@ -63,22 +68,31 @@ const createUser = async (req, res) => {
 }
 
 const updateUser = async (req, res) => {
-  const activeUser = req.user;
-    if (!req.body.email || !req.body.username) {
-    return res.status(406).json({ error: "Please fill out all fields" })
-  }
+  
+  const infoToUpdate = {};
+  if (req.body.email !== "") infoToUpdate.email = req.body.email;
+  if (req.body.username !== "") infoToUpdate.username = req.body.username;
+  if (req.body.info !== "") infoToUpdate.info = req.body.info;
 
-  const avatar = await imageUpload(req.file, "user_avatar")
-         try {
-            const updatedUser = await UserModel.findByIdAndUpdate(activeUser._id, req.body, { new: true });
-           res.status(200).json(updatedUser);
-           message("Update Successfully!!!!")
-    	}catch(e) {
-            console.log(e);
-            res.status(500).send(e.message);
-      }
+  if (req.file) {
+    const avatar = await imageUpload(req.file, "user_avatar")
+    infoToUpdate.avatar = avatar
+}
+  try {
+    const updatedUser = await UserModel.findByIdAndUpdate(req.user._id, infoToUpdate, { new: true });
+    res.status(200).json(updatedUser);
+     message("Update Successfully!!!!")
+
+  } catch (error) {
+    console.log('error :>> ', error);
+    res.status(500).json(error.message)
+    
+  }
+  
     }
 
+
+    
 const loginUser = async (req,res) => {
 // console.log('req.body :>> ', req.body);
      try {
