@@ -15,8 +15,8 @@ import '../index.css';
 function NavStrap() {
 
   const { user, login, logout } = useContext(AuthContext);
-    const [showLogin, setShowLogin] = useState(false);
-    const handleCloseLogin = () => setShowLogin(false);
+  const [showLogin, setShowLogin] = useState(false);
+  const handleCloseLogin = () => setShowLogin(false);
   const handleShowLogin = () => setShowLogin(true);
   
 
@@ -42,16 +42,18 @@ function NavStrap() {
   
   const handleChangeLogin = (e) => {
     setFormDataLogin({ ...formDataLogin, [e.target.name]: e.target.value })
-    console.log('formData :>> ', formDataLogin);
+    // console.log('formData :>> ', formDataLogin);
   }
     const handleChangeRegister = (e) => {
     setFormDataRegister({ ...formDataRegister, [e.target.name]: e.target.value })
-    console.log('formData :>> ', formDataRegister);
+    // console.log('formData :>> ', formDataRegister);
   }
   const handleSubmitLogin = (e) => {
     e.preventDefault();
     login(formDataLogin.email, formDataLogin.password);
   }
+
+
   const handleSubmitRegister = async(e) => {
     e.preventDefault();
         setLoading(true);

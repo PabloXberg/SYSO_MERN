@@ -8,29 +8,9 @@ import UserModal from '../components/UserModal'
 function SketchCard(props: any) {
 const { user, login, logout } = useContext(AuthContext);
    const [show, setShow] = useState(false);
-    console.log('props SketchesCard:>> ', props);
-    
-    // const datum = props.createdAt;
-    // const shortdatum = datum.substring(0, 10);
-  
-  
-  // let OwnerName = "";
-  // console.log('OwnerName :>> ', OwnerName);
-  console.log('props :>> ', props);
 
-  // const getTheOwner = async (req: any,res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: { error: string; }): void; new(): any; }; }; }) => {
-  //   try {
-  //     const Owneruser = await UserModel.find();
-  //     Owneruser ? OwnerName = Owneruser.username : OwnerName = "Anonym"
-  //     return OwnerName
-  //   } catch (error) { 
-  //      res.status(500).json({error:"Something went wrong..."})
-  //     console.log('error :>> ', error);
-  //     alert(error)
-  //   }
-  // } 
-  
-  
+    
+ 
   return (
     <Card style={{ width: '18rem', height:'auto' }}>
       <Card.Img variant="top" alt ="Sketch" src={props.props.url} />

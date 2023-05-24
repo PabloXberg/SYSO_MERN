@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
   sketchs: [{ type: mongoose.Schema.Types.ObjectId, ref: "sketche" }],
   likes: [{ type: String }],
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "comment" }],
-  avatar: { type: String, default: "https://res.cloudinary.com/dhaezmblt/image/upload/v1683021517/user_avatar/placeholder_fc6szz.png" }
+  avatar: { type: String, default: "https://res.cloudinary.com/dhaezmblt/image/upload/v1684921855/user_avatar/user-default_rhbk4i.png" }
   // ,avatar_public_id: { type: String , default: "Default_Avatar"}
 
 }, { timestamps: true });

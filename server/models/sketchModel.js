@@ -5,7 +5,8 @@ const sketchSchema = new mongoose.Schema({
   comment: { type: String, required: true },
   likes: [{ type: String }],
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "comment" }],
-  owner: { type: mongoose.Schema.Types.ObjectId, ref:"user" }
+  owner: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
+  url: { type: String, default: "https://res.cloudinary.com/dhaezmblt/image/upload/v1684921923/user_sketches/Default_Image_Thumbnail_tk7kkh.png" }
 }, { timestamps: true });
 
 const SketchModel = mongoose.model("sketche", sketchSchema);

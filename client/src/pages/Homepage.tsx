@@ -61,6 +61,9 @@ const Homepage = (props: Props) => {
       <InstagramEmbed url="https://www.instagram.com/p/Cr5F6xMtbmm/" width={"100%"} />
     </div>
      */}
+{/* 
+     <iframe title= "IG"src="https://www.instagram.com/share_your_sketch/" ></iframe> */}
+      
     </div>
                   
    </>
