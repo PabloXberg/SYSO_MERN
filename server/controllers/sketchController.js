@@ -62,21 +62,19 @@ const createSketch = async (req, res) => {
 
 
 const addLike = async (req, res) => {
-  console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>req.body :>> ', req.body);
-  console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>req.user :>> ', req.user._id);
+
 
   try {
-    const like = SketchModel.findByIdAndUpdate(req?.body._id,
-      { $push: { likes: req?.user._id } },
+   await SketchModel.findByIdAndUpdate(req.body.sketch,
+      { $push: { likes: req.user._id } },
       { new: true });
     
-    const addToFavo = await UserModel.findByIdAndUpdate(req?.user._id,
-      { $push: { likes: req?.sketch._id } },
+    await UserModel.findByIdAndUpdate(req.user._id,
+      { $push: { likes: req.body.sketch} },
       {new: true}
      )
-    
-    console.log("El ususario ha borrado el like del siguiente sketch..." + like);
-    // res.status(200).json({message: "Algo Salió mal... muy mal.... " + error.message})
+
+    res.status(200).json({message: "Success!!!! liked "})
     
   } catch (error) {
     res.status(500).json({error: "Algo Salió mal... muy mal.... " + error.message})
@@ -84,21 +82,19 @@ const addLike = async (req, res) => {
 }
 
 const deleteLike = async (req, res) => {
-  console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>req.body :>> ', req.body);
-  console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>req.user :>> ', req.user);
 
   try {
-    const unlike = SketchModel.findByIdAndUpdate(req.body._id,
+    await SketchModel.findByIdAndUpdate(req.body.sketch,
       { $pull: { likes: req.user._id } },
       { new: true });
-    
-    const deleteFromFavo = await UserModel.findByIdAndUpdate(req.user._id,
-      { $pull: { likes: req.sketch._id } },
+   
+    await UserModel.findByIdAndUpdate(req.user._id,
+      { $pull: { likes: req.body.sketch } },
       {new: true}
      )
     
-    console.log("El ususario ha borrado el like del siguiente sketch..." + unlike);
-    // res.status(200).json({message: "Algo Salió mal... muy mal.... " + error.message})
+     res.status(200).json({message: "Success!!!! unliked "})
+
     
   } catch (error) {
     res.status(500).json({error: "Algo Salió mal... muy mal.... " + error.message})

@@ -121,7 +121,7 @@ const EditProfile = (props: Props) => {
                     </Form.Text>
                   
                     <Form.Label >Personal Info:</Form.Label>
-                    <Form.Control type="text"name='info' placeholder={user?.info}  onChange={handleChange}/>
+                    <Form.Control type="text"name='info' placeholder={user?.info} onChange={handleChange}/>
                     {/* <Form.Text className="text-muted">
                       We'll never share your email with anyone else.
                     </Form.Text> */}
