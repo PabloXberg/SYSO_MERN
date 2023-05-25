@@ -59,42 +59,50 @@ const createSketch = async (req, res) => {
   }
 }
 
-const addLike = (req, res) => {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>req.body :>> ', req.body);
-   console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>req.user :>> ', req.user);
-  SketchModel.findByIdAndUpdate(req.body._id, {
-    $push: {likes: req.user._id}
-  }, { new: true }).exec((error, result) => {
-    if (error) {
-      return res.status(422).json({error:error})
-    } else {
-      res.status(200).json({
-        message: "succesfully liked",
-        result: result
-      })}
+
+
+const addLike = async (req, res) => {
+  console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>req.body :>> ', req.body);
+  console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>req.user :>> ', req.user._id);
+
+  try {
+    const like = SketchModel.findByIdAndUpdate(req?.body._id,
+      { $push: { likes: req?.user._id } },
+      { new: true });
+    
+    const addToFavo = await UserModel.findByIdAndUpdate(req?.user._id,
+      { $push: { likes: req?.sketch._id } },
+      {new: true}
+     )
+    
+    console.log("El ususario ha borrado el like del siguiente sketch..." + like);
+    // res.status(200).json({message: "Algo Salió mal... muy mal.... " + error.message})
+    
+  } catch (error) {
+    res.status(500).json({error: "Algo Salió mal... muy mal.... " + error.message})
   }
-  )
 }
 
 const deleteLike = async (req, res) => {
   console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>req.body :>> ', req.body);
-   console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>req.user :>> ', req.user);
+  console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>req.user :>> ', req.user);
 
-   SketchModel.findByIdAndUpdate(req.body._id, {
-    $pull: {likes: req.user._id}
-  }, { new: true }).exec((error, result) => {
+  try {
+    const unlike = SketchModel.findByIdAndUpdate(req.body._id,
+      { $pull: { likes: req.user._id } },
+      { new: true });
     
-    if (error) {
-      return res.status(422).json({error:error})
-    } else {
-      res.status(200).json({
-        message: "succesfully unliked",
-        result: result
-      })
-    }
+    const deleteFromFavo = await UserModel.findByIdAndUpdate(req.user._id,
+      { $pull: { likes: req.sketch._id } },
+      {new: true}
+     )
+    
+    console.log("El ususario ha borrado el like del siguiente sketch..." + unlike);
+    // res.status(200).json({message: "Algo Salió mal... muy mal.... " + error.message})
+    
+  } catch (error) {
+    res.status(500).json({error: "Algo Salió mal... muy mal.... " + error.message})
   }
-  )
-
 }
-
+ 
 export { getAllSketches, createSketch, addLike, deleteLike}
