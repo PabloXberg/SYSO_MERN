@@ -7,6 +7,7 @@ import sketchRouter from "./routes/sketchRoutes.js";
 import cloudinaryConfig from "./config/cloudinary.js";
 import cors from "cors";
 import passportConfig from "./config/passport.js";
+import commentRouter from "./routes/commentsRoutes.js";
 
 
 const app = express();
@@ -38,7 +39,7 @@ const connectMongoose = () => {
 const connectRoutes = () => {
   app.use("/api/users", userRouter);
   app.use("/api/sketches", sketchRouter);
-  // app.use("/api/comments", commentRouter);
+  app.use("/api/comments", commentRouter);
   app.use("*", (req,res) => {res.status(500).json({error: "Endpoint not found - What for a API is that!?!?!"})})
 }
 

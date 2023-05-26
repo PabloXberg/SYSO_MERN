@@ -45,7 +45,7 @@ const EditProfile = (props: Props) => {
   
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
+    setLoading(true);   ///// FUTURE SPINNER
     const user_ID = user?._id
 
     const myHeaders = new Headers();

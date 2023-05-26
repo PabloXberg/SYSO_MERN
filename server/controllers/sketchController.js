@@ -45,7 +45,7 @@ const createSketch = async (req, res) => {
        
     try {
          const sketchToSave = await newSketch.save();    
-        const updatedUser = await addSketchToUser(req.body.owner, sketchToSave);
+         const updatedUser = await addSketchToUser(req.body.owner, sketchToSave);
 
       res.status(200).json({
           update_status: updatedUser,
