@@ -25,7 +25,7 @@ const UsersPage = (props: Props) => {
   
   const getUsers = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/users/all");
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}users/all`)
       const result = await response.json();
       setUsers(result.users);
       console.log("all users:", result)

@@ -51,10 +51,7 @@ function SketchCard(props) {
     };
 
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/sketches/like",
-        requestOptions
-      );
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}sketches/like`,requestOptions);
       const result = await response.json();
       console.log(result);
       setRefresh(true);
@@ -83,10 +80,7 @@ function SketchCard(props) {
     };
 
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/sketches/unlike",
-        requestOptions
-      );
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}sketches/unlike`,requestOptions);
       const result = await response.json();
       console.log(result);
       setRefresh(true);
@@ -189,6 +183,8 @@ const page = '/sketchdetail/'
           
         </Card.Footer>
       </Card.Body>
+
+      
       <UserModal
         style={{ cursor: "pointer" }}
         onClose={() => setShow(false)}

@@ -6,7 +6,7 @@ import jwtAuth from '../middlewares/jwtAuth.js'
 const sketchRouter = express.Router();
 
 sketchRouter.get("/all", getAllSketches);
-sketchRouter.get("/id/:id", getSketchbyID)
+sketchRouter.get("/id/:id",jwtAuth,  getSketchbyID)
 
 sketchRouter.post("/new", jwtAuth, multerUploads.single("url"), createSketch);
 sketchRouter.post("/like", jwtAuth,  addLike);

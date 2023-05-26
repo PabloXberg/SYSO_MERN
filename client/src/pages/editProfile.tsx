@@ -13,7 +13,7 @@ type Props = {}
 const EditProfile = (props: Props) => {
 
   
-  const { user, login, logout } = useContext(AuthContext);
+  const { user  } = useContext(AuthContext);
   console.log('user :>> ', user);
   const [loading, setLoading] = useState(false);
   const[avatarPreview, setAvatarPreview] = useState(user?.avatar) 

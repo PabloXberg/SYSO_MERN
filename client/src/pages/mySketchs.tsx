@@ -58,7 +58,7 @@ const MySketchs = (props: Props) => {
     const id = user?._id;
     setID(id);
     try {
-      const response = await fetch(`http://localhost:5000/api/users/id/${id}`);
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}users/id/${id}`);
       const result = await response.json();
 
       setActiveUser(result);
