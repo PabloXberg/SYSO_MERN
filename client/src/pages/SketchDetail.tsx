@@ -1,11 +1,19 @@
-import React from 'react'
+import React from 'react';
+import { useParams } from "react-router-dom";
 
-type Props = {}
 
-const SketchDetail = (props: Props) => {
+const SketchDetail = () => {
+
+  const { id } = useParams();
+  console.log('id :>> ', id);
+  // Contenido y lógica del componente
   return (
-    <div>SketchDetail</div>
-  )
-}
+    
+    <div>
+      Contenido del componente SketchDetail
 
-export default SketchDetail
+    </div>
+  )
+};
+
+export default SketchDetail;

@@ -15,6 +15,20 @@ try {
     }
 }
 
+
+///////////////////////////////////////////////////////////////////////// GET JUST ONE SKETCH BY ID
+
+const getSketchbyID = async(req, res) => {
+
+    try {
+        const user = await SketchModel.findById(req.params.id).populate("owner");
+        res.status(200).json(user)
+    } catch (error) {
+        res.status(500).json({error:"Something went wrong..."})
+        console.log(error);
+    }
+ }
+
 ////////////////////////////////////////////////////////////// THIS FUNCTION SAVE THE SKETCH ID ON THE OWNER COLLECTION
 const addSketchToUser = async (userId, sharedPost) => {
     try {
@@ -59,11 +73,7 @@ const createSketch = async (req, res) => {
   }
 }
 
-
-
 const addLike = async (req, res) => {
-
-
   try {
    await SketchModel.findByIdAndUpdate(req.body.sketch,
       { $push: { likes: req.user._id } },
@@ -101,4 +111,4 @@ const deleteLike = async (req, res) => {
   }
 }
  
-export { getAllSketches, createSketch, addLike, deleteLike}
+export { getAllSketches, createSketch, addLike, deleteLike, getSketchbyID}

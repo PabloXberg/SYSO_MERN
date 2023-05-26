@@ -14,6 +14,7 @@ import UsersPage from './pages/users';
 import MySketchs from './pages/mySketchs';
 import MyFav from './pages/myFav';
 import EditProfile from './pages/editProfile';
+import SketchDetail from './pages/SketchDetail';
 
 function App() {
 
@@ -26,7 +27,7 @@ function App() {
                     <Route path='/' element={ <Homepage />} />
                     <Route path='register' element={ <Register /> } />
                     <Route path='login' element={<Login />} />
-
+                    <Route path='sketchdetail/:id' element={<SketchDetail/>}/>
                     <Route path='sketches' element={<Sketches />} />
                     <Route path='users' element={<UsersPage />} />
                     <Route path='mysketchs' element={<MySketchs />} />
