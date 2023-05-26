@@ -68,7 +68,7 @@ const MySketchs = (props: Props) => {
   };
   useEffect(() => {
     getUserById();
-  }, [user]);
+  }, [user, SketchCard]);
 
   ////////////////////////////////////////////////////////////////////////////////// HANDLE CHANGE ON MODAL IMPUTS
   const handleChange = (e: { target: { name: any; value: any } }) => {

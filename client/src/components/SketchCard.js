@@ -1,6 +1,6 @@
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { AuthContext } from '../contexts/AuthContext';
 import UserModal from './UserModal'
 
@@ -10,22 +10,31 @@ import UserModal from './UserModal'
 
 function SketchCard(props) {
   const { user } = useContext(AuthContext);
-  console.log('user :>> ', user._id);
-const [show, setShow] = useState(false);
-  // const [data, setData] = useState([])
-  console.log('props :>> ', props);
-const datum = props.props.createdAt;
-const shortdatum = datum.substring(0, 10);
+
+  const [show, setShow] = useState(false);
+  const [refresh, setRefresh] = useState(false)
+  const datum = props.props.createdAt;
+  const shortdatum = datum.substring(0, 10);
   
-  const likesArray = props?.props?.likes
+  const likesArray = props?.props?.likes  
   console.log('likesArray :>> ', likesArray);
-    
-    // console.log('props.props.likes.lenght  :>> ', props.props.likes );
-    // console.log('numberLikes :>> ', numberOfLikes);
 
-  
+//////////////////////////////////////////////////////////////////////////////////// USE EFFECT PARA RECARCAR LA PAGINA::: NO FUNCIONA; SOLUCIONAR ESTO 
 
-const likeSketch= async (props) => {
+  useEffect(() => {
+    if (refresh) {
+      // Hacer aquí cualquier otra operación necesaria antes de la recarga del componente
+        console.log('%crefresh :>> ',"color:red" ,refresh);
+      // Reiniciar el estado de refresh después de un corto tiempo
+      setTimeout(() => {
+        setRefresh(false);
+      }, 100);
+    }
+  }, [refresh]);
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const likeSketch = async (props) => {
+
 const myHeaders = new Headers();
     
 myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
@@ -43,19 +52,10 @@ const requestOptions = {
 try {
     const response = await fetch("http://localhost:5000/api/sketches/like", requestOptions)
     const result = await response.json();
-    console.log(result);
-  
-   // const newData = data.map((item) => {
-  //   console.log('item :>> ', item);
-  //   console.log('result :>> ', result);
-  //   if (item._id == result._id) {
-  //       return result
-  //   } else {
-  //     return item
-  //     }
-  //   })
-
-  
+   console.log(result);
+   setRefresh(true)
+   window.location.reload() ///////////////////////////////////////////////////////////////////// PROVISORIO
+    
     } catch (error) {
       console.log('error', error)
     }
@@ -63,6 +63,7 @@ try {
   
     
 const unlikeSketch = async (props) => {
+
 const myHeaders = new Headers();
     
 myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
@@ -80,34 +81,16 @@ const requestOptions = {
 try {
     const response = await fetch("http://localhost:5000/api/sketches/unlike", requestOptions)
     const result = await response.json();
-    console.log(result);
-  
-  
-  // const newData = data.map((item) => {
-  //   console.log('item :>> ', item);
-  //   console.log('result :>> ', result);
-  //   if (item._id == result._id) {
-  //       return result
-  //   } else {
-  //     return item
-  //     }
-  //   })
+   console.log(result);
+   setRefresh(true)
+   window.location.reload() ///////////////////////////////////////////////////////////////////// PROVISORIO
   
     } catch (error) {
       console.log('error', error)
     }
-}
-  
+  }
+   
   const _id = props.props._id
-  // console.log('_id :>> ', _id);
-  const isLiked = (likesArray) => {
-    if (likesArray?.includes(user._id)) {
-      console.log("true");
-      return true
-    } else {
-      console.log("false");
-    return false}
-}
 
   return (
     <Card style={{ width: '18rem', height:'auto' }}>
@@ -128,40 +111,21 @@ try {
         <Card.Footer style={{ display: "Flex", flexDirection: "row" }}>
           <div style={{ alignSelf: "flex-start" }}>
             
-            {/* {props?.props?.likes?.includes(user?.id) */}
-            {likesArray?.includes(user?._id)
+
+                  {likesArray?.includes(user?._id)
               ?
-             <>
-             <i className="material-icons" style={{ cursor: "pointer" }} onClick={()=> unlikeSketch(_id)}>thumb_down</i>
-        
-                {console.log("%cdown", "color:red",likesArray?.includes(user?.id))}
-                {console.log("%cdown", "color:red",typeof likesArray[0])}
-              </> 
+                  <i className="material-icons" style={{ cursor: "pointer" }} onClick={()=> unlikeSketch(_id)}>thumb_down</i>
             : 
-              <>
-                <i className="material-icons" style={{ cursor: "pointer" }} onClick={()=> likeSketch(_id)}>thumb_up</i>
-               
-                 {console.log("%cup", "color:verde",likesArray?.includes(user?.id))}
-              </>
+                  <i className="material-icons" style={{ cursor: "pointer" }} onClick={()=> likeSketch(_id)}>thumb_up</i>
               
-            }  
+              }   
             
-             {/* {isLiked(likesArray) */}
-             {/* {likesArray?.includes(user?._id)
-              ?
-           <i className="material-icons" style={{ cursor: "pointer" }} onClick={()=> unlikeSketch(_id)}>thumb_down</i>
-            : 
-              <i className="material-icons" style={{ cursor: "pointer" }} onClick={()=> likeSketch(_id)}>thumb_up</i>
-              
-              }   */}
-            
-           
-            
+                   
           </div> 
           
           <div style={{ alignSelf: "flex-end", justifySelf: "right", justifyContent: "right" }}>
 
-          { props?.props?.likes &&  <h6>{props?.props?.likes?.length} likes</h6>}
+          { props?.props?.likes &&  <h6>{props?.props?.likes?.length} {props?.props?.likes?.length === 1 ? 'Like' : 'Likes'}</h6>}
           </div> 
           </Card.Footer>  
        
