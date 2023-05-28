@@ -10,7 +10,7 @@ import React, { ChangeEvent, FormEvent, useContext, useState } from 'react'
 import { AuthContext } from '../contexts/AuthContext'
 import { Link } from 'react-router-dom';
 import '../index.css';
-
+import Typewriter from 'typewriter-effect';
 
 function NavStrap() {
 
@@ -95,7 +95,20 @@ function NavStrap() {
   return (
     <Navbar bg="dark" variant="dark" expand="lg">
       <Container fluid>
-        <Navbar.Brand style={{cursor: "pointer"}} href="/">Share Your Sketch Online</Navbar.Brand>
+        <Navbar.Brand style={{ cursor: "pointer" }} href="/">{ <Typewriter
+                                                      onInit={(typewriter) => {
+                                                        typewriter.typeString('Share Your Sketch Online ')
+                                                          .callFunction(() => {
+                                                            console.log('String typed out!');
+                                                          })
+                                                          .pauseFor(2500)
+                                                          .deleteAll()
+                                                          .callFunction(() => {
+                                                            console.log('All strings were deleted');
+                                                          })
+                                                          .start();
+  }}
+/> }  </Navbar.Brand>
                         
                <div style={{ display: "flex", gap: "1em" }}>
                           
