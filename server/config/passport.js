@@ -17,7 +17,16 @@ const passportConfig = () => {
     // } catch (error) {
     //   return done(error, false);
     // }
-    UserModel.findById(jwt_payload.sub).then((user) => {
+    UserModel.findById(jwt_payload.sub)
+    .populate({ path: "likes",
+                populate: [
+                    { path: 'owner', select: ['username'] }
+                 
+                ]
+            })
+      .populate('sketchs')
+      .populate("comments")
+      .then((user) => {
       return user ? done(null, user) : done(null, false)
     }).catch((error) => {
       return done(error, false)

@@ -45,7 +45,7 @@ const SkechesPage = (props: Props) => {
 
       <>
        
-        <h1>All Uploaded Sketches</h1>
+        <h1 className='NavtrapBar' style={{textAlign:"center"}}>Uploaded Sketches</h1>
         
         <div className='cardcontainer'>
            {sketches && sketches.map((sketch: Sketch) => {

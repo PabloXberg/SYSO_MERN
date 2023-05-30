@@ -99,7 +99,8 @@ const page = '/sketchdetail/'
           variant="top"
           alt="Sketch"
           src={props.props.url}
-          style={{ cursor: "pointer" }}
+          style={{ cursor: "pointer", height:"20rem", width:"18rem"}}
+
         />
       </Link>
 

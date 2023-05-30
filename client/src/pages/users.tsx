@@ -21,7 +21,7 @@ const UsersPage = (props: Props) => {
  const [users, setUsers] = useState<Users>([]);
   const [user, setUser] = useState<User | null>(null);
 
-   
+   console.log('user :>> ', user);
   
   const getUsers = async () => {
     try {
@@ -45,7 +45,7 @@ const UsersPage = (props: Props) => {
 
       <>
        
-       <h1>All Registered Users</h1>
+       <h1 className='NavtrapBar' style={{textAlign:"center"}}>Registered Users</h1>
         <div className='cardcontainer'>
            {users && users.map((user: User) => {
             return <UserCard key={user._id} props={user} />

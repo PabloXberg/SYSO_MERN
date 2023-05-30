@@ -30,7 +30,7 @@ const getUser = async(req, res) => {
   const id = req.params.id // will show just "bla bla bla"
   
     try {
-        const user = await UserModel.findById(id).populate("sketchs");
+        const user = await UserModel.findById(id).populate("sketchs likes");
         res.status(200).json(user)
     } catch (error) {
         res.status(500).json({error:"Something went wrong..."})

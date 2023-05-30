@@ -139,10 +139,12 @@ const EditProfile = (props: Props) => {
               </Button>
               
               <Modal
+                    style={{height:"30rem"}}
           show={show}
           onHide={handleClose}
           backdrop="static"
-          keyboard={false}
+                keyboard={false}
+                
         >
           <Modal.Header closeButton>
             <Modal.Title>Change Password</Modal.Title>
@@ -156,15 +158,16 @@ const EditProfile = (props: Props) => {
                     <Form.Control type="password" placeholder="New Password" /><br />
                     <Form.Label className="text-muted"><i>Repeat New Password</i></Form.Label>
                     <Form.Control type="password" placeholder="Repeat New Password" />
-                  </Form.Group>
                   
-                  </Modal.Body>
                   <Modal.Footer>
                     <Button variant="danger" onClick={handleClose}>
                       Close
                     </Button>
                     <Button variant="success">Save</Button>
-                  </Modal.Footer>
+                    </Modal.Footer>
+                    </Form.Group>
+                  
+                  </Modal.Body>
                 </Modal>
             </div> 
           

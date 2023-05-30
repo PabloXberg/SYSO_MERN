@@ -4,11 +4,8 @@ import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Register from './pages/register';
 import Homepage from './pages/Homepage';
-
 import { AuthContext, AuthContextProvider } from './contexts/AuthContext';
-import Navbar from './components/Navbar';
 import NavStrap from './components/NavTrap';
-
 import Sketches from './pages/sketches';
 import UsersPage from './pages/users';
 import MySketchs from './pages/mySketchs';
@@ -31,7 +28,7 @@ function App() {
                     <Route path='sketches' element={<Sketches />} />
                     <Route path='users' element={<UsersPage />} />
                     <Route path='mysketchs' element={<MySketchs />} />
-                    <Route path='myfav' element={<MyFav />} />
+                    <Route path='myfav' element={<MyFav/>} />
                     <Route path='edit' element={ <EditProfile /> } />
                   </Routes>
               </BrowserRouter>

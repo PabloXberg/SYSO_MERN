@@ -139,7 +139,7 @@ const MySketchs = (props: Props) => {
         }}
         className="title"
       >
-        <h1 style={{ textAlign: "center" }}>mySketchs</h1>
+        <h1 className='NavtrapBar' style={{textAlign:"center"}}>my Sketches</h1>
         <Button onClick={handleShow} className="primary">
           <b>+</b>
         </Button>

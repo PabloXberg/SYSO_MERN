@@ -14,7 +14,8 @@ function UserCard(props: any) {
     <div style={{display: "Flex", }}>
       
       <Card style={{ width: '18rem' }}>
-        <Card.Img variant="top" src={props.props.avatar} style={{borderRadius:"50%"}} />
+        <Card.Img variant="top" src={props.props.avatar} style={{
+          borderRadius: "50%", width: "15rem", height: "15rem", alignSelf: "center", padding:"1rem" }} />
         <Card.Body>
           
 

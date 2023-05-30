@@ -184,3 +184,11 @@ height: 80rem;
 font-family: 'Bungee Shade', cursive;
 
 }
+.detailsImage{
+  height: 600px;
+  min-height: 400px;
+  max-height: 800px;
+  width: 800px;
+  min-width: 600px;
+  max-width: 1000px;
+}

@@ -20,11 +20,11 @@ function NavStrap() {
   const handleShowLogin = () => setShowLogin(true);
   
 
-    const [showRegister, setShowRegister] = useState(false);
-    const handleCloseRegister = () => setShowRegister(false);
+  const [showRegister, setShowRegister] = useState(false);
+  const handleCloseRegister = () => setShowRegister(false);
   const handleShowRegister = () => setShowRegister(true);
   const[avatarPreview, setAvatarPreview] = useState(DefaultImage) 
-   const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   
 
   const [formDataLogin, setFormDataLogin] = useState({
@@ -162,46 +162,54 @@ function NavStrap() {
 
               // MODAL PARA LOGIN DE USUSARIO
             }
-            <Modal
-          show={showLogin}
+              <Modal
+               size="sm"
+                show={showLogin}
+                style={{height:"23rem"}}
           onHide={handleCloseLogin}
           backdrop="static"
           keyboard={false}
+          aria-labelledby="contained-modal-title-vcenter"
+      centered
         >
           <Modal.Header closeButton>
             <Modal.Title>User Login</Modal.Title>
           </Modal.Header>
                 <Modal.Body>
                   
-                <Form.Group className="mb-3" controlId="formBasicPassword">
+                <Form.Group className="mb-1" controlId="formBasicPassword">
                     <Form.Label ><i>Email address</i></Form.Label>
-                    <Form.Control type='email' name='email' placeholder='email' onChange={handleChangeLogin}/><br />
+                    <Form.Control type='email' name='email' placeholder='email' onChange={handleChangeLogin}/>
                     <Form.Label className="text-muted"><i>Password</i></Form.Label>
                     <Form.Control type="password" name='password' placeholder="Password" onChange={handleChangeLogin}/>
-                  </Form.Group>
+                    
                   
-                  </Modal.Body>
                   <Modal.Footer>
                     <Button variant="danger" onClick={handleCloseLogin}>
                       Close
                     </Button>
                   <Button style={{ cursor: "pointer" }} onClick={handleSubmitLogin} variant="success">Login</Button>
                   </Modal.Footer>
+                    </Form.Group>
+                   </Modal.Body>
             </Modal>
               
               {/* MODAL PARA REGISTRO DE USUSARIO */}
 
                        
               <Modal
-                size="lg"
+    
                     className='userRegisterModal'
                     show={showRegister}
                     onHide={handleCloseRegister}
                     backdrop="static"
-                    keyboard={false}
+                keyboard={false}
+                 aria-labelledby="contained-modal-title-vcenter"
+                centered
+                style={{height:"70rem"}}
                   >
                   <Modal.Header closeButton>
-                    <Modal.Title >User Register</Modal.Title>
+                    <Modal.Title>User Register</Modal.Title>
                   </Modal.Header>
                
                 <div >
@@ -210,7 +218,7 @@ function NavStrap() {
                   <div className='avatar'>
                    
 
-                      <img alt='User Avatar' style={{border: "black 2px solid",padding:"5px" ,borderRadius: "50%", width: "15rem", height: "auto"}} src={avatarPreview ? avatarPreview : DefaultImage} />
+                      <img alt='User Avatar' style={{border: "black 2px solid",padding:"3px" ,borderRadius: "50%", width: "8rem", height: "auto", alignSelf:"center"}} src={avatarPreview ? avatarPreview : DefaultImage} />
                        <br />
 
                        {/* eslint-disable-next-line react/jsx-pascal-case */}
@@ -223,24 +231,24 @@ function NavStrap() {
               <div className="dataform">
                     
            
-                        <Form.Group className="mb-3" controlId="formBasicEmail">
-                          <Form.Label >Email address</Form.Label>
+                        <Form.Group className="mb-4" controlId="formBasicEmail">
+                          <Form.Label >(*) Email address:</Form.Label>
                           <Form.Control type='email' name='email' placeholder='email' onChange={handleChangeRegister}/>
                           <Form.Text className="text-muted">
-                            <i>Required</i><br /><br />
-                              </Form.Text>
-                          <Form.Label >Password</Form.Label>
+                            
+                            </Form.Text>
+                          <Form.Label >(*) Password:</Form.Label>
                           <Form.Control type="password" name='password' placeholder="Password" onChange={handleChangeRegister} />
-                        <Form.Text className="text-muted"><i>Required</i><br /><br /></Form.Text>
+                        <Form.Text className="text-muted"></Form.Text>
                                             
-                    <Form.Label >User Name:</Form.Label>
+                    <Form.Label >(*) User Name:</Form.Label>
                   <Form.Control  name='username' placeholder="username" onChange={handleChangeRegister}/>
                     <Form.Text className="text-muted">
-                      <i>Required</i><br /><br />
+                     
                     </Form.Text>
                   
                      <Form.Label >Personal Info</Form.Label>
-                    <Form.Control type='email' name='info' placeholder='Personal Info' onChange={handleChangeRegister}/><br />
+                    <Form.Control type='email' name='info' placeholder='Personal Info' onChange={handleChangeRegister}/>
                     {/* <Form.Text className="text-muted">
                       We'll never share your email with anyone else.
                     </Form.Text> */}
