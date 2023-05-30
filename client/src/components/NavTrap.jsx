@@ -93,15 +93,21 @@ function NavStrap() {
   }
 
   return (
-    <Navbar bg="dark" variant="dark" expand="lg">
+    <Navbar bg="dark" variant="dark" expand="lg" className='NavtrapBar'>
       <Container fluid>
-        <Navbar.Brand style={{ cursor: "pointer" }} href="/">{ <Typewriter
+        <Navbar.Brand style={{ cursor: "pointer" }} href="/">{<Typewriter
+          
+                                                                  options={{
+                                                          strings: ['Share Your Sketch Online'],
+                                                          autoStart: true,
+                                                          loop: true,
+                                                        }}
                                                       onInit={(typewriter) => {
                                                         typewriter.typeString('Share Your Sketch Online ')
                                                           .callFunction(() => {
                                                             console.log('String typed out!');
                                                           })
-                                                          .pauseFor(2500)
+                                                          .pauseFor(1500)
                                                           .deleteAll()
                                                           .callFunction(() => {
                                                             console.log('All strings were deleted');
