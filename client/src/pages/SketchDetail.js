@@ -39,8 +39,10 @@ useEffect(() => {
 
 
   // Contenido y lógica del componente
-   return (
-    <Card className="bg-dark text-white">
+  return (
+     
+    <div className='detailsImage'>
+      <Card className="bg-dark text-white">
       <Card.Img src={sketch?.url} alt={sketch?.name} />
       <Card.ImgOverlay>
         <Card.Title>{sketch?.name}</Card.Title>
@@ -49,7 +51,8 @@ useEffect(() => {
         </Card.Text>
         <Card.Text>Last updated 3 mins ago</Card.Text>
       </Card.ImgOverlay>
-    </Card>
+    </Card></div>
+
   );
 };
 
