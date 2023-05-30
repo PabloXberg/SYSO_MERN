@@ -21,20 +21,6 @@ function UserCard(props: any) {
 
 
           <Card.Title>{props.props.username ? props.props.username : "Nombre de Usuario"}</Card.Title>
-          
-          {/* <Card.Link
-              style={{ cursor: "pointer" }}
-              onClick={() => setShow(true)}
-            >
-              <b>
-                {props?.props.owner.username
-                  ? props?.props.owner.username
-                  : user?.username}
-              </b>
-            </Card.Link> */}
-
-
-
 
         <Card.Text>
           {props.props.info ? props.props.info : "Hier we can see some info about the User"}

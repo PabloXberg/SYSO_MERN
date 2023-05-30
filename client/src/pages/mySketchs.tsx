@@ -217,7 +217,7 @@ const MySketchs = (props: Props) => {
       <div className="cardcontainer">
         {sketchsArray &&
           sketchsArray.map((sketch: Sketch) => {
-            return <SketchCard key={sketch._id} props={sketch} />;
+            return <SketchCard bolean={true} key={sketch._id} props={sketch} />;
           })}
       </div>
     </div>

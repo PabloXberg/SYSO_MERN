@@ -47,7 +47,7 @@ const MyFav = () => {
          <div className="cardcontainer">
         {LikesArray &&
           LikesArray.map((sketch) => {
-            return <SketchCard key={sketch._id} props={sketch} />;
+            return <SketchCard bolean={true} key={sketch._id} props={sketch} />;
           })}
       </div>
 

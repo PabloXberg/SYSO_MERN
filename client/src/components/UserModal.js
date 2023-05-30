@@ -37,7 +37,7 @@ function UserModal(props) {
            <div className='modal-body'>
             <h5>Personal Info: </h5><p><i>{props.character.owner.info}</i></p> 
          
-            <h5>Uploaded Sketches: # </h5> <p><i>{longi ? longi : props.characters.owner.sketchs.length}</i></p> 
+            <h5>Uploaded Sketches: </h5> <p><i>{longi ? longi : props.characters.owner.sketchs.length}</i></p> 
             <h5>Registered on: </h5> <p><i>{shortdatum}</i></p>
 
            </div>

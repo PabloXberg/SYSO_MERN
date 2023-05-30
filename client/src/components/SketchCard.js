@@ -3,11 +3,11 @@ import Card from "react-bootstrap/Card";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import UserModal from "./UserModal";
-import { Link } from "react-router-dom";
+import { Link , useLocation} from "react-router-dom";
 
 // import UserModel from "../../../server/models/userModels.js";
 
-function SketchCard(props) {
+function SketchCard(props, bolean) {
   const { user } = useContext(AuthContext);
 
   const [show, setShow] = useState(false);
@@ -16,8 +16,9 @@ function SketchCard(props) {
   const shortdatum = datum.substring(0, 10);
 
   const likesArray = props?.props?.likes;
-  console.log("likesArray :>> ", likesArray);
 
+  const location = useLocation();
+  console.log('location :>> ', location);
   //////////////////////////////////////////////////////////////////////////////////// USE EFFECT PARA RECARCAR LA PAGINA::: NO FUNCIONA; SOLUCIONAR ESTO
 
   useEffect(() => {
@@ -99,41 +100,47 @@ const page = '/sketchdetail/'
           variant="top"
           alt="Sketch"
           src={props.props.url}
-          style={{ cursor: "pointer", height:"20rem", width:"18rem"}}
+          style={{ cursor: "pointer", height:"18rem", width:"18rem"}}
 
         />
       </Link>
 
       <Card.Body>
-        <Card.Title>{props.props.name}</Card.Title>
+        <Card.Title>{props?.props.name}</Card.Title>
         <Card.Text>
           {props.props.comment
             ? props.props.comment
             : "Hier we can see some info about the Sketch"}
         </Card.Text>
+    {      console.log('props :>> ', props)}
+        {location.pathname === '/sketches'
+          
+          ?
+                    
 
-        {props.props.owner.username ? (
-          <Card.Footer className="text-muted">
-            {" "}
-            <i>Created by: </i>{" "}
-            <Card.Link
-              style={{ cursor: "pointer" }}
-              onClick={() => setShow(true)}
-            >
-              <b>
-                {props?.props.owner.username
+            
+          (<Card.Footer className="text-muted">{" "}<i>Created by: </i>{" "}<Card.Link style={{ cursor: "pointer" }} onClick={() => setShow(true)}>  
+              <b>   
+                {props?.props.owner.username 
                   ? props?.props.owner.username
                   : user?.username}
               </b>
             </Card.Link>
           </Card.Footer>
-        ) : (
-          <Card.Footer>
-            <i className="material-icons" style={{ cursor: "pointer" }}>
-              delete_forever
-            </i>
-          </Card.Footer>
-        )}
+        )
+          
+          
+          : 
+                  
+
+          (location.pathname === '/mysketchs' ? <Card.Footer> Created by me  <i className="material-icons" style={{ cursor: "pointer" }}> delete_forever</i></Card.Footer>
+             /// AQUI ES DONDE TENDRIA QUE MOSTRARLO EN MIS SKETCHES PROPIOS
+            : 
+                  ""   /// AQUI ES DONDE TENDRIA QUE MOSTRARLO EN MIS FAVORITOS
+            )
+        
+        
+        }
         <Card.Footer className="text-muted">
           <i>Upload: {shortdatum}</i>
         </Card.Footer>
