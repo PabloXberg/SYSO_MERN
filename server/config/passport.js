@@ -24,7 +24,12 @@ const passportConfig = () => {
                  
                 ]
             })
-      .populate('sketchs')
+          .populate({ path: "sketchs",
+                populate: [
+                    { path: 'owner', select: ['username'] }
+                 
+                ]
+            })
       .populate("comments")
       .then((user) => {
       return user ? done(null, user) : done(null, false)

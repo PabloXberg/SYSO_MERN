@@ -30,7 +30,19 @@ const getUser = async(req, res) => {
   const id = req.params.id // will show just "bla bla bla"
   
     try {
-        const user = await UserModel.findById(id).populate("sketchs likes");
+        const user = await UserModel.findById(id).populate({ path: "likes",
+                populate: [
+                    { path: 'owner', select: ['username'] }
+                 
+                ]
+            })
+          .populate({ path: "sketchs",
+                populate: [
+                    { path: 'owner', select: ['username'] }
+                 
+                ]
+            })
+      .populate("comments")
         res.status(200).json(user)
     } catch (error) {
         res.status(500).json({error:"Something went wrong..."})
