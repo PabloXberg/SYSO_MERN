@@ -7,7 +7,7 @@ import { Link , useLocation} from "react-router-dom";
 
 // import UserModel from "../../../server/models/userModels.js";
 
-function SketchCard(props, bolean) {
+  function SketchCard(props, bolean) {
   const { user } = useContext(AuthContext);
 
   const [show, setShow] = useState(false);
@@ -170,6 +170,7 @@ const page = '/sketchdetail/'
               alignSelf: "flex-end",
               justifySelf: "right",
               justifyContent: "right",
+              
             }}
           >
             {props?.props?.likes && (
@@ -179,7 +180,7 @@ const page = '/sketchdetail/'
               </h6>
             )}
           </div>
-          <Link to={page + _id} params={_id}  key={_id}>
+          {/* <Link to={page + _id} params={_id}  key={_id}>
            <i
             className="material-icons"
             to="/sketchdetail"
@@ -187,7 +188,7 @@ const page = '/sketchdetail/'
           >
             message
           </i> 
-          </Link>
+          </Link> */}
           
         </Card.Footer>
       </Card.Body>

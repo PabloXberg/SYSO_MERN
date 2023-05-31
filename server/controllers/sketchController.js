@@ -27,7 +27,13 @@ const getSketchbyID = async(req, res) => {
       const user = await SketchModel.findById(req.params.id)
      .populate({ path: "owner", select: ["email", "username", "avatar", "likes", "sketchs", "createdAt", "info"] })
     .populate("likes")
-      .populate("comments")
+        .populate({
+          path: "comments",
+          populate: [
+            { path: 'owner', select: ['username'] }
+                 
+          ]
+        })
         res.status(200).json(user)
     } catch (error) {
         res.status(500).json({error:"Something went wrong..."})
