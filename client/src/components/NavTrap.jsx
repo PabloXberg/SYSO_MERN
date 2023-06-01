@@ -105,12 +105,12 @@ function NavStrap() {
                                                       onInit={(typewriter) => {
                                                         typewriter.typeString('Share Your Sketch Online ')
                                                           .callFunction(() => {
-                                                            console.log('String typed out!');
+                                                      
                                                           })
                                                           .pauseFor(1500)
                                                           .deleteAll()
                                                           .callFunction(() => {
-                                                            console.log('All strings were deleted');
+                                                      
                                                           })
                                                           .start();
   }}
@@ -122,37 +122,45 @@ function NavStrap() {
                             <Navbar.Toggle aria-controls="navbarScroll" />
                              <Navbar.Collapse id="navbarScroll">
                   
-                          <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '100px' }} navbarScroll>
-                                 <Nav.Link href="#action6" disabled>
-                                  {<img className='NavAtar' style={{gap:"1em", height:"2em", width:"2em", borderRadius:"50%"} } alt="User Avatar" src={user.avatar}></img>}{user.username}
-                              </Nav.Link>
-                                    {/* <Nav.Link href="/events">Events</Nav.Link> */}
+              <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '100px' }} navbarScroll>
+                
+                              
+                               <Nav.Link href="/battles" disabled>Battles</Nav.Link>
+                
+                                <Nav.Link href="#action6" disabled>   Shop   </Nav.Link>
                                     <Nav.Link href="/sketches">Sketches</Nav.Link>
-                                    <Nav.Link href="/users">Users</Nav.Link>
-                                      <NavDropdown title="Profile" id="navbarScrollingDropdown">
-                                        <NavDropdown.Item  href="/mysketchs">My Sketchs</NavDropdown.Item>
+                                   <Nav.Link href="/users">Usuarios</Nav.Link>---
+                                {<img className='NavAtar' style={{ gap: "1em", height: "2em", width: "2em", borderRadius: "50%" }}
+                                  alt="User Avatar" src={user.avatar}></img>}
+                                      <NavDropdown title={user?.username} id="navbarScrollingDropdown">
+                                        <NavDropdown.Item  href="/mysketchs">Mis Sketches</NavDropdown.Item>
                                         <NavDropdown.Item  href="/myfav">
-                                            My Favourites
+                                            Mis Favoritos
                                         </NavDropdown.Item>
                                         <NavDropdown.Divider />
-                                        <NavDropdown.Item href="/edit">
-                                            Edit Profile
-                                        </NavDropdown.Item>
-                                </NavDropdown>
-                                <Nav.Link href="#action6" disabled>
-                                    Shop
-                              </Nav.Link>
-                                 </Nav>
-                        <Form className="d-flex">
-                            <Form.Control
-                            type="search"
-                            placeholder="Search"
-                            className="me-2"
-                            aria-label="Search"
-                            />
-                              {/* <Button variant="outline-success"></Button> */}
-                              <Button variant="outline-danger" href="/" onClick={logout}>logout</Button> 
-                    </Form>
+                                        <NavDropdown.Item href="/edit">Editar Perfil</NavDropdown.Item>                                        
+                                     </NavDropdown>
+                
+                
+                                     
+
+
+                                 
+                                  {/* <Form className="d-flex">
+                                                <Form.Control
+                                                type="search"
+                                                placeholder="Search"
+                                                className="me-2"
+                                                aria-label="Search"
+                                                />
+
+                                                   <Button variant="outline-success"></Button>
+                                                
+                                   </Form>  */}
+                
+
+                <Button variant="outline-danger" href="/" onClick={logout}>logout</Button> 
+                </Nav>
                     </Navbar.Collapse>
                           </div>
                               :
@@ -163,14 +171,14 @@ function NavStrap() {
               // MODAL PARA LOGIN DE USUSARIO
             }
               <Modal
-               size="sm"
-                show={showLogin}
-                style={{height:"23rem"}}
-          onHide={handleCloseLogin}
-          backdrop="static"
-          keyboard={false}
-          aria-labelledby="contained-modal-title-vcenter"
-      centered
+                  size="sm"
+                    show={showLogin}
+                    style={{height:"23rem"}}
+              onHide={handleCloseLogin}
+              backdrop="static"
+              keyboard={false}
+              aria-labelledby="contained-modal-title-vcenter"
+              centered
         >
           <Modal.Header closeButton>
             <Modal.Title>User Login</Modal.Title>
