@@ -191,11 +191,11 @@ font-family: 'Bungee Shade', cursive;
   width: 1000px;
   min-width: 800px;
   max-width: 1000px;
-position: fixed;
-top: 50%;
-left: 50%;
-transform: translate(-50%, -50%);
-/* align-self: flex-start; */
+    position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      align-self: flex-start;
 
     
 }
@@ -216,10 +216,10 @@ transform: translate(-50%, -50%);
 
 .sketchDetails{
 
-display: flex;
+display: flexbox;
 flex-direction: column;
 }
 
 .opciones {
-  align-self: flex-end;
+  align-self: flex-endv;
 }

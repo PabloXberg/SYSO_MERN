@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Register from './pages/register';
+// import Register from './pages/register';
 import Homepage from './pages/Homepage';
 import { AuthContext, AuthContextProvider } from './contexts/AuthContext';
 import NavStrap from './components/NavTrap';
@@ -22,7 +22,7 @@ function App() {
                 <NavStrap/>
                   <Routes>
                     <Route path='/' element={ <Homepage />} />
-                    <Route path='register' element={ <Register /> } />
+                    {/* <Route path='register' element={ <Register /> } /> */}
             
                     <Route path='sketchdetail/:id' element={<SketchDetail/>}/>
                     <Route path='sketches' element={<Sketches />} />
