@@ -18,17 +18,17 @@ import { Link , useLocation} from "react-router-dom";
   const likesArray = props?.props?.likes;
 
   const location = useLocation();
-  console.log('location :>> ', location);
+  // console.log('location :>> ', location);
   //////////////////////////////////////////////////////////////////////////////////// USE EFFECT PARA RECARCAR LA PAGINA::: NO FUNCIONA; SOLUCIONAR ESTO
 
   useEffect(() => {
     if (refresh) {
       // Hacer aquí cualquier otra operación necesaria antes de la recarga del componente
-      console.log("%crefresh :>> ", "color:red", refresh);
+      // console.log("%crefresh :>> ", "color:red", refresh);
       // Reiniciar el estado de refresh después de un corto tiempo
-      setTimeout(() => {
-        setRefresh(false);
-      }, 100);
+      // setTimeout(() => {
+      //   setRefresh(false);
+      // }, 100);
     }
   }, [refresh]);
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -83,7 +83,7 @@ import { Link , useLocation} from "react-router-dom";
     try {
       const response = await fetch(`${process.env.REACT_APP_BASE_URL}sketches/unlike`,requestOptions);
       const result = await response.json();
-      console.log(result);
+      // console.log(result);
       setRefresh(true);
       window.location.reload(); ///////////////////////////////////////////////////////////////////// PROVISORIO
     } catch (error) {
@@ -112,7 +112,7 @@ const page = '/sketchdetail/'
             ? props.props.comment
             : "Hier we can see some info about the Sketch"}
         </Card.Text>
-    {      console.log('props :>> ', props)}
+    {/* {      console.log('props :>> ', props)} */}
         {location.pathname === '/sketches'
           
           ?

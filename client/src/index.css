@@ -174,10 +174,10 @@ width: auto;
 
 
 
-iframe {
+/* iframe {
 width: 80rem;
 height: 80rem;
-}
+} */
 
 
 .NavtrapBar{
@@ -191,11 +191,11 @@ font-family: 'Bungee Shade', cursive;
   width: 1000px;
   min-width: 800px;
   max-width: 1000px;
-    position: fixed;
-      top: 50%;
+    /* position: fixed; */
+      /* top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      align-self: flex-start;
+      align-self: flex-start; */
 
     
 }
@@ -210,16 +210,16 @@ font-family: 'Bungee Shade', cursive;
 .detailsText1{
   font-size: x-large;
 }
-.detailsText2 {
+/* .detailsText2 {
   font-size: large;
-}
+} */
 
 .sketchDetails{
 
-display: flexbox;
+display: flex;
 flex-direction: column;
 }
 
 .opciones {
-  align-self: flex-endv;
+  align-self: flex-end;
 }

@@ -59,7 +59,7 @@ const createComment = async (req, res) => {
         })
   } catch (error) {
     console.log(error);
-    res.status(500).jason("No se puede guardar su mensaje...")
+    res.status(500).json("No se puede guardar su mensaje...")
   }
 }
 

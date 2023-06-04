@@ -98,7 +98,7 @@ function NavStrap() {
         <Navbar.Brand style={{ cursor: "pointer" }} href="/">{<Typewriter
           
                                                                   options={{
-                                                          strings: ['Share Your Sketch Online'],
+                                                          strings: ['Share Your Sketch...'],
                                                           autoStart: true,
                                                           loop: true,
                                                         }}
