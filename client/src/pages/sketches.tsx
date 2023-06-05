@@ -49,7 +49,7 @@ const SkechesPage = (props: Props) => {
         
         <div className='cardcontainer'>
            {sketches && sketches.map((sketch: Sketch) => {
-             return <SketchCard bolean={false} key={sketch._id} props={sketch} />
+             return <SketchCard key={sketch._id} props={sketch} />
          })}
         </div>
                       

@@ -7,7 +7,7 @@ import { Link , useLocation} from "react-router-dom";
 
 // import UserModel from "../../../server/models/userModels.js";
 
-  function SketchCard(props, bolean) {
+  function SketchCard(props) {
   const { user } = useContext(AuthContext);
 
   const [show, setShow] = useState(false);
@@ -22,24 +22,15 @@ import { Link , useLocation} from "react-router-dom";
   //////////////////////////////////////////////////////////////////////////////////// USE EFFECT PARA RECARCAR LA PAGINA::: NO FUNCIONA; SOLUCIONAR ESTO
 
   useEffect(() => {
-    if (refresh) {
-      // Hacer aquí cualquier otra operación necesaria antes de la recarga del componente
-      // console.log("%crefresh :>> ", "color:red", refresh);
-      // Reiniciar el estado de refresh después de un corto tiempo
-      // setTimeout(() => {
-      //   setRefresh(false);
-      // }, 100);
-    }
-  }, [refresh]);
+
+  }, []);
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   const likeSketch = async (props) => {
     const myHeaders = new Headers();
 
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-    myHeaders.append(
-      "Authorization",
-      `Bearer ${localStorage.getItem("token")}`
+    myHeaders.append("Authorization",`Bearer ${localStorage.getItem("token")}`
     );
 
     const urlencoded = new URLSearchParams();
@@ -66,9 +57,7 @@ import { Link , useLocation} from "react-router-dom";
     const myHeaders = new Headers();
 
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-    myHeaders.append(
-      "Authorization",
-      `Bearer ${localStorage.getItem("token")}`
+    myHeaders.append("Authorization",`Bearer ${localStorage.getItem("token")}`
     );
 
     const urlencoded = new URLSearchParams();
@@ -93,9 +82,11 @@ import { Link , useLocation} from "react-router-dom";
 
   const _id = props.props._id;
 const page = '/sketchdetail/'
-  return (
+    return (
+    ////////////////////////////////////////////////////////////////////////////////////COMIENZA LA CARD
     <Card style={{ width: "18rem", height: "auto" }}>
-      <Link to={page + _id} params={_id}  key={_id}>
+        <Link to={page + _id} params={_id} key={_id}> 
+          
         <Card.Img
           variant="top"
           alt="Sketch"
@@ -105,81 +96,79 @@ const page = '/sketchdetail/'
         />
       </Link>
 
+        
       <Card.Body>
-        <Card.Title>{props?.props.name}</Card.Title>
+        <Card.Title>{props?.props.name}</Card.Title>        
         <Card.Text>
           {props.props.comment
             ? props.props.comment
             : "Hier we can see some info about the Sketch"}
-        </Card.Text>
-    {/* {      console.log('props :>> ', props)} */}
+          </Card.Text>
+          
+          
+        {/* LA POROXIMA CONDICIONAL/LOGICA ES PARA MOSTRAR O NO MOSTRAR; DEPENDIENDO DEW LA PAGINA; EL FOOTER CON EL NOMBRE DEL CREADOR */}
+          
+{/* 
         {location.pathname === '/sketches'
           
           ?
-                    
-
-            
-          (<Card.Footer className="text-muted">{" "}<i>Created by: </i>{" "}<Card.Link style={{ cursor: "pointer" }} onClick={() => setShow(true)}>  
-              <b>   
-                {props?.props.owner.username 
-                  ? props?.props.owner.username
-                  : user?.username}
-              </b>
+                                
+            (<Card.Footer className="text-muted">{" "}<i>Created by: </i>{" "}
+              <Card.Link style={{ cursor: "pointer" }} onClick={() => setShow(true)}>
+                <b> {props?.props.owner.username ? props?.props.owner.username : user?.username}</b>
             </Card.Link>
           </Card.Footer>
         )
-          
-          
+                    
           : 
                   
-
           (location.pathname === '/mysketchs' ? <Card.Footer> Created by me  <i className="material-icons" style={{ cursor: "pointer" }}> delete_forever</i></Card.Footer>
              /// AQUI ES DONDE TENDRIA QUE MOSTRARLO EN MIS SKETCHES PROPIOS
-            : 
-                  ""   /// AQUI ES DONDE TENDRIA QUE MOSTRARLO EN MIS FAVORITOS
+              : 
+              //AQUI DEVERIA IR EL FOOTER CON EL NOMBRE DEL CREADOR; EN LA PAGINA DE MIS FAVORITOS
+
+                  <Card.Footer className="text-muted">{" "}<i>Created by: </i>{" "}
+              <Card.Link style={{ cursor: "pointer" }} onClick={() => setShow(true)}>
+                <b> {props?.props?.owner?.username ? props?.props?.owner?.username : user?.username}</b>
+            </Card.Link>
+          </Card.Footer>
             )
         
         
-        }
+          } */}
+          
+
+
         <Card.Footer className="text-muted">
           <i>Upload: {shortdatum}</i>
-        </Card.Footer>
-        <Card.Footer style={{ display: "Flex", flexDirection: "row" }}>
-          <div style={{ alignSelf: "flex-start" }}>
-            {likesArray?.includes(user?._id) ? (
-              <i
-                className="material-icons"
-                style={{ cursor: "pointer" }}
-                onClick={() => unlikeSketch(_id)}
-              >
-                thumb_down
-              </i>
-            ) : (
-              <i
-                className="material-icons"
-                style={{ cursor: "pointer" }}
-                onClick={() => likeSketch(_id)}
-              >
-                thumb_up
-              </i>
-            )}
-          </div>
+          </Card.Footer>
+          
 
-          <div
-            style={{
-              alignSelf: "flex-end",
-              justifySelf: "right",
-              justifyContent: "right",
+        <Card.Footer style={{ display: "Flex", flexDirection: "row" }}>
+            <div style={{ alignSelf: "flex-start" }}>
               
-            }}
-          >
-            {props?.props?.likes && (
-              <h6>
-                {props?.props?.likes?.length}{" "}
-                {props?.props?.likes?.length === 1 ? "Like" : "Likes"}
-              </h6>
-            )}
-          </div>
+
+              {console.log('likesArray :>> ', likesArray)}
+              {console.log('user._id >> ', user?._id)}
+              {console.log('props :>> ', props)}
+
+                              {/* {props.props.likes._id === user?._id */}
+               {likesArray.includes(user?._id) 
+
+                ?
+                (<i className="material-icons" style={{ cursor: "pointer" }} onClick={() => unlikeSketch(_id)}>thumb_down</i>)
+                :
+                (<i className="material-icons" style={{ cursor: "pointer" }} onClick={() => likeSketch(_id)}>thumb_up</i>)
+              }
+            </div>
+
+            <div >
+              
+              {props?.props?.likes && (<h6>{props?.props?.likes?.length}{" "}{props?.props?.likes?.length === 1 ? "Like" : "Likes"}</h6>)}
+              
+            </div>
+
+
           {/* <Link to={page + _id} params={_id}  key={_id}>
            <i
             className="material-icons"
@@ -198,7 +187,7 @@ const page = '/sketchdetail/'
         style={{ cursor: "pointer" }}
         onClose={() => setShow(false)}
         show={show}
-        character={props.props}
+        character={props?.props}
       />
     </Card>
   );

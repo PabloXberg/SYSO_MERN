@@ -9,8 +9,8 @@ const getAllSketches = async (req, res) => {
 try {
   const sketch = await SketchModel.find()
     .populate({ path: "owner", select: ["email", "username", "avatar", "likes", "sketchs", "createdAt", "info"] })
-    .populate("likes")
-  .populate("comments")
+ 
+    .populate("comments")
     res.status(200).json(sketch)
 } catch (error) {
     console.log(error);
@@ -26,8 +26,14 @@ const getSketchbyID = async(req, res) => {
     try {
       const user = await SketchModel.findById(req.params.id)
      .populate({ path: "owner", select: ["email", "username", "avatar", "likes", "sketchs", "createdAt", "info"] })
-    .populate("likes")
-        .populate({
+       .populate({
+          path: "likes",
+          populate: [
+            { path: 'owner', select: ['username'] }
+                 
+          ]
+        })
+     .populate({
           path: "comments",
           populate: [
             { path: 'owner', select: ['username'] }
