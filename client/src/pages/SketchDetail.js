@@ -8,12 +8,12 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 const SketchDetail = () => {
 const { id } = useParams();
 const [sketch, setSketch] = useState();
-  const [commentImput, setCommentInput] = useState("");
+const [commentImput, setCommentInput] = useState("");
+const [resultado, setResultado] = useState("");
 
 const handleChange = (e) => {
-  setCommentInput({ ...commentImput, [e.target.name]: e.target.value });
+  setCommentInput( e.target.value );
   }
-  
   
 const geSketchbyID = async (ID) => {
 const myHeaders = new Headers();
@@ -30,7 +30,7 @@ const requestOptions = {
  try {
       const response = await fetch(`${process.env.REACT_APP_BASE_URL}sketches/id/${ID}`, requestOptions)
       const result = await response.json();
-      console.log("single Sketch:", result);
+      // console.log("single Sketch:", result);
       setSketch(result);
   } catch (error) {
    console.log(error)
@@ -45,9 +45,10 @@ const requestOptions = {
    myHeaders.append("Authorization", `Bearer ${localStorage.getItem("token")}`);
     
   const urlencoded = new URLSearchParams();
-  urlencoded.append("comment", "si si si si... antes de que preguneten, Pablo y yo compartíamos wohnung");
-  urlencoded.append("owner", sketch.owner);
+  urlencoded.append("comment", commentImput);
+  urlencoded.append("owner", sketch.owner._id);
     urlencoded.append("sketch", sketch._id);
+  console.log('commentImput :>> ', commentImput);
     
   const requestOptions = {
   method: 'POST',
@@ -57,9 +58,9 @@ const requestOptions = {
 
     try {
       const response = await fetch(`${process.env.REACT_APP_BASE_URL}comments/new`, requestOptions);
-      const result = await response.json();
-      console.log(result);
-      alert("Success!!! message saved");
+      setResultado (await response.json())
+      console.log(resultado);
+      setCommentInput("")
       // setLoading(false);
     } catch (error) {
       console.log(error)
@@ -71,7 +72,7 @@ const requestOptions = {
   
 useEffect(() => {
     geSketchbyID(id)
-  }, []);
+  }, [resultado]);
 
   const datum = sketch?.createdAt;
   const shortdatum = datum?.substring(0, 10);
@@ -101,20 +102,18 @@ useEffect(() => {
               
               ?
               <>
-                {sketch.comments && sketch.comments.map((comment) => {
-                  // console.log('comment :>> ', comment);
-
-                const  commentdatum = comment.createdAt;
-                const  commentshortdatum =  commentdatum.substring(0, 10);
-             return     <div style={{ border: "red 2px solid" }}>
-                    
-                    <p style={{ color: "black" }}><b>{comment.owner.username}</b> <i> on: {commentshortdatum}</i></p>
-
-                 <p>{comment.comment}</p>
-               </ div>
-               
-              
-         })}
+              {sketch.comments && sketch.comments.map((comment, index) => {
+    const commentdatum = comment.createdAt;
+    const commentshortdatum = commentdatum.substring(0, 10);
+  
+    return (
+      <div key={comment._id} style={{ border: "red 2px solid" }}>
+        {/* {console.log('comment :>> ', comment)} */}
+            <p style={{ color: "black" }}><b>{comment?.owner?.username}</b> <i> on: {commentshortdatum}</i></p>
+            <p>{comment.comment}</p>
+        </div>
+    );
+})}
               </>
              
             :
@@ -124,11 +123,12 @@ useEffect(() => {
 
                   <FloatingLabel controlId="floatingTextarea2" label="add a comment..">
                             <Form.Control
-                              as="textarea"
-                              placeholder="Leave a comment here"
-                              style={{ height: '70px', width: "100%" }}
-                              name="comment"
+              as="textarea"
+              placeholder="Leave a comment here"
+              style={{ height: '70px', width: "100%" }}
+              name="comment"
               onChange={handleChange}
+              value={commentImput}
               // onSubmit={commentSubmit}
             />
             <Button onClick={commentSubmit} variant='success'>enviar</Button>
