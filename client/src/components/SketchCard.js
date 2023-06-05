@@ -8,7 +8,7 @@ import { Link , useLocation} from "react-router-dom";
 // import UserModel from "../../../server/models/userModels.js";
 
   function SketchCard(props) {
-  const { user } = useContext(AuthContext);
+  const { user , fetchActiveUser } = useContext(AuthContext);
 
   const [show, setShow] = useState(false);
   const [refresh, setRefresh] = useState(false);
@@ -22,8 +22,8 @@ import { Link , useLocation} from "react-router-dom";
   //////////////////////////////////////////////////////////////////////////////////// USE EFFECT PARA RECARCAR LA PAGINA::: NO FUNCIONA; SOLUCIONAR ESTO
 
   useEffect(() => {
-
-  }, []);
+setRefresh(false)
+  }, [refresh]);
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   const likeSketch = async (props) => {
@@ -47,6 +47,7 @@ import { Link , useLocation} from "react-router-dom";
       const result = await response.json();
       console.log(result);
       setRefresh(true);
+      ///fetchActiveUser(localStorage.getItem("token"));
       window.location.reload(); ///////////////////////////////////////////////////////////////////// PROVISORIO
     } catch (error) {
       console.log("error", error);
@@ -73,15 +74,16 @@ import { Link , useLocation} from "react-router-dom";
       const response = await fetch(`${process.env.REACT_APP_BASE_URL}sketches/unlike`,requestOptions);
       const result = await response.json();
       // console.log(result);
-      setRefresh(true);
+   setRefresh(true);
+     /// fetchActiveUser(localStorage.getItem("token"));
       window.location.reload(); ///////////////////////////////////////////////////////////////////// PROVISORIO
     } catch (error) {
       console.log("error", error);
     }
   };
 
-  const _id = props.props._id;
-const page = '/sketchdetail/'
+  const _id = props?.props._id;
+  const page = '/sketchdetail/'
     return (
     ////////////////////////////////////////////////////////////////////////////////////COMIENZA LA CARD
     <Card style={{ width: "18rem", height: "auto" }}>
@@ -108,7 +110,7 @@ const page = '/sketchdetail/'
           
         {/* LA POROXIMA CONDICIONAL/LOGICA ES PARA MOSTRAR O NO MOSTRAR; DEPENDIENDO DEW LA PAGINA; EL FOOTER CON EL NOMBRE DEL CREADOR */}
           
-{/* 
+ 
         {location.pathname === '/sketches'
           
           ?
@@ -127,16 +129,16 @@ const page = '/sketchdetail/'
               : 
               //AQUI DEVERIA IR EL FOOTER CON EL NOMBRE DEL CREADOR; EN LA PAGINA DE MIS FAVORITOS
 
-                  <Card.Footer className="text-muted">{" "}<i>Created by: </i>{" "}
-              <Card.Link style={{ cursor: "pointer" }} onClick={() => setShow(true)}>
-                <b> {props?.props?.owner?.username ? props?.props?.owner?.username : user?.username}</b>
-            </Card.Link>
+                  <Card.Footer className="text-muted">{" "}<i>Created by: </i>{" "} <b> {props?.props?.owner?.username ? props?.props?.owner?.username : user?.username}</b>
+              {/* <Card.Link style={{ cursor: "pointer" }} onClick={() => setShow(true)}>
+               
+            </Card.Link> */}
           </Card.Footer>
             )
         
         
-          } */}
-          
+          } 
+           
 
 
         <Card.Footer className="text-muted">
@@ -148,9 +150,9 @@ const page = '/sketchdetail/'
             <div style={{ alignSelf: "flex-start" }}>
               
 
-              {console.log('likesArray :>> ', likesArray)}
+              {/* {console.log('likesArray :>> ', likesArray)}
               {console.log('user._id >> ', user?._id)}
-              {console.log('props :>> ', props)}
+              {console.log('props :>> ', props)} */}
 
                               {/* {props.props.likes._id === user?._id */}
                {likesArray.includes(user?._id) 
@@ -164,7 +166,7 @@ const page = '/sketchdetail/'
 
             <div >
               
-              {props?.props?.likes && (<h6>{props?.props?.likes?.length}{" "}{props?.props?.likes?.length === 1 ? "Like" : "Likes"}</h6>)}
+              {props?.props?.likes && (<h6>{props?.props.likes?.length}{" "}{props?.props.likes?.length === 1 ? "Like" : "Likes"}</h6>)}
               
             </div>
 

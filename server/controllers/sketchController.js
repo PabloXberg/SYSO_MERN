@@ -32,7 +32,8 @@ const getSketchbyID = async(req, res) => {
             { path: 'owner', select: ['username'] }
                  
           ]
-        })
+       })
+        .populate({ path: "likes", select: ["_id"] })
      .populate({
           path: "comments",
           populate: [

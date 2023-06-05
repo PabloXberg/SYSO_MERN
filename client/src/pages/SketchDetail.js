@@ -97,7 +97,7 @@ useEffect(() => {
           
           <div className="altecomments">
            
-            {sketch?.comments.length > 0
+            {sketch?.comments?.length >= 0
               
               ?
               <>
