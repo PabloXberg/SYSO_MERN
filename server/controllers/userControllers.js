@@ -104,6 +104,10 @@ const updateUser = async (req, res) => {
     }
 
 
+const deleteUser = async (req, res) => {
+      
+    }
+
     
 const loginUser = async (req,res) => {
 // console.log('req.body :>> ', req.body);
@@ -160,4 +164,4 @@ const getActiveUser = async (req, res) => {
 }
 
 
-export {testingRoute, getUsers, getUser, createUser, updateUser, loginUser, getActiveUser}
+export {testingRoute, getUsers, getUser, createUser, updateUser, loginUser, getActiveUser, deleteUser}

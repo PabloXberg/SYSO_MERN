@@ -17,7 +17,19 @@ const addCommentToUser = async (userId, sharedPost) => {
         return false
     }   
 };
-
+const deleteCommentToUser = async (userId, sharedPost) => {
+    try {
+        const result = await UserModel.findByIdAndUpdate(userId,
+            { $pull: { comments: sharedPost._id } },
+            { new: true }
+        )
+        console.log("user making post....", result);
+        return true
+    } catch (error) {
+        console.log(error)
+        return false
+    }   
+};
 const addCommentToSketch = async (sketchId, sharedPost) => {
     try {
         const result = await SketchModel.findByIdAndUpdate(sketchId,
@@ -31,6 +43,44 @@ const addCommentToSketch = async (sketchId, sharedPost) => {
         return false
     }   
 };
+const deleteCommentToSketch = async (sketchId, sharedPost) => {
+    try {
+        const result = await SketchModel.findByIdAndUpdate(sketchId,
+            { $pull: { comments: sharedPost._id } },
+            { new: true }
+        )
+        console.log("user making post on this sketch...", result);
+        return true
+    } catch (error) {
+        console.log(error)
+        return false
+    }   
+};
+
+
+const deleteComment = async (req, res) => {
+
+    try {
+    // console.log('req.body :>> ', req.body);
+        const deletedComment = await CommentModel.findByIdAndRemove(req.body._id);
+        const updatedUser = await deleteCommentToUser(req.body.owner, registeredComment);
+        const updatedSketch = await deleteCommentToSketch(req.body.sketch, registeredComment);
+        
+        res.status(200).json({
+            message: "Mensaje borrado!! ",
+            userUpdated: updatedUser,
+            sketchUpdated:updatedSketch,
+            deletedComment: deletedComment
+        })
+  } catch (error) {
+    console.log(error);
+    res.status(500).json("No se puede borrar su mensaje...")
+  }
+}
+
+const updatecomment = async (req, res) => {
+      
+}
 
 
 const createComment = async (req, res) => {
@@ -63,4 +113,4 @@ const createComment = async (req, res) => {
   }
 }
 
-export {createComment}
+export {createComment, updatecomment, deleteComment}

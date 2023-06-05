@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useParams } from "react-router-dom";
 import Card from 'react-bootstrap/Card';
 import { Button, Form } from 'react-bootstrap';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import { AuthContext } from '../contexts/AuthContext'
 
 
 const SketchDetail = () => {
+const { user } = useContext(AuthContext);
 const { id } = useParams();
 const [sketch, setSketch] = useState();
 const [commentImput, setCommentInput] = useState("");
@@ -46,9 +48,9 @@ const requestOptions = {
     
   const urlencoded = new URLSearchParams();
   urlencoded.append("comment", commentImput);
-  urlencoded.append("owner", sketch.owner._id);
+  urlencoded.append("owner", user._id);
     urlencoded.append("sketch", sketch._id);
-  console.log('commentImput :>> ', commentImput);
+  // console.log('commentImput :>> ', commentImput);
     
   const requestOptions = {
   method: 'POST',

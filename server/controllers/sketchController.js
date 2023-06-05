@@ -19,6 +19,54 @@ try {
 }
 
 
+
+/// no funciona delete sketch, y no se porque
+const deleteSketch = async (req, res) => {
+        try {
+        // console.log('req.body :>> ', req.body);
+        const deletedSketch = await SketchModel.findByIdAndDelete(req.body._id);
+        // const updatedUser = await deleteCommentToUser(req.body.owner, registeredComment);   //// DEBERIA QUITAR LOS LIKES DE LOS USUARIOS; Y LOS COMENTARIOS RELACIONADOS
+        // const updatedSketch = await deleteCommentToSketch(req.body.sketch, registeredComment);
+        
+        res.status(200).json({
+            message: "Sketch borrado!! ",
+            // userUpdated: updatedUser,
+            // sketchUpdated:updatedSketch,
+            deletedSketch: deletedSketch
+        })
+  } catch (error) {
+    console.log(error);
+    res.status(500).json("No se puede borrar su mensaje...")
+  }
+}
+
+
+
+////FUNCIONAAAAAA
+const updateSketch = async (req, res) => {
+  const infoToUpdate = {};
+
+  if (req.body.name !== "") infoToUpdate.name = req.body.name;
+  if (req.body.comment !== "") infoToUpdate.comment = req.body.comment;
+
+  if (req.file) {
+    console.log('req.file :>> ', req.file);
+    const URL = await imageUpload(req.file, "user_sketches")
+    infoToUpdate.url = URL
+  }
+  
+  try {
+    const updatedSketch = await SketchModel.findByIdAndUpdate(req.body._id, infoToUpdate, { new: true });
+    res.status(200).json(updatedSketch); // QUITAR EL PASSWORD DE ESTE OBJETO ANTES DE MANDARLO PARA EL FRONT END
+    // Y SI QUIERO PUEDO MANDAR UN MENSAJE DE "Update Successfully!!!!"; AUNQUE CREO QUE EN EL FRONT END YA HAY UNO
+
+  } catch (error) {
+    console.log('error :>> ', error);
+    res.status(500).json(error.message)
+    
+  }
+}
+
 ///////////////////////////////////////////////////////////////////////// GET JUST ONE SKETCH BY ID
 
 const getSketchbyID = async(req, res) => {
@@ -130,4 +178,4 @@ const deleteLike = async (req, res) => {
   }
 }
  
-export { getAllSketches, createSketch, addLike, deleteLike, getSketchbyID}
+export { getAllSketches, createSketch, addLike, deleteLike, getSketchbyID, deleteSketch, updateSketch}
