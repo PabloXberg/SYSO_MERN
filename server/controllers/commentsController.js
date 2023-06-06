@@ -58,6 +58,8 @@ const deleteCommentToSketch = async (sketchId, sharedPost) => {
 };
 
 
+
+/// FUNCIONAAAAAA !!!!!
 const deleteComment = async (req, res) => {
 
     try {
@@ -78,8 +80,24 @@ const deleteComment = async (req, res) => {
   }
 }
 
+
+////FUNCIONA!!!!!!
+
 const updatecomment = async (req, res) => {
-      
+  const infoToUpdate = {};
+
+  if (req.body.comment !== "") infoToUpdate.comment = req.body.comment;
+   
+  try {
+    const updatedComment = await CommentModel.findByIdAndUpdate(req.body._id, infoToUpdate, { new: true });
+    res.status(200).json(updatedComment); // QUITAR EL PASSWORD DE ESTE OBJETO ANTES DE MANDARLO PARA EL FRONT END
+    // Y SI QUIERO PUEDO MANDAR UN MENSAJE DE "Update Successfully!!!!"; AUNQUE CREO QUE EN EL FRONT END YA HAY UNO
+
+  } catch (error) {
+    console.log('error :>> ', error);
+    res.status(500).json(error.message)
+    
+  }
 }
 
 
