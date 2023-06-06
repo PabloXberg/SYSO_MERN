@@ -4,6 +4,7 @@ import Card from 'react-bootstrap/Card';
 import { Button, Form } from 'react-bootstrap';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import { AuthContext } from '../contexts/AuthContext'
+import '../index.css'
 
 
 const SketchDetail = () => {
@@ -91,48 +92,64 @@ useEffect(() => {
           <Card.ImgOverlay style={{border: "solid 2px white"}}>
             <h1 className='detailsTitle'>{sketch?.name}</h1>
             <Card.Text className='detailsText2'><i>Upload on {shortdatum}</i></Card.Text>
-          
-            
+                    
             
           </Card.ImgOverlay>
             <Card.Text className='detailsText1'>{sketch?.comment}</Card.Text>
           
           
-          <div className="altecomments">
+          <div>
            
             {sketch?.comments?.length >= 0
               
               ?
               <>
               {sketch.comments && sketch.comments.map((comment, index) => {
-    const commentdatum = comment.createdAt;
-    const commentshortdatum = commentdatum.substring(0, 10);
+                const commentdatum = comment.createdAt;
+                const commentshortdatum = commentdatum.substring(0, 10);
   
-    return (
-      <div key={comment._id} style={{ border: "red 2px solid" }}>
-        {/* {console.log('comment :>> ', comment)} */}
-            <p style={{ color: "black" }}><b>{comment?.owner?.username}</b> <i> on: {commentshortdatum}</i></p>
-            <p>{comment.comment}</p>
-        </div>
+                return (
+
+                <div className='commentGrid'>
+                    
+
+                    <div key={comment._id} >
+                      
+                    {/* {console.log('comment :>> ', comment)} */}
+                      <div> <p style={{ color: "black" }}><b>{comment?.owner?.username}</b> <i> on: {commentshortdatum}</i></p>  </div> 
+                      {comment?.owner._id === user?._id
+                        ? 
+                     <><i class="small material-icons">edit</i><i class="material-icons">delete_forever</i></> 
+                        
+                        :
+                      ""
+                  }
+                    </div>
+                    <div className="commentText"><p style={{
+                        display:"flex", flexDirection: "column"}}>{comment.comment}</p></div>
+                      
+                    
+                </div>
+               
     );
 })}
               </>
              
             :
-            "AQUI VAN LOS COMENTARIOS"}
+            ""}
           </div>
 
 
                   <FloatingLabel controlId="floatingTextarea2" label="add a comment..">
                             <Form.Control
-              as="textarea"
-              placeholder="Leave a comment here"
-              style={{ height: '70px', width: "100%" }}
-              name="comment"
-              onChange={handleChange}
-              value={commentImput}
-              // onSubmit={commentSubmit}
-            />
+                                  as="textarea"
+                                  placeholder="Leave a comment here"
+                                  style={{ height: '70px', width: "100%" }}
+                                  name="comment"
+                                  onChange={handleChange}
+                                  value={commentImput}
+                                  // onSubmit={commentSubmit}
+                                />
             <Button onClick={commentSubmit} variant='success'>enviar</Button>
                    </FloatingLabel>
         </Card>
@@ -142,8 +159,7 @@ useEffect(() => {
         
       </div>
 
-    
-      
+        
       {/* <div className="opciones">
          <Form onSubmit={(e) => {
           e.preventDefault();
