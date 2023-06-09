@@ -191,11 +191,11 @@ font-family: 'Bungee Shade', cursive;
   width: 1000px;
   min-width: 800px;
   max-width: 1000px;
-    position: fixed;
-      top: 50%;
+    /* position: fixed; */
+      /* top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
-      align-self: flex-start;
+      transform: translate(-50%, -50%); */
+      /* align-self: flex-start; */
 
     
 }
@@ -224,31 +224,34 @@ flex-direction: column;
   align-self: flex-end;
 }
 
-.commentGrid{
-  border: solid 1px black;
-display: grid;
-grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-grid-column-gap: 0px;
-grid-row-gap: 0px;
+.commentFlex{
+border: solid 1px gray;
+background-color: rgba(0, 0, 255, 0.15);
+border-radius: 0 0 15px 15px;
+display: Flex;
+flex-direction: column;
+
+/* flex-wrap: wrap; */
+
 
 }
-
+.Bdelete:hover{
+  scale: 1.20;
+  cursor: "pointer";
+}
+.Bedit:hover {
+  scale: 1.20;
+  cursor: "pointer";
+}
 
 .commentOwner {
-border: solid 1px green;
-  display: grid;
-
-  grid-row: 1;
-
-  grid-column-start: 1;
-  grid-column-end: 4;
+/* border: solid 1px green; */
+justify-content: space-between;
+display: flex;
+flex-direction: row;
 }
 .commentText {
-  border: solid 1px red;
-  display: grid;
-  grid-row: 2;
-  grid-column-start: 1;
-  grid-column-end: 4;
+  /* border: solid 1px red; */
+  display: flex;
 }
 

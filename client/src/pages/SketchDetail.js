@@ -4,6 +4,7 @@ import Card from 'react-bootstrap/Card';
 import { Button, Form } from 'react-bootstrap';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import { AuthContext } from '../contexts/AuthContext'
+import FormControl from 'react-bootstrap/FormControl'
 import '../index.css'
 
 
@@ -12,7 +13,8 @@ const { user } = useContext(AuthContext);
 const { id } = useParams();
 const [sketch, setSketch] = useState();
 const [commentImput, setCommentInput] = useState("");
-const [resultado, setResultado] = useState("");
+  const [resultado, setResultado] = useState("");
+  const [refresh, setRefresh] = useState(false);
 
 const handleChange = (e) => {
   setCommentInput( e.target.value );
@@ -73,9 +75,49 @@ const requestOptions = {
 
   }
   
+
+
+const commentDelete = async (comment) => {
+  
+  if (user._id === comment.owner._id) {
+  
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+    myHeaders.append("Authorization", `Bearer ${localStorage.getItem("token")}`);
+      
+    const urlencoded = new URLSearchParams();
+    urlencoded.append("_id", comment._id);
+    urlencoded.append("owner", comment.owner);
+    urlencoded.append("sketch", sketch._id);
+
+    const requestOptions = {
+      method: 'DELETE',
+      headers: myHeaders,
+      body: urlencoded,
+    };
+
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}comments/delete/${comment._id}`, requestOptions)
+      const result = await response.json();
+          console.log(result);
+          setRefresh(true)
+    } catch (error) {
+          console.log(error)
+          alert("Something went wrong - Try again...")
+    }
+
+
+  }
+}
+
+
+  
+  
+
 useEffect(() => {
-    geSketchbyID(id)
-  }, [resultado]);
+  geSketchbyID(id)
+  setRefresh(false)
+  }, [resultado, refresh, id]);
 
   const datum = sketch?.createdAt;
   const shortdatum = datum?.substring(0, 10);
@@ -91,12 +133,24 @@ useEffect(() => {
           <Card.Img variant="top" src={sketch?.url} alt={sketch?.name} />
           <Card.ImgOverlay style={{border: "solid 2px white"}}>
             <h1 className='detailsTitle'>{sketch?.name}</h1>
-            <Card.Text className='detailsText2'><i>Upload on {shortdatum}</i></Card.Text>
+            <Card.Text className='detailsText2'><b><i>Upload on {shortdatum}</i></b></Card.Text>
                     
             
           </Card.ImgOverlay>
             <Card.Text className='detailsText1'>{sketch?.comment}</Card.Text>
-          
+              <FloatingLabel controlId="floatingTextarea2" label="add a comment..">
+                 <Form.Control
+                                  as="textarea"
+                                  style={{ height: '70px', width: "100%" }}
+                                  name="comment"
+                                  onChange={handleChange}
+                                  value={commentImput}
+                                   onSubmit={()=>commentSubmit}
+            />
+            <div style={{display:"flex", flexDirection: "row",alignItems:"flex-end", marginRight:"0px", marginLeft:"930px"}}> <Button style={{dfisplay:"flex", flexDirection: "row",alignItems:"flex-end"}} onClick={commentSubmit} variant='success'>enviar</Button></div>
+           
+                   </FloatingLabel>
+        </Card>
           
           <div>
            
@@ -107,29 +161,31 @@ useEffect(() => {
               {sketch.comments && sketch.comments.map((comment, index) => {
                 const commentdatum = comment.createdAt;
                 const commentshortdatum = commentdatum.substring(0, 10);
-  
                 return (
 
-                <div className='commentGrid'>
-                    
-
-                    <div key={comment._id} >
+                  <div style={{ padding: "3px" }}>
+                    <div className='commentFlex'>
+                        <div key={comment._id} >
                       
                     {/* {console.log('comment :>> ', comment)} */}
-                      <div> <p style={{ color: "black" }}><b>{comment?.owner?.username}</b> <i> on: {commentshortdatum}</i></p>  </div> 
-                      {comment?.owner._id === user?._id
+                      <div className='commentOwner'> <p style={{ color: "black" }}><b>{comment?.owner?.username}</b> <i> dijo el dia: {commentshortdatum}</i></p>   
+                             {comment?.owner._id === user?._id
                         ? 
-                     <><i class="small material-icons">edit</i><i class="material-icons">delete_forever</i></> 
+                            <div className='commentIcons'>
+                              <i className="large material-icons Bedit" style={{ cursor: "pointer"}}>edit</i>
+                              <i className="large material-icons Bdelete" onClick={()=>commentDelete(comment, index)} style={{ cursor: "pointer" }}>delete_forever</i>
+                            </div> 
                         
                         :
-                      ""
-                  }
+                            ""
+                      }
+                        </div>
                     </div>
-                    <div className="commentText"><p style={{
-                        display:"flex", flexDirection: "column"}}>{comment.comment}</p></div>
+                      <div className="commentText"><p><i>{comment.comment}</i></p></div>
                       
                     
-                </div>
+                </div></div>
+             
                
     );
 })}
@@ -140,19 +196,7 @@ useEffect(() => {
           </div>
 
 
-                  <FloatingLabel controlId="floatingTextarea2" label="add a comment..">
-                            <Form.Control
-                                  as="textarea"
-                                  placeholder="Leave a comment here"
-                                  style={{ height: '70px', width: "100%" }}
-                                  name="comment"
-                                  onChange={handleChange}
-                                  value={commentImput}
-                                  // onSubmit={commentSubmit}
-                                />
-            <Button onClick={commentSubmit} variant='success'>enviar</Button>
-                   </FloatingLabel>
-        </Card>
+              
         
 
 
