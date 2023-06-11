@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams } from "react-router-dom";
 import Card from 'react-bootstrap/Card';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Modal } from 'react-bootstrap';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import { AuthContext } from '../contexts/AuthContext'
 import FormControl from 'react-bootstrap/FormControl'
@@ -12,12 +12,24 @@ const SketchDetail = () => {
 const { user } = useContext(AuthContext);
 const { id } = useParams();
 const [sketch, setSketch] = useState();
-const [commentImput, setCommentInput] = useState("");
-  const [resultado, setResultado] = useState("");
-  const [refresh, setRefresh] = useState(false);
+  const [commentImput, setCommentInput] = useState("");
+  const [commentEditImput, setCommentEditInput] = useState("");
+const [resultado, setResultado] = useState("");
+const [refresh, setRefresh] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
+
+const handleCloseDelete = () => setShowDelete(false);
+  const handleShowDelete = () => setShowDelete(true);
+  const handleCloseEdit = () => setShowEdit(false);
+const handleShowEdit = () => setShowEdit(true);
 
 const handleChange = (e) => {
   setCommentInput( e.target.value );
+}
+  
+const handleChangeEdit = (e) => {
+    setCommentEditInput( e.target.value );
   }
   
 const geSketchbyID = async (ID) => {
@@ -76,7 +88,6 @@ const requestOptions = {
   }
   
 
-
 const commentDelete = async (comment) => {
   
   if (user._id === comment.owner._id) {
@@ -100,17 +111,48 @@ const commentDelete = async (comment) => {
       const response = await fetch(`${process.env.REACT_APP_BASE_URL}comments/delete/${comment._id}`, requestOptions)
       const result = await response.json();
           console.log(result);
-          setRefresh(true)
+      setRefresh(true)
+      handleCloseDelete();
     } catch (error) {
           console.log(error)
-          alert("Something went wrong - Try again...")
+          alert("Algo salió Mal - Intentalo otra vez...")
     }
 
 
   }
 }
 
+  const handleCommentEdit = async (comment) => {
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+    myHeaders.append("Authorization", `Bearer ${localStorage.getItem("token")}`);
+    
+const urlencoded = new URLSearchParams();
+urlencoded.append("comment", commentEditImput);
+urlencoded.append("_id", comment._id);
+urlencoded.append("owner", comment.owner);
+    urlencoded.append("sketch", sketch._id);
+    
 
+    
+const requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  body: urlencoded,
+};
+
+        try {
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}comments/update/${comment._id}`, requestOptions)
+      const result = await response.json();
+          console.log(result);
+          setRefresh(true)
+          handleCloseEdit();
+    } catch (error) {
+          console.log(error)
+          alert("Algo salió Mal - Intentalo otra vez...")
+    }
+
+}
   
   
 
@@ -157,23 +199,37 @@ useEffect(() => {
             {sketch?.comments?.length >= 0
               
               ?
-              <>
+            <>
+              
               {sketch.comments && sketch.comments.map((comment, index) => {
+
+                let TextDatum =""
+                if (comment.createdAt === comment.updatedAt) {
                 const commentdatum = comment.createdAt;
-                const commentshortdatum = commentdatum.substring(0, 10);
+                  const commentshortdatum = commentdatum.substring(0, 10);
+                  TextDatum = "dijo el " + commentshortdatum;
+                } else{
+                   const commentdatum = comment.updatedAt;
+                  const commentshortdatum = commentdatum.substring(0, 10);
+                   TextDatum = "editado el " + commentshortdatum;
+              }
+          
+
                 return (
 
+                
+              
                   <div style={{ padding: "3px" }}>
                     <div className='commentFlex'>
                         <div key={comment._id} >
                       
                     {/* {console.log('comment :>> ', comment)} */}
-                      <div className='commentOwner'> <p style={{ color: "black" }}><b>{comment?.owner?.username}</b> <i> dijo el dia: {commentshortdatum}</i></p>   
+                      <div className='commentOwner'> <p style={{ color: "black" }}><b>{comment?.owner?.username}</b> <i> {TextDatum}</i></p>   
                              {comment?.owner._id === user?._id
                         ? 
                             <div className='commentIcons'>
-                              <i className="large material-icons Bedit" style={{ cursor: "pointer"}}>edit</i>
-                              <i className="large material-icons Bdelete" onClick={()=>commentDelete(comment, index)} style={{ cursor: "pointer" }}>delete_forever</i>
+                              <i className="large material-icons Bedit" onClick={handleShowEdit} style={{ cursor: "pointer" }} >edit</i>
+                              <i className="large material-icons Bedit" onClick={handleShowDelete} style={{ cursor: "pointer" }} >delete_forever</i>
                             </div> 
                         
                         :
@@ -184,11 +240,62 @@ useEffect(() => {
                       <div className="commentText"><p><i>{comment.comment}</i></p></div>
                       
                     
-                </div></div>
+                    </div>
+
+                    <Modal style={{height:"20rem"}} show={showDelete} onHide={handleCloseDelete}>
+                            <Modal.Header closeButton>
+                              <Modal.Title>ATENCION</Modal.Title>
+                            </Modal.Header>
+                      <Modal.Body>   <Modal.Header>
+                              <Modal.Title>Estas seguro de borrar el comentario???</Modal.Title>
+                            </Modal.Header> <br></br>
+                        <div style={{display:"flex", flexDirection:"row", justifyContent: "space-around"}}> <Button variant="success" onClick={handleCloseDelete}>
+                                Cancelar
+                              </Button>
+                              <Button onClick={()=>commentDelete(comment, index)} variant="danger">
+                                Eliminar
+                              </Button></div>   
+                       
+                      </Modal.Body>
+       
+                    </Modal>
+
+
+                       <Modal style={{height:"23rem"}} show={showEdit} onHide={handleCloseEdit}>
+                            <Modal.Header closeButton>
+                              <Modal.Title>Editar Comentario</Modal.Title>
+                            </Modal.Header>
+                          <Modal.Body> <Modal.Title>Estás seguro de eliminar el comentario??</Modal.Title>     <br/>
+                        <Form.Control style={{height:"5rem"}} type="text" name='comment' placeholder={comment?.comment} onChange={handleChangeEdit} />
+                        <br/>
+                        < div style={{ display: "flex", flexDirection: "row", justifyContent: "space-around" }}>
+                          <Button variant="danger" onClick={ handleCloseEdit}>
+                                Cancelar
+                              </Button>
+                              <Button  onClick={()=>handleCommentEdit(comment)} variant="success">
+                                Guardar
+                              </Button></div>
+                           
+                        </Modal.Body>
+                            
+                    </Modal>
+                  
+                  
+                  </div>
              
                
     );
-})}
+              })}
+              
+
+
+   
+
+
+
+
+
+
               </>
              
             :

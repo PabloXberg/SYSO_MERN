@@ -1,9 +1,9 @@
-import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import UserModal from "./UserModal";
-import { Link , useLocation} from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { Button, Form, Modal } from 'react-bootstrap';
 
 // import UserModel from "../../../server/models/userModels.js";
 
@@ -11,7 +11,15 @@ import { Link , useLocation} from "react-router-dom";
   const { user , fetchActiveUser } = useContext(AuthContext);
 
   const [show, setShow] = useState(false);
-  const [refresh, setRefresh] = useState(false);
+const [refresh, setRefresh] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
+
+const handleCloseDelete = () => setShowDelete(false);
+  const handleShowDelete = () => setShowDelete(true);
+  const handleCloseEdit = () => setShowEdit(false);
+    const handleShowEdit = () => setShowEdit(true);
+    
   const datum = props.props.createdAt;
   const shortdatum = datum.substring(0, 10);
 
@@ -21,9 +29,45 @@ import { Link , useLocation} from "react-router-dom";
   // console.log('location :>> ', location);
   //////////////////////////////////////////////////////////////////////////////////// USE EFFECT PARA RECARCAR LA PAGINA::: NO FUNCIONA; SOLUCIONAR ESTO
 
+    
+    const handleSketchDelete = async (sketch) => {
+  
+      console.log('sketch :>> ', sketch);
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+myHeaders.append("Authorization", `Bearer ${localStorage.getItem("token")}`);
+
+const urlencoded = new URLSearchParams();
+      urlencoded.append("_id", sketch._id);
+      urlencoded.append("owner", sketch.owner._id);
+      
+const requestOptions = {
+  method: 'DELETE',
+  headers: myHeaders,
+  body: urlencoded,
+
+};
+      
+       try {
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}sketches/delete/${sketch._id}`, requestOptions)
+      const result = await response.json();
+          console.log(result);
+
+         setRefresh(true)
+         handleCloseDelete();
+////    window.location.reload();///// PROVISORIO
+    } catch (error) {
+          console.log(error)
+          alert("Algo salió Mal - Intentalo otra vez...")
+    }
+
+    
+}
+    
+    
   useEffect(() => {
 setRefresh(false)
-  }, [refresh]);
+}, [refresh]);
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   const likeSketch = async (props) => {
@@ -48,7 +92,7 @@ setRefresh(false)
       console.log(result);
       setRefresh(true);
       ///fetchActiveUser(localStorage.getItem("token"));
-      window.location.reload(); ///////////////////////////////////////////////////////////////////// PROVISORIO
+     /// window.location.reload(); ///////////////////////////////////////////////////////////////////// PROVISORIO
     } catch (error) {
       console.log("error", error);
     }
@@ -124,7 +168,35 @@ setRefresh(false)
                     
           : 
                   
-          (location.pathname === '/mysketchs' ? <Card.Footer> Created by me  <i className="material-icons" style={{ cursor: "pointer" }}> delete_forever</i></Card.Footer>
+            (location.pathname === '/mysketchs'
+              ?<>   <Card.Footer style={{
+                display: "flex", flexDirection: "row", justifyContent: "space-between"
+              }}>
+                <div>Created by me</div>
+                <div>
+                      <i className="material-icons Bedit" placeholder="edit" style={{ cursor: "pointer" }} > edit</i>
+                       <i className="material-icons Bedit" style={{ cursor: "pointer" }} onClick={handleShowDelete}> delete_forever</i>
+                </div> 
+              </Card.Footer>
+              
+                       <Modal style={{height:"20rem"}} show={showDelete} onHide={handleCloseDelete}>
+                            <Modal.Header closeButton>
+                              <Modal.Title>ATENCION</Modal.Title>
+                            </Modal.Header>
+                      <Modal.Body>   <Modal.Header>
+                              <Modal.Title>Estas seguro de eliminar este Sketch???</Modal.Title>
+                            </Modal.Header> <br></br>
+                        <div style={{display:"flex", flexDirection:"row", justifyContent: "space-around"}}> <Button variant="success" onClick={handleCloseDelete}>
+                                Cancelar
+                              </Button>
+                      <Button onClick={()=>handleSketchDelete(props.props)} variant="danger">
+                                Eliminar
+                              </Button></div>   
+                       
+                      </Modal.Body>
+       
+                    </Modal></>
+           
              /// AQUI ES DONDE TENDRIA QUE MOSTRARLO EN MIS SKETCHES PROPIOS
               : 
               //AQUI DEVERIA IR EL FOOTER CON EL NOMBRE DEL CREADOR; EN LA PAGINA DE MIS FAVORITOS
@@ -146,7 +218,7 @@ setRefresh(false)
           </Card.Footer>
           
 
-        <Card.Footer style={{ display: "Flex", flexDirection: "row" }}>
+        <Card.Footer style={{ display: "Flex", flexDirection: "row" , justifyContent:"space-between"}}>
             <div style={{ alignSelf: "flex-start" }}>
               
 
@@ -158,9 +230,9 @@ setRefresh(false)
                {likesArray.includes(user?._id) 
 
                 ?
-                (<i className="material-icons" style={{ cursor: "pointer" }} onClick={() => unlikeSketch(_id)}>thumb_down</i>)
+                (<i className="material-icons Bedit" style={{ cursor: "pointer" }} onClick={() => unlikeSketch(_id)}>thumb_down</i>)
                 :
-                (<i className="material-icons" style={{ cursor: "pointer" }} onClick={() => likeSketch(_id)}>thumb_up</i>)
+                (<i className="material-icons Bedit" style={{ cursor: "pointer" }} onClick={() => likeSketch(_id)}>thumb_up</i>)
               }
             </div>
 

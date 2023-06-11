@@ -20,18 +20,18 @@ try {
 
 
 
-/// no funciona delete sketch, y no se porque
+/// FUNCIONA; PERO TENGO QUE QUITAR LOS COMENTARIOS RELACIONADOS AUN
 const deleteSketch = async (req, res) => {
         try {
         // console.log('req.body :>> ', req.body);
         const deletedSketch = await SketchModel.findByIdAndDelete(req.body._id);
-        // const updatedUser = await deleteCommentToUser(req.body.owner, registeredComment);   //// DEBERIA QUITAR LOS LIKES DE LOS USUARIOS; Y LOS COMENTARIOS RELACIONADOS
-        // const updatedSketch = await deleteCommentToSketch(req.body.sketch, registeredComment);
+        const updatedUser = await deleteSketchToUser(req.body.owner, req.body._id);   //// DEBERIA QUITAR LOS LIKES DE LOS USUARIOS; Y LOS COMENTARIOS RELACIONADOS
+        // const updatedSketch = await deleteCommentToSketch(req.body.sketch, deletedSketch);
         
         res.status(200).json({
             message: "Sketch borrado!! ",
-            // userUpdated: updatedUser,
-            // sketchUpdated:updatedSketch,
+             userUpdated: updatedUser,
+          // sketchUpdated:updatedSketch,
             deletedSketch: deletedSketch
         })
   } catch (error) {
@@ -177,5 +177,20 @@ const deleteLike = async (req, res) => {
     res.status(500).json({error: "Algo Salió mal... muy mal.... " + error.message})
   }
 }
+
+const deleteSketchToUser = async (userId, sharedPost) => {
+
+    try {
+        const result = await UserModel.findByIdAndUpdate(userId,
+            { $pull: { sketchs: sharedPost} },
+            { new: true }
+        )
+        console.log("user making post....", result);
+        return true
+    } catch (error) {
+        console.log(error)
+        return false
+    }   
+};
  
 export { getAllSketches, createSketch, addLike, deleteLike, getSketchbyID, deleteSketch, updateSketch}

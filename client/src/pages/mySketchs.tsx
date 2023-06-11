@@ -68,7 +68,7 @@ const MySketchs = (props: Props) => {
   };
   useEffect(() => {
     getUserById();
-  }, [user, SketchCard]);
+  }, [user, SketchCard, ID]);
 
   ////////////////////////////////////////////////////////////////////////////////// HANDLE CHANGE ON MODAL IMPUTS
   const handleChange = (e: { target: { name: any; value: any } }) => {
@@ -110,7 +110,8 @@ const MySketchs = (props: Props) => {
       console.log(result);
       alert("Success!!! Your new Sketch is uploaded in our data base");
       setLoading(false);
-    } catch (error) {
+      handleClose();
+     } catch (error) {
       console.log(error);
       alert("Something went wrong - check console");
       setLoading(false);
