@@ -5,7 +5,7 @@ function UserModal(props) {
     if (!props.show) {
         return null
   }
-  console.log('props :>> ', props);
+  // console.log('props :>> ', props);
 
 
   const datum = props.character.owner.createdAt;
@@ -21,20 +21,22 @@ function UserModal(props) {
   
   
 
-  console.log('longi :>> ', longi);
-  console.log('props  lalalala :>> ', props);
+  // console.log('longi :>> ', longi);
+  // console.log('props  lalalala :>> ', props);
   return (
-    <>
+    <div style={{
+      display: "flex", flexDirection:"row", justifyContent:"space-around",alignItems:"center"}}>
       
-     <div className='modal-container' onClick={props.onClose} >
+      <div className='modal-conta' style={{
+        height: "50rem", width: "40rem", alignSelf: "center"}} onClick={props.onClose} >
          <div className='modal-content'onClick={e => e.stopPropagation()} >
-          <div className='modal-header'>
+          <div className='modal-header' style={{color:"White"}}>
             <h3>{props.character.owner.username}</h3>
            </div>
           <div>
             < img className='modal-picture' src={props.character.owner.avatar} alt="User Avatar"/>
            </div>
-           <div className='modal-body'>
+           <div style={{color:"White"}}>
             <h5>Personal Info: </h5><p><i>{props.character.owner.info}</i></p> 
          
             <h5>Uploaded Sketches: </h5> <p><i>{longi ? longi : props.characters.owner.sketchs.length}</i></p> 
@@ -46,7 +48,7 @@ function UserModal(props) {
            </div>
          </div>   
        </div>
-      </>
+      </div>
   )
 }
 

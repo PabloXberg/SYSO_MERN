@@ -174,11 +174,11 @@ function NavStrap() {
                   size="sm"
                     show={showLogin}
                     style={{height:"23rem"}}
-              onHide={handleCloseLogin}
-              backdrop="static"
-              keyboard={false}
-              aria-labelledby="contained-modal-title-vcenter"
-              centered
+                    onHide={handleCloseLogin}
+                    backdrop="static"
+                    keyboard={false}
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
         >
           <Modal.Header closeButton>
             <Modal.Title>User Login</Modal.Title>
@@ -236,6 +236,7 @@ function NavStrap() {
                   </div>
                   
 
+                  
               <div className="dataform">
                     
            
@@ -260,7 +261,9 @@ function NavStrap() {
                     {/* <Form.Text className="text-muted">
                       We'll never share your email with anyone else.
                     </Form.Text> */}
-                  </Form.Group></div>      
+                    </Form.Group>
+                  </div>      
+                  
                   <Modal.Footer>
                     <Button variant="danger" onClick={handleCloseRegister}>
                       Close

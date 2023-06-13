@@ -4,6 +4,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import UserModal from "./UserModal";
 import { Link, useLocation } from "react-router-dom";
 import { Button, Form, Modal } from 'react-bootstrap';
+import EditSketch from "../pages/editSketch";
 
 // import UserModel from "../../../server/models/userModels.js";
 
@@ -92,7 +93,7 @@ setRefresh(false)
       console.log(result);
       setRefresh(true);
       ///fetchActiveUser(localStorage.getItem("token"));
-     /// window.location.reload(); ///////////////////////////////////////////////////////////////////// PROVISORIO
+      window.location.reload(); ///////////////////////////////////////////////////////////////////// PROVISORIO
     } catch (error) {
       console.log("error", error);
     }
@@ -174,12 +175,12 @@ setRefresh(false)
               }}>
                 <div>Created by me</div>
                 <div>
-                      <i className="material-icons Bedit" placeholder="edit" style={{ cursor: "pointer" }} > edit</i>
+                      <i className="material-icons Bedit" onClick={handleShowEdit} placeholder="edit" style={{ cursor: "pointer" }} > edit</i>
                        <i className="material-icons Bedit" style={{ cursor: "pointer" }} onClick={handleShowDelete}> delete_forever</i>
                 </div> 
               </Card.Footer>
               
-                       <Modal style={{height:"20rem"}} show={showDelete} onHide={handleCloseDelete}>
+                       <Modal style={{height:"20rem"}} show={showDelete} onHide={handleCloseDelete}  centered>
                             <Modal.Header closeButton>
                               <Modal.Title>ATENCION</Modal.Title>
                             </Modal.Header>
@@ -195,7 +196,83 @@ setRefresh(false)
                        
                       </Modal.Body>
        
-                    </Modal></>
+                </Modal>
+              
+                
+               
+               
+               
+               
+               
+                              
+              <Modal
+    
+                    className='userRegisterModal'
+                    show={showEdit}
+                    onHide={handleCloseEdit}
+                    backdrop="static"
+                    keyboard={false}
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
+                  style={{ height: "70rem" }}
+                  
+                  >
+                  <Modal.Header closeButton>
+                    <Modal.Title>User Register</Modal.Title>
+                  </Modal.Header>
+               
+                <div >
+
+                  
+                  <div className='avatar'>
+                   
+
+                      <img alt='User Avatar' style={{border: "black 2px solid",padding:"3px" ,borderRadius: "50%", width: "8rem", height: "auto", alignSelf:"center"}} src={avatarPreview ? avatarPreview : DefaultImage} />
+                       <br />
+
+                       {/* eslint-disable-next-line react/jsx-pascal-case */}
+                        <input style={{padding: "1rem"}} type='file' name='loading...' accept= 'image/jpg, image/jpeg, image/png' onChange={handleFile} />
+
+                   
+                  </div>
+                  
+
+                  
+              <div className="dataform">
+                    
+           
+                        <Form.Group className="mb-4" controlId="formBasicEmail">
+                          <Form.Label >Name:</Form.Label>
+                          <Form.Control type='text' name='name' placeholder={props.props.name}  onChange={handleChangeEdit}/>
+                          <Form.Text className="text-muted">
+                            
+                            </Form.Text>
+                          <Form.Label >Description:</Form.Label>
+                          <Form.Control type="text" name='comment' placeholder={props.props.comment} onChange={handleChangeEdit} />
+                        <Form.Text className="text-muted"></Form.Text>
+                                            
+                    </Form.Group>
+                  </div>      
+                  
+                  <Modal.Footer>
+                    <Button variant="danger" onClick={handleCloseEdit}>
+                      Close
+                    </Button>
+                  <Button style={{ cursor: "pointer" }}  variant="success">Register</Button>
+                  </Modal.Footer>
+
+                  
+                  
+          </div>
+               
+                </Modal> 
+              
+              
+              
+              
+              
+              
+              </>
            
              /// AQUI ES DONDE TENDRIA QUE MOSTRARLO EN MIS SKETCHES PROPIOS
               : 
