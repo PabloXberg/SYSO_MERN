@@ -131,7 +131,7 @@ const EditProfile = (props: Props) => {
               <Form.Check type="checkbox" label="Check me out" />
             </Form.Group> */}
             <div className="botones">
-                  <Button variant="dark" onClick={handleShow}>
+                  <Button variant="dark" disabled onClick={handleShow}>
                 change password
                 </Button>
                   <Button variant="success" type="submit" >

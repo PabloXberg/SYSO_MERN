@@ -4,12 +4,12 @@ import { AuthContext } from "../contexts/AuthContext";
 import UserModal from "./UserModal";
 import { Link, useLocation } from "react-router-dom";
 import { Button, Form, Modal } from 'react-bootstrap';
-import EditSketch from "../pages/editSketch";
+// import EditSketch from "../pages/editSketch";
 
 // import UserModel from "../../../server/models/userModels.js";
 
   function SketchCard(props) {
-  const { user , fetchActiveUser } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
   const [show, setShow] = useState(false);
 const [refresh, setRefresh] = useState(false);
@@ -20,6 +20,20 @@ const handleCloseDelete = () => setShowDelete(false);
   const handleShowDelete = () => setShowDelete(true);
   const handleCloseEdit = () => setShowEdit(false);
     const handleShowEdit = () => setShowEdit(true);
+
+ const sketch = props;
+  // console.log('user :>> ', user);
+  const [loading, setLoading] = useState(false);
+    const [avatarPreview, setAvatarPreview] = useState(sketch?.props.url);
+
+ 
+  const [formData, setFormData] = useState({
+    owner: "",
+    name: "",
+    comment: "",
+    url: ""
+  });
+
     
   const datum = props.props.createdAt;
   const shortdatum = datum.substring(0, 10);
@@ -30,10 +44,59 @@ const handleCloseDelete = () => setShowDelete(false);
   // console.log('location :>> ', location);
   //////////////////////////////////////////////////////////////////////////////////// USE EFFECT PARA RECARCAR LA PAGINA::: NO FUNCIONA; SOLUCIONAR ESTO
 
+    const handleSubmitEdit = async (e) => {
+    e.preventDefault();
+    ///  setLoading(true);   ///// FUTURE SPINNER
+      
+      if (user?._id === sketch?.props.owner._id) {
+         
+    console.log('props and sketch on edit sketch page:>> ', props, sketch);
+      
+    const myHeaders = new Headers();
+    const token = localStorage.getItem("token")
+    myHeaders.append("Authorization", `Bearer ${token}`);
+
+
+    const submitData = new FormData();
+    submitData.append("_id", sketch.props._id); 
+    submitData.append("owner", sketch.props.owner._id);
+    submitData.append("name", formData.name);
+    submitData.append("comment", formData.comment);
+    submitData.append("url", formData.url);
+
+    const requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: submitData,
+    };
+
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}sketches/update/${sketch?.props._id}`, requestOptions);
+      const result = await response.json();
+      console.log(result);
+      alert("Success!!! User Updated");
+      setLoading(false);
+
+      
+    } catch (error) {
+      console.log(error)
+      alert("Something went wrong - Try again...")
+      setLoading(false);
+    }
+
+    }
+
+  }
     
-    const handleSketchDelete = async (sketch) => {
+    
+const handleChangeEdit = (e) => {
+  setFormData({ ...formData, [e.target.name]: e.target.value })
+  console.log('formData :>> ', formData);
+      }
+    
+const handleSketchDelete = async (sketch) => {
   
-      console.log('sketch :>> ', sketch);
+console.log('sketch :>> ', sketch);
 const myHeaders = new Headers();
 myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 myHeaders.append("Authorization", `Bearer ${localStorage.getItem("token")}`);
@@ -53,7 +116,7 @@ const requestOptions = {
       const response = await fetch(`${process.env.REACT_APP_BASE_URL}sketches/delete/${sketch._id}`, requestOptions)
       const result = await response.json();
           console.log(result);
-
+         setLoading(true); 
          setRefresh(true)
          handleCloseDelete();
 ////    window.location.reload();///// PROVISORIO
@@ -63,12 +126,24 @@ const requestOptions = {
     }
 
     
-}
+    }
+    
+      const handleFile = (e) => {
+    // console.log('e.target :>> ', e.target.files);
+    if (e.target.files) {
+      const arrayURL = URL.createObjectURL(e.target.files[0]);
+      setAvatarPreview(arrayURL)
+      setFormData({ ...formData, url: e.target.files[0] })
+    } else {
+      setFormData({ ...formData, url: "" })
+    }
+  }
     
     
-  useEffect(() => {
-setRefresh(false)
-}, [refresh]);
+useEffect(() => {
+  setRefresh(false)
+   setLoading(false); 
+}, [refresh, loading]);
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   const likeSketch = async (props) => {
@@ -91,9 +166,10 @@ setRefresh(false)
       const response = await fetch(`${process.env.REACT_APP_BASE_URL}sketches/like`,requestOptions);
       const result = await response.json();
       console.log(result);
+        setLoading(true); 
       setRefresh(true);
       ///fetchActiveUser(localStorage.getItem("token"));
-      window.location.reload(); ///////////////////////////////////////////////////////////////////// PROVISORIO
+     window.location.reload(); ///////////////////////////////////////////////////////////////////// PROVISORIO
     } catch (error) {
       console.log("error", error);
     }
@@ -118,10 +194,11 @@ setRefresh(false)
     try {
       const response = await fetch(`${process.env.REACT_APP_BASE_URL}sketches/unlike`,requestOptions);
       const result = await response.json();
-      // console.log(result);
-   setRefresh(true);
+      console.log(result);
+        setLoading(true); 
+        setRefresh(true);
      /// fetchActiveUser(localStorage.getItem("token"));
-      window.location.reload(); ///////////////////////////////////////////////////////////////////// PROVISORIO
+    window.location.reload(); ///////////////////////////////////////////////////////////////////// PROVISORIO
     } catch (error) {
       console.log("error", error);
     }
@@ -197,13 +274,11 @@ setRefresh(false)
                       </Modal.Body>
        
                 </Modal>
-              
-                
+                          
                
+                     
                
-               
-               
-               
+            {/*//////////////////////////////// EDITAR SKETCH MODAL   /////////////////////////// */}
                               
               <Modal
     
@@ -213,12 +288,12 @@ setRefresh(false)
                     backdrop="static"
                     keyboard={false}
                     aria-labelledby="contained-modal-title-vcenter"
-                    centered
-                  style={{ height: "70rem" }}
+                  centered
+                                      // style={{ height: "70rem" }}
                   
                   >
                   <Modal.Header closeButton>
-                    <Modal.Title>User Register</Modal.Title>
+                    <Modal.Title>Editar Sketch</Modal.Title>
                   </Modal.Header>
                
                 <div >
@@ -226,8 +301,9 @@ setRefresh(false)
                   
                   <div className='avatar'>
                    
-
-                      <img alt='User Avatar' style={{border: "black 2px solid",padding:"3px" ,borderRadius: "50%", width: "8rem", height: "auto", alignSelf:"center"}} src={avatarPreview ? avatarPreview : DefaultImage} />
+                      {/* {console.log('avatarPreview :>> ', avatarPreview)}
+                     {console.log('sketch :>> ', sketch)} */}
+                      <img alt='User Sketch' style={{border: "black 2px solid",padding:"3px" , width: "20rem", height: "12rem", alignSelf:"center"}} src={avatarPreview ? avatarPreview : sketch?.url} />
                        <br />
 
                        {/* eslint-disable-next-line react/jsx-pascal-case */}
@@ -241,24 +317,24 @@ setRefresh(false)
               <div className="dataform">
                     
            
-                        <Form.Group className="mb-4" controlId="formBasicEmail">
+                        <Form.Group className="mb-6" controlId="formBasicEmail" style={{display:"flex", flexDirection:"column", alignContent:"space-between"}} >
                           <Form.Label >Name:</Form.Label>
                           <Form.Control type='text' name='name' placeholder={props.props.name}  onChange={handleChangeEdit}/>
                           <Form.Text className="text-muted">
                             
-                            </Form.Text>
+                        </Form.Text>
+                        
                           <Form.Label >Description:</Form.Label>
                           <Form.Control type="text" name='comment' placeholder={props.props.comment} onChange={handleChangeEdit} />
                         <Form.Text className="text-muted"></Form.Text>
                                             
-                    </Form.Group>
+                      </Form.Group>
+                      <br/>
                   </div>      
                   
-                  <Modal.Footer>
-                    <Button variant="danger" onClick={handleCloseEdit}>
-                      Close
-                    </Button>
-                  <Button style={{ cursor: "pointer" }}  variant="success">Register</Button>
+                  <Modal.Footer style={{display:"flex", flexDirection:"row", justifyContent:"space-between", height:"8rem"}}>
+                    <Button variant="danger" onClick={handleCloseEdit}>Cancelar</Button>
+                  <Button style={{ cursor: "pointer" }} onClick={handleSubmitEdit} variant="success">Guardar</Button>
                   </Modal.Footer>
 
                   
@@ -267,10 +343,8 @@ setRefresh(false)
                
                 </Modal> 
               
-              
-              
-              
-              
+
+                        
               
               </>
            
@@ -320,7 +394,7 @@ setRefresh(false)
             </div>
 
 
-          {/* <Link to={page + _id} params={_id}  key={_id}>
+          <Link to={page + _id} params={_id}  key={_id}>
            <i
             className="material-icons"
             to="/sketchdetail"
@@ -328,7 +402,7 @@ setRefresh(false)
           >
             message
           </i> 
-          </Link> */}
+          </Link>
           
         </Card.Footer>
       </Card.Body>

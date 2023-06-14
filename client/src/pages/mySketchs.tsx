@@ -68,7 +68,7 @@ const MySketchs = (props: Props) => {
   };
   useEffect(() => {
     getUserById();
-  }, [user, SketchCard, ID]);
+  }, [user, SketchCard, ID, loading]);
 
   ////////////////////////////////////////////////////////////////////////////////// HANDLE CHANGE ON MODAL IMPUTS
   const handleChange = (e: { target: { name: any; value: any } }) => {
@@ -79,7 +79,7 @@ const MySketchs = (props: Props) => {
   //////////////////////////////////////////////////////////////////////////////////// HANDLE SUBMIT - SAVE A NEEW SKETCH
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    setLoading(true); /// FUTURE SPINNER
+    ///setLoading(true); /// FUTURE SPINNER
 
     ////////////////////////////////////////////////////////////// HEADERS
     const myHeaders = new Headers();
@@ -109,7 +109,7 @@ const MySketchs = (props: Props) => {
       const result = await response.json();
       console.log(result);
       alert("Success!!! Your new Sketch is uploaded in our data base");
-      setLoading(false);
+      setLoading(true);
       handleClose();
      } catch (error) {
       console.log(error);
@@ -146,13 +146,12 @@ const MySketchs = (props: Props) => {
         </Button>
 
         <Modal
-          size="lg"
           className="userRegisterModal"
           show={show}
           onHide={handleClose}
           backdrop="static"
           keyboard={false}
-        >
+           >
           <Modal.Header closeButton>
             <Modal.Title>Upload a new Sketch</Modal.Title>
           </Modal.Header>
@@ -160,12 +159,13 @@ const MySketchs = (props: Props) => {
           <div>
             <div className="avatar">
               <img
-                alt="User Avatar"
+                alt="newSketch"
                 style={{
+                  position:"static",
                   border: "black 2px solid",
                   padding: "5px",
-                  width: "15rem",
-                  height: "auto",
+                  width: "20rem",
+                  height: "15rem",
                 }}
                 src={avatarPreview ? avatarPreview : DefaultImage}
               />
@@ -199,7 +199,7 @@ const MySketchs = (props: Props) => {
                 />
               </Form.Group>
             </div>
-            <Modal.Footer>
+            <Modal.Footer style={{display:"flex",flexDirection:"row", justifyContent:"space-between"}}>
               <Button variant="danger" onClick={handleClose}>
                 Close
               </Button>
