@@ -25,6 +25,9 @@ function NavStrap() {
   const handleShowRegister = () => setShowRegister(true);
   const[avatarPreview, setAvatarPreview] = useState(DefaultImage) 
   const [loading, setLoading] = useState(false);
+
+  const [password, setPassword] = useState("");
+  const [isValid, setIsValid] = useState(true);
   
 
   const [formDataLogin, setFormDataLogin] = useState({
@@ -38,7 +41,33 @@ function NavStrap() {
       password: "",
       info: "",
       avatar: ""
-       });
+    });
+  
+  
+  function validarPassword(password) {
+  // Verificar la longitud mínima de 10 caracteres
+  if (password.length < 10) {
+    return false;
+  }
+  
+  // Verificar si hay al menos una mayúscula
+  if (!/[A-Z]/.test(password)) {
+    return false;
+  }
+  
+  // Verificar si hay al menos un número
+  if (!/\d/.test(password)) {
+    return false;
+  }
+  
+  // Verificar si hay al menos un carácter especial
+  if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+    return false;
+  }
+  
+  // Si pasa todas las verificaciones, la contraseña es válida
+  return true;
+}
   
   const handleChangeLogin = (e) => {
     setFormDataLogin({ ...formDataLogin, [e.target.name]: e.target.value })
@@ -56,12 +85,18 @@ function NavStrap() {
 
   const handleSubmitRegister = async(e) => {
     e.preventDefault();
-        setLoading(true);
-    const submitData = new FormData();
+    setLoading(true);
+    
+      if (validarPassword(password)) {
+      console.log("Contraseña válida");
+      setIsValid(true);                 //// aqui debo cambiar alguna state variable, para que muestreenable or disable el boton de registrar... y una cruz o tick arriba del input.
+    
+        const submitData = new FormData();
         submitData.append("email", formDataRegister.email);
         submitData.append("username", formDataRegister.username);
         submitData.append("password", formDataRegister.password);
         submitData.append("avatar", formDataRegister.avatar);
+
     const requestOptions = {
       method: 'POST',
       body: submitData,
@@ -77,6 +112,14 @@ function NavStrap() {
       alert("Something went wrong - check console")
       setLoading(false);
     }
+            
+      } else {
+      alert("La contraseña no cumple con los requisitos mínimos."); /// podría agregar en cada IF, informacion mas específica... (El password debe tener Numeros... o caracteres especiales...)
+      setIsValid(false);
+    }
+
+
+  
    
   }
 
@@ -205,16 +248,16 @@ function NavStrap() {
               {/* MODAL PARA REGISTRO DE USUSARIO */}
 
                        
-              <Modal
+               <Modal
     
                     className='userRegisterModal'
                     show={showRegister}
                     onHide={handleCloseRegister}
                     backdrop="static"
-                keyboard={false}
-                 aria-labelledby="contained-modal-title-vcenter"
-                centered
-                style={{height:"70rem"}}
+                    keyboard={false}
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
+                    style={{height:"70rem"}}
                   >
                   <Modal.Header closeButton>
                     <Modal.Title>User Register</Modal.Title>
