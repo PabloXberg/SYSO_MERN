@@ -6,9 +6,8 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Modal from 'react-bootstrap/Modal';
 import DefaultImage from '../placeholder.png'
-import React, { ChangeEvent, FormEvent, useContext, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { AuthContext } from '../contexts/AuthContext'
-import { Link } from 'react-router-dom';
 import '../index.css';
 import Typewriter from 'typewriter-effect';
 
@@ -44,24 +43,25 @@ function NavStrap() {
     });
   
   
+ 
   function validarPassword(password) {
   // Verificar la longitud mínima de 10 caracteres
-  if (password.length < 10) {
+    if (password.length < 10) {
     return false;
   }
   
   // Verificar si hay al menos una mayúscula
-  if (!/[A-Z]/.test(password)) {
+    if (!/[A-Z]/.test(password)) {
     return false;
   }
   
   // Verificar si hay al menos un número
-  if (!/\d/.test(password)) {
+    if (!/\d/.test(password)) {
     return false;
   }
   
   // Verificar si hay al menos un carácter especial
-  if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
     return false;
   }
   
@@ -105,7 +105,7 @@ function NavStrap() {
       const response = await fetch(`${process.env.REACT_APP_BASE_URL}users/new`, requestOptions);
       const result = await response.json();
       console.log(result);
-      alert("Success! Check console.");
+    ///  alert("Success! Check console.");
       setLoading(false);
     } catch (error) {
       console.log(error)
@@ -114,18 +114,15 @@ function NavStrap() {
     }
             
       } else {
-      alert("La contraseña no cumple con los requisitos mínimos."); /// podría agregar en cada IF, informacion mas específica... (El password debe tener Numeros... o caracteres especiales...)
+      alert("Una contraseña debe contener, al menos, 10 caracteres alfanuméricos aleatorios, una Mayúscula, y por lo menos un carácter especial. Por ejemplo, $ % & ( / ) !."); /// podría agregar en cada IF, informacion mas específica... (El password debe tener Numeros... o caracteres especiales...)
       setIsValid(false);
     }
 
-
-  
-   
   }
 
   
   const handleFile = (e) => {
-    console.log('e.target :>> ', e.target.files);
+    // console.log('e.target :>> ', e.target.files);
     if (e.target.files) {
       let arrayURL = URL.createObjectURL(e.target.files[0]);
       setAvatarPreview(arrayURL)
@@ -184,12 +181,7 @@ function NavStrap() {
                                         <NavDropdown.Item href="/edit">Editar Perfil</NavDropdown.Item>                                        
                                      </NavDropdown>
                 
-                
-                                     
-
-
-                                 
-                                  {/* <Form className="d-flex">
+                           {/* <Form className="d-flex">
                                                 <Form.Control
                                                 type="search"
                                                 placeholder="Search"
@@ -290,9 +282,9 @@ function NavStrap() {
                             
                             </Form.Text>
                           <Form.Label >(*) Password:</Form.Label>
-                          <Form.Control type="password" name='password' placeholder="Password" onChange={handleChangeRegister} />
-                        <Form.Text className="text-muted"></Form.Text>
-                                            
+                      <Form.Control type="password" name='password' placeholder="Password" onChange={handleChangeRegister} />
+                      <Form.Text className="text-muted"></Form.Text>
+                                                         
                     <Form.Label >(*) User Name:</Form.Label>
                   <Form.Control  name='username' placeholder="username" onChange={handleChangeRegister}/>
                     <Form.Text className="text-muted">

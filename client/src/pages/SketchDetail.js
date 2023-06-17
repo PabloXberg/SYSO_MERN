@@ -24,7 +24,8 @@ const handleCloseDelete = () => setShowDelete(false);
   const handleCloseEdit = () => setShowEdit(false);
 const handleShowEdit = () => setShowEdit(true);
 
-const handleChange = (e) => {
+  const handleChange = (e) => {
+
   setCommentInput( e.target.value );
 }
   
@@ -110,7 +111,7 @@ const commentDelete = async (comment) => {
     try {
       const response = await fetch(`${process.env.REACT_APP_BASE_URL}comments/delete/${comment._id}`, requestOptions)
       const result = await response.json();
-          console.log(result);
+          // console.log(result);
       setRefresh(true)
       handleCloseDelete();
     } catch (error) {
@@ -131,7 +132,7 @@ const urlencoded = new URLSearchParams();
 urlencoded.append("comment", commentEditImput);
 urlencoded.append("_id", comment._id);
 urlencoded.append("owner", comment.owner);
-    urlencoded.append("sketch", sketch._id);
+urlencoded.append("sketch", sketch._id);
     
 
     
@@ -187,7 +188,12 @@ useEffect(() => {
                                   name="comment"
                                   onChange={handleChange}
                                   value={commentImput}
-                                   onSubmit={()=>commentSubmit}
+              onSubmit={() => commentSubmit}
+               onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                commentSubmit()
+              }
+            }}
             />
             <div style={{display:"flex", flexDirection: "row",alignItems:"flex-end", marginRight:"0px", marginLeft:"930px"}}> <Button style={{dfisplay:"flex", flexDirection: "row",alignItems:"flex-end"}} onClick={commentSubmit} variant='success'>enviar</Button></div>
            

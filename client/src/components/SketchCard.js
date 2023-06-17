@@ -389,7 +389,7 @@ useEffect(() => {
 
             <div >
               
-              {props?.props?.likes && (<h6>{props?.props.likes?.length}{" "}{props?.props.likes?.length === 1 ? "Like" : "Likes"}</h6>)}
+              {props?.props?.likes && (<h6>{props?.props.likes?.length}{" "}{props?.props.likes?.length === 1 ? <i>Cool</i> : <i>Coools</i> }</h6>)}
               
             </div>
 
