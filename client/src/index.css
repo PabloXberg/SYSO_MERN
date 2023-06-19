@@ -185,6 +185,7 @@ font-family: 'Bungee Shade', cursive;
 
 }
 .detailsImage{
+  /* border: solid 3px black; */
   height: 800px;
   min-height: 600px;
   max-height: 800px;
@@ -214,10 +215,15 @@ font-family: 'Bungee Shade', cursive;
   font-size: large;
 } */
 
-.sketchDetails{
-
-display: flex;
-flex-direction: column;
+.sketchDetails {
+ 
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .opciones {
@@ -254,48 +260,20 @@ flex-direction: row;
 }
 
 .modal-conta {
-  /* position: fixed; */
-  z-index: 1000;
-  position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    margin-top: 200px;
-    margin-bottom: 200px;
-    margin-left: 200px;
-    margin-right: 200px;
-    width: 400px; /* Ajusta el ancho según tus necesidades */
-    height: 200px;/* Ajusta la altura según tus necesidades */
-  background-color: rgba(0, 0, 0, 0.733);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+ 
+    z-index: 1000;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    /* Ajusta el ancho según tus necesidades */
+    height: 200px;
+    /* Ajusta la altura según tus necesidades */
+    background-color: rgba(0, 0, 0, 0.733);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: solid 3px orange;
-  
-}
-/* .modal-picture {
-  box-shadow: 20%;
-  width: 100%;
-  border-radius: 15px;
-  align-items: center;
-  box-shadow: 10px green;
-  justify-self: center;
-
-}
-
-.modal-title {
-  margin: 0;
-} */
-/* .modal-content {
-  width: 400px;
-  height: 650px;
-  background-color: #fff;
-  border: solid 3px orange;
-  border-radius: 20px;
-  align-items: center;
-  justify-self: center;
-  padding-top: 2%;
-  box-shadow: 10px;
-  box-shadow: 10px green;
-} */
+    border-radius: 15px;
+  }

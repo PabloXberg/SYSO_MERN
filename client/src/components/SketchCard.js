@@ -376,34 +376,38 @@ useEffect(() => {
               {/* {console.log('likesArray :>> ', likesArray)}
               {console.log('user._id >> ', user?._id)}
               {console.log('props :>> ', props)} */}
-
-                              {/* {props.props.likes._id === user?._id */}
-               {likesArray.includes(user?._id) 
+             {/* {props.props.likes._id === user?._id */}
+              
+                {likesArray.includes(user?._id) 
 
                 ?
-                (<i className="material-icons Bedit" style={{ cursor: "pointer" }} onClick={() => unlikeSketch(_id)}>thumb_down</i>)
+                    // ME GUSTA Y NO ME  GUSTA
+                (<div style={{display: "flex", flexDirection: "row", justifyContent:"flex-start", gap:"5px"}}> <i className="material-icons Bedit" style={{ cursor: "pointer" }} onClick={() => unlikeSketch(_id)}>thumb_down</i>
+                   {props?.props?.likes && (<h6>{props?.props.likes?.length}{" "}{props?.props.likes?.length === 1 ? <i></i> : <i></i> }</h6>)} </div>
+                 )
+                
                 :
-                (<i className="material-icons Bedit" style={{ cursor: "pointer" }} onClick={() => likeSketch(_id)}>thumb_up</i>)
+                (
+                  <div style={{display: "flex", flexDirection: "row", justifyContent:"flex-start"}}> <i className="material-icons Bedit" style={{ cursor: "pointer" }} onClick={() => likeSketch(_id)}>thumb_up</i>  
+                   {props?.props?.likes && (<h6>{props?.props.likes?.length}{" "}{props?.props.likes?.length === 1 ? <i></i> : <i></i> }</h6>)} </div>             )
               }
             </div>
 
-            <div >
+            {/* <div >
               
-              {props?.props?.likes && (<h6>{props?.props.likes?.length}{" "}{props?.props.likes?.length === 1 ? <i>Cool</i> : <i>Coools</i> }</h6>)}
+              {props?.props?.likes && (<h6>{props?.props.likes?.length}{" "}{props?.props.likes?.length === 1 ? <i></i> : <i></i> }</h6>)}              
+            </div> */}
+       <div style={{display: "flex", flexDirection:"row", justifyContent:"space-around", gap:"2px"}}>
+               <h6><b>{sketch?.props?.comments?.length} </b> </h6>
               
-            </div>
+              <Link to={page + _id} params={_id} key={_id} style={{ disply: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+             
+                <i className="material-icons Bedit" to="/sketchdetail" style={{ cursor: "pointer" }}>message</i>
+              </Link>
+             
+        </div >
+            
 
-
-          <Link to={page + _id} params={_id}  key={_id}>
-           <i
-            className="material-icons"
-            to="/sketchdetail"
-            style={{ cursor: "pointer" }}
-          >
-            message
-          </i> 
-          </Link>
-          
         </Card.Footer>
       </Card.Body>
 

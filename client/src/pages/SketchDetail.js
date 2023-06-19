@@ -174,13 +174,43 @@ useEffect(() => {
        <div className='detailsImage'>
            <Card className="bg-light ">
           <Card.Img variant="top" src={sketch?.url} alt={sketch?.name} />
-          <Card.ImgOverlay style={{border: "solid 2px white"}}>
-            <h1 className='detailsTitle'>{sketch?.name}</h1>
-            <Card.Text className='detailsText2'><b><i>Upload on {shortdatum}</i></b></Card.Text>
+
+          <span style={{display:"flex", flexDirection:"row", justifyContent:"space-between"}}>
+          <h1  >{sketch?.name}</h1>
+            <Card.Text ><i>Upload on {shortdatum}</i></Card.Text>
+           <Card.Text ><i>Upload by <b>{sketch?.owner?.username}</b></i></Card.Text>
+          </span>  
                     
-            
-          </Card.ImgOverlay>
-            <Card.Text className='detailsText1'>{sketch?.comment}</Card.Text>
+ <div style={{ display: "flex",flexDirection:"row" ,justifyContent: "space-between" }}>
+          <Card.Text  className='detailsText1'>{sketch?.comment}</Card.Text>
+           
+              
+              {sketch?.likes && (<h5>{sketch?.likes?.length}{" "}{(<i className="material-icons">thumb_up</i>)}</h5>)}
+
+
+      {/* PARA HACER LA FUNCIONALIDAD DEL LIKES/UNLIKES       */}
+              {/* {sketch?.likes?.includes(user?._id) 
+              
+
+                ?
+                    // ME GUSTA Y NO ME  GUSTA
+                (<div style={{display: "flex", flexDirection: "row", justifyContent:"flex-start", gap:"5px"}}> <i className="material-icons Bedit" style={{ cursor: "pointer" }} onClick={() => unlikeSketch(sketch?._id)}>thumb_down</i>
+                   {sketch?.likes && (<h6>{sketch?.likes?.length}{" "}{sketch?.likes?.length === 1 ? <i></i> : <i></i> }</h6>)} </div>
+                 )
+                
+                :
+                (
+                  <div style={{display: "flex", flexDirection: "row", justifyContent:"flex-start"}}> <i className="material-icons Bedit" style={{ cursor: "pointer" }} onClick={() => likeSketch(sketch?._id)}>thumb_up</i>  
+                   {sketch?.likes && (<h6>{sketch?.likes?.length}{" "}{sketch?.likes?.length === 1 ? <i></i> : <i></i> }</h6>)} </div>             )
+              } */}
+
+
+
+
+
+
+
+            </div>
               <FloatingLabel controlId="floatingTextarea2" label="add a comment..">
                  <Form.Control
                                   as="textarea"
@@ -188,14 +218,14 @@ useEffect(() => {
                                   name="comment"
                                   onChange={handleChange}
                                   value={commentImput}
-              onSubmit={() => commentSubmit}
-               onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                commentSubmit()
-              }
-            }}
-            />
-            <div style={{display:"flex", flexDirection: "row",alignItems:"flex-end", marginRight:"0px", marginLeft:"930px"}}> <Button style={{dfisplay:"flex", flexDirection: "row",alignItems:"flex-end"}} onClick={commentSubmit} variant='success'>enviar</Button></div>
+                                  onSubmit={() => commentSubmit}
+                                  onKeyDown={(e) => {
+                                  if (e.key === "Enter") {
+                                    commentSubmit()
+                                  }
+                                }}
+                                />
+            {/* <div style={{display:"flex", flexDirection: "row",alignItems:"flex-end", marginRight:"0px", marginLeft:"930px"}}> <Button style={{dfisplay:"flex", flexDirection: "row",alignItems:"flex-end"}} onClick={commentSubmit} variant='success'>enviar</Button></div> */}
            
                    </FloatingLabel>
         </Card>
