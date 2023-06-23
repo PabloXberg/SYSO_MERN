@@ -107,21 +107,21 @@ const EditProfile = (props: Props) => {
 
               <Form onSubmit={handleSubmit}>
                   <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Label >Email address</Form.Label>
-                    <Form.Control type='email' name='email' placeholder={user?.email}  onChange={handleChange}/>
+                    <Form.Label >Correo electrónico:</Form.Label>
+                    <Form.Control type='email' name='correo' placeholder={user?.email}  defaultValue={user?.email}  onChange={handleChange}/>
                     <Form.Text className="text-muted">
-                      <i>Required</i><br /><br />
+                      <i>Obligatorio</i><br /><br />
                     </Form.Text>
 
                     
-                    <Form.Label >User Name:</Form.Label>
-                  <Form.Control type="text"  name='username' placeholder={user?.username}  onChange={handleChange}/>
+                    <Form.Label >Nombre de Usuario:</Form.Label>
+                  <Form.Control type="text"  name='username' placeholder={user?.username}  defaultValue={user?.username}  onChange={handleChange}/>
                     <Form.Text className="text-muted">
-                      <i>Required</i><br /><br />
+                      <i>Obligatorio</i><br /><br />
                     </Form.Text>
                   
-                    <Form.Label >Personal Info:</Form.Label>
-                    <Form.Control type="text"name='info' placeholder={user?.info} onChange={handleChange}/>
+                    <Form.Label >Informacion Personal:</Form.Label>
+                    <Form.Control type="text"name='info' placeholder={user?.info}  defaultValue={user?.info} onChange={handleChange}/>
                     {/* <Form.Text className="text-muted">
                       We'll never share your email with anyone else.
                     </Form.Text> */}
@@ -132,10 +132,10 @@ const EditProfile = (props: Props) => {
             </Form.Group> */}
             <div className="botones">
                   <Button variant="dark" disabled onClick={handleShow}>
-                change password
+                Cambiar Contraseña
                 </Button>
                   <Button variant="success" type="submit" >
-                  Save
+                  Guardar
               </Button>
               
               <Modal
@@ -147,23 +147,23 @@ const EditProfile = (props: Props) => {
                 
         >
           <Modal.Header closeButton>
-            <Modal.Title>Change Password</Modal.Title>
+            <Modal.Title>Cambiar Contraseña</Modal.Title>
           </Modal.Header>
                 <Modal.Body>
                   
                 <Form.Group className="mb-3" controlId="formBasicPassword">
-                    <Form.Label className="text-muted"><i>Old Password</i></Form.Label>
-                    <Form.Control type="password" placeholder="Old Password" /> <br />
-                    <Form.Label className="text-muted"><i>New Password</i></Form.Label>
-                    <Form.Control type="password" placeholder="New Password" /><br />
-                    <Form.Label className="text-muted"><i>Repeat New Password</i></Form.Label>
-                    <Form.Control type="password" placeholder="Repeat New Password" />
+                    <Form.Label className="text-muted"><i>Contraseña actual</i></Form.Label>
+                    <Form.Control type="password" placeholder="Contraseña actual" /> <br />
+                    <Form.Label className="text-muted"><i>Nueva Contraseña</i></Form.Label>
+                    <Form.Control type="password" placeholder="Nueva Contraseña" /><br />
+                    <Form.Label className="text-muted"><i>Repite la nueva Contraseña</i></Form.Label>
+                    <Form.Control type="password" placeholder="Repite la nueva Contraseña" />
                   
                   <Modal.Footer>
                     <Button variant="danger" onClick={handleClose}>
-                      Close
+                      Cancelar
                     </Button>
-                    <Button variant="success">Save</Button>
+                    <Button variant="success">Guardar</Button>
                     </Modal.Footer>
                     </Form.Group>
                   

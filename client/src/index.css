@@ -1,16 +1,26 @@
-body {
+@font-face {
+  font-family: 'MiFuente';
+  src: url('../src/fonts/DonGraffiti.otf') format('truetype');
+}
+/* * {
+  font-family: 'MiFuente';
+  color: beige;
+  font-size: large;
+  background-color: black;
+} */
+/* body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
+} */
+/* 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
-}
+} */
 
 .cardcontainer {
   display: flex;
@@ -181,7 +191,8 @@ height: 80rem;
 
 
 .NavtrapBar{
-font-family: 'Bungee Shade', cursive;
+font-family: 'MiFuente', cursive;
+font-size: xx-large;
 
 }
 .detailsImage{
@@ -203,20 +214,24 @@ font-family: 'Bungee Shade', cursive;
 
 .detailsTitle
 {
+  font-family: 'MiFuente';
+    font-size: xx-large;
   color: white;
-  font-size: xx-large;
+  /* font-size: xx-large; */
 /* font-family: 'Bungee Shade', cursive; */
 }
 
-.detailsText1{
-  font-size: x-large;
-}
+/* .detailsText1{
+    font-family: 'MiFuente';
+  font-size: xx-large;
+} */
 /* .detailsText2 {
   font-size: large;
 } */
 
 .sketchDetails {
- 
+  /* font-family: 'MiFuente';
+    font-size: xx-large; */
   position: absolute;
   top: 50%;
   left: 50%;

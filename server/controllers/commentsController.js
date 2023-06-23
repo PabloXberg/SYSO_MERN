@@ -10,7 +10,7 @@ const addCommentToUser = async (userId, sharedPost) => {
             { $push: { comments: sharedPost._id } },
             { new: true }
         )
-        console.log("user making post....", result);
+        // console.log("user making post....", result);
         return true
     } catch (error) {
         console.log(error)
@@ -23,7 +23,7 @@ const deleteCommentToUser = async (userId, sharedPost) => {
             { $pull: { comments: sharedPost._id } },
             { new: true }
         )
-        console.log("user making post....", result);
+        // console.log("user making post....", result);
         return true
     } catch (error) {
         console.log(error)
@@ -36,7 +36,7 @@ const addCommentToSketch = async (sketchId, sharedPost) => {
             { $push: { comments: sharedPost._id } },
             { new: true }
         )
-        console.log("user making post on this sketch...", result);
+        // console.log("user making post on this sketch...", result);
         return true
     } catch (error) {
         console.log(error)
@@ -49,7 +49,7 @@ const deleteCommentToSketch = async (sketchId, sharedPost) => {
             { $pull: { comments: sharedPost._id } },
             { new: true }
         )
-        console.log("user making post on this sketch...", result);
+        // console.log("user making post on this sketch...", result);
         return true
     } catch (error) {
         console.log(error)
@@ -67,7 +67,7 @@ const deleteComment = async (req, res) => {
         const deletedComment = await CommentModel.findByIdAndRemove(req.body._id);
         const updatedUser = await deleteCommentToUser(req.body.owner, deletedComment);
         const updatedSketch = await deleteCommentToSketch(req.body.sketch, deletedComment);
-        console.log('deletedComment :>> ', deletedComment);
+        // console.log('deletedComment :>> ', deletedComment);
         res.status(200).json({
             message: "Mensaje borrado!! ",
             userUpdated: updatedUser,
@@ -121,9 +121,9 @@ const createComment = async (req, res) => {
         
         res.status(200).json({
             message: "Mensaje guardado!! ",
-            userUpdatd: updatedUser,
-            sketchUpdated:updatedSketch,
-            newComment: registeredComment
+            // userUpdatd: updatedUser,
+            // sketchUpdated:updatedSketch,
+            // newComment: registeredComment
         })
   } catch (error) {
     console.log(error);

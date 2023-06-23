@@ -13,20 +13,22 @@ function UserCard(props: any) {
   
     <div style={{display: "Flex", }}>
       
-      <Card style={{ width: '18rem' }}>
+      <Card >
         <Card.Img variant="top" src={props.props.avatar} style={{
           borderRadius: "50%", width: "15rem", height: "15rem", alignSelf: "center", padding:"1rem" }} />
-        <Card.Body>
-          
+        <Card.Body style={{width: '18rem', display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
+            <Card.Title>{props.props.username ? props.props.username : "Nombre de Usuario"}</Card.Title>
 
-
-          <Card.Title>{props.props.username ? props.props.username : "Nombre de Usuario"}</Card.Title>
-
-        <Card.Text>
-          {props.props.info ? props.props.info : "Hier we can see some info about the User"}
-          </Card.Text>
-          <Card.Link style={{cursor: "pointer"}} onClick={()=>setShow(true)} ><i>Sketchs</i></Card.Link>
-          <Card.Footer className="text-muted"><i>Registered on: {shortdatum}</i></Card.Footer>
+            <Card.Text>
+              {props.props.info ? props.props.info : "Hier we can see some info about the User"}
+            </Card.Text>
+          <div>
+            <Card.Footer style={{display:"flex", flexDirection:"row", justifyContent:"space-around"}}>
+                <Card.Link style={{ cursor: "pointer" }} onClick={() => setShow(true)} ><i>Bocetos Subidos</i></Card.Link>
+            </Card.Footer>  
+            <Card.Footer className="text-muted"><i>Registrado el: {shortdatum}</i></Card.Footer>
+          </div>
+         
         {/* <Button variant="primary">Details</Button> */}
       </Card.Body>
     </Card>

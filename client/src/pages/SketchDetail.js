@@ -12,26 +12,21 @@ const SketchDetail = () => {
 const { user } = useContext(AuthContext);
 const { id } = useParams();
 const [sketch, setSketch] = useState();
-  const [commentImput, setCommentInput] = useState("");
-  const [commentEditImput, setCommentEditInput] = useState("");
+const [commentImput, setCommentInput] = useState("");
+const [commentEditImput, setCommentEditInput] = useState("");
 const [resultado, setResultado] = useState("");
 const [refresh, setRefresh] = useState(false);
-  const [showDelete, setShowDelete] = useState(false);
-  const [showEdit, setShowEdit] = useState(false);
+const [showDelete, setShowDelete] = useState(false);
+const [showEdit, setShowEdit] = useState(false);
 
 const handleCloseDelete = () => setShowDelete(false);
-  const handleShowDelete = () => setShowDelete(true);
-  const handleCloseEdit = () => setShowEdit(false);
+const handleShowDelete = () => setShowDelete(true);
+const handleCloseEdit = () => setShowEdit(false);
 const handleShowEdit = () => setShowEdit(true);
 
-  const handleChange = (e) => {
-
-  setCommentInput( e.target.value );
-}
+  const handleChange = (e) => {setCommentInput( e.target.value )}
   
-const handleChangeEdit = (e) => {
-    setCommentEditInput( e.target.value );
-  }
+const handleChangeEdit = (e) => {setCommentEditInput( e.target.value )}
   
 const geSketchbyID = async (ID) => {
 const myHeaders = new Headers();
@@ -56,7 +51,7 @@ const requestOptions = {
   }
   }
 
-  const commentSubmit = async() => {
+const commentSubmit = async() => {
     
    const myHeaders = new Headers();
    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
@@ -162,10 +157,14 @@ useEffect(() => {
   setRefresh(false)
   }, [resultado, refresh, id]);
 
-  const datum = sketch?.createdAt;
-  const shortdatum = datum?.substring(0, 10);
-
-
+///////////////  FORMATEANDO LA FECHA EN DIFERENTES FORMATOS PARA QUE SEA MAS AMIGABLE ////////////
+const datum = sketch?.createdAt;
+const shortdatum = datum?.substring(0, 10);
+  
+// const partesFecha = shortdatum?.split("-");
+// const fechaTransformada = partesFecha[2] + "-" + partesFecha[1] + "-" + partesFecha[0];
+  
+///////////////////////////////////////////////////////////////////////////////////////////////////
   // console.log('sketch :>> ', sketch);
   // Contenido y lógica del componente
   return (
@@ -177,8 +176,8 @@ useEffect(() => {
 
           <span style={{display:"flex", flexDirection:"row", justifyContent:"space-between"}}>
           <h1  >{sketch?.name}</h1>
-            <Card.Text ><i>Upload on {shortdatum}</i></Card.Text>
-           <Card.Text ><i>Upload by <b>{sketch?.owner?.username}</b></i></Card.Text>
+            <Card.Text >Subido el: <i><b>{shortdatum}</b></i> por: <i><b>{sketch?.owner?.username}</b></i></Card.Text>
+           {/* <Card.Text >Subido por: <i><b>{sketch?.owner?.username}</b></i></Card.Text> */}
           </span>  
                     
  <div style={{ display: "flex",flexDirection:"row" ,justifyContent: "space-between" }}>
@@ -206,12 +205,8 @@ useEffect(() => {
 
 
 
-
-
-
-
             </div>
-              <FloatingLabel controlId="floatingTextarea2" label="add a comment..">
+          <FloatingLabel controlId="floatingTextarea2" label="agrega un comentario...">
                  <Form.Control
                                   as="textarea"
                                   style={{ height: '70px', width: "100%" }}
@@ -238,16 +233,28 @@ useEffect(() => {
             <>
               
               {sketch.comments && sketch.comments.map((comment, index) => {
-
+                // const reversed = comment.reverse();
+                // console.log('reversed :>> ', reversed);
+                // console.log('comment :>> ', comment);
                 let TextDatum =""
                 if (comment.createdAt === comment.updatedAt) {
-                const commentdatum = comment.createdAt;
-                  const commentshortdatum = commentdatum.substring(0, 10);
-                  TextDatum = "dijo el " + commentshortdatum;
+                  const commentdatum = comment.createdAt;
+                  const fecha = new Date(commentdatum);
+                  const opcionesFecha = { year: 'numeric', month: '2-digit', day: '2-digit' };
+                  const opcionesHora = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+                  const fechaFormateada = fecha.toLocaleDateString('es-ES', opcionesFecha);
+                  const horaFormateada = fecha.toLocaleTimeString('es-ES', opcionesHora);
+                  const fechaHoraAmigable = `${fechaFormateada} ${horaFormateada}`;
+                  TextDatum = "dijo el " + fechaHoraAmigable;
                 } else{
-                   const commentdatum = comment.updatedAt;
-                  const commentshortdatum = commentdatum.substring(0, 10);
-                   TextDatum = "editado el " + commentshortdatum;
+                  const commentdatum = comment.updatedAt;
+                  const fecha = new Date(commentdatum);
+                  const opcionesFecha = { year: 'numeric', month: '2-digit', day: '2-digit' };
+                  const opcionesHora = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+                  const fechaFormateada = fecha.toLocaleDateString('es-ES', opcionesFecha);
+                  const horaFormateada = fecha.toLocaleTimeString('es-ES', opcionesHora);
+                  const fechaHoraAmigable = `${fechaFormateada} ${horaFormateada}`;
+                   TextDatum = "editado el " + fechaHoraAmigable;
               }
           
 
@@ -278,7 +285,7 @@ useEffect(() => {
                     
                     </div>
 
-                    <Modal style={{height:"20rem"}} show={showDelete} onHide={handleCloseDelete}>
+                    <Modal  style={{height:"20rem"}} show={showDelete} onHide={handleCloseDelete}>
                             <Modal.Header closeButton>
                               <Modal.Title>ATENCION</Modal.Title>
                             </Modal.Header>
@@ -295,14 +302,19 @@ useEffect(() => {
                       </Modal.Body>
        
                     </Modal>
+                    {console.log('reverseIndex :>> ')}
+                    {console.log('index :>> ', index)}
 
-
-                       <Modal style={{height:"23rem"}} show={showEdit} onHide={handleCloseEdit}>
+                    <Modal  style={{height:"23rem"}} show={showEdit} onHide={handleCloseEdit}>
                             <Modal.Header closeButton>
                               <Modal.Title>Editar Comentario</Modal.Title>
                             </Modal.Header>
-                          <Modal.Body> <Modal.Title>Estás seguro de eliminar el comentario??</Modal.Title>     <br/>
-                        <Form.Control style={{height:"5rem"}} type="text" name='comment' placeholder={comment?.comment} onChange={handleChangeEdit} />
+                          <Modal.Body> <Modal.Title>Si quiere, puede editar su comentario...</Modal.Title>     <br/>
+                        <Form.Control style={{height:"5rem"}} type="text" name='comment' placeholder={comment?.comment} defaultValue={comment?.comment}      onKeyDown={(e) => {
+                                  if (e.key === "Enter") {
+                                    handleCommentEdit(comment)
+                                  }
+                                }} onChange={handleChangeEdit} />
                         <br/>
                         < div style={{ display: "flex", flexDirection: "row", justifyContent: "space-around" }}>
                           <Button variant="danger" onClick={ handleCloseEdit}>
@@ -325,23 +337,11 @@ useEffect(() => {
               
 
 
-   
-
-
-
-
-
-
               </>
              
             :
             ""}
           </div>
-
-
-              
-        
-
 
         
       </div>

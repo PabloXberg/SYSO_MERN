@@ -37,6 +37,8 @@ const handleCloseDelete = () => setShowDelete(false);
     
   const datum = props.props.createdAt;
   const shortdatum = datum.substring(0, 10);
+  const partesFecha = shortdatum.split("-");
+  const fechaTransformada = partesFecha[2] + "-" + partesFecha[1] + "-" + partesFecha[0];
 
   const likesArray = props?.props?.likes;
 
@@ -221,12 +223,12 @@ useEffect(() => {
       </Link>
 
         
-      <Card.Body>
+      <Card.Body style={{width: '18rem', display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
         <Card.Title>{props?.props.name}</Card.Title>        
         <Card.Text>
           {props.props.comment
             ? props.props.comment
-            : "Hier we can see some info about the Sketch"}
+            : "(...aqui normalmente hay informacion sobre el boceto...)"}
           </Card.Text>
           
           
@@ -237,7 +239,7 @@ useEffect(() => {
           
           ?
                                 
-            (<Card.Footer className="text-muted">{" "}<i>Created by: </i>{" "}
+            (<Card.Footer className="text-muted">{" "}<i>Creado por: </i>{" "}
               <Card.Link style={{ cursor: "pointer" }} onClick={() => setShow(true)}>
                 <b> {props?.props.owner.username ? props?.props.owner.username : user?.username}</b>
             </Card.Link>
@@ -250,7 +252,7 @@ useEffect(() => {
               ?<>   <Card.Footer style={{
                 display: "flex", flexDirection: "row", justifyContent: "space-between"
               }}>
-                <div>Created by me</div>
+                <div>Creado por mí</div>
                 <div>
                       <i className="material-icons Bedit" onClick={handleShowEdit} placeholder="edit" style={{ cursor: "pointer" }} > edit</i>
                        <i className="material-icons Bedit" style={{ cursor: "pointer" }} onClick={handleShowDelete}> delete_forever</i>
@@ -282,13 +284,13 @@ useEffect(() => {
                               
               <Modal
     
-                    className='userRegisterModal'
+                    className='userRegisterModal dark'
                     show={showEdit}
                     onHide={handleCloseEdit}
                     backdrop="static"
                     keyboard={false}
                     aria-labelledby="contained-modal-title-vcenter"
-                  centered
+                    centered
                                       // style={{ height: "70rem" }}
                   
                   >
@@ -319,13 +321,13 @@ useEffect(() => {
            
                         <Form.Group className="mb-6" controlId="formBasicEmail" style={{display:"flex", flexDirection:"column", alignContent:"space-between"}} >
                           <Form.Label >Name:</Form.Label>
-                          <Form.Control type='text' name='name' placeholder={props.props.name}  onChange={handleChangeEdit}/>
+                          <Form.Control type='text' name='name' placeholder={props.props.name} defaultValue={props.props.name}  onChange={handleChangeEdit}/>
                           <Form.Text className="text-muted">
                             
                         </Form.Text>
                         
                           <Form.Label >Description:</Form.Label>
-                          <Form.Control type="text" name='comment' placeholder={props.props.comment} onChange={handleChangeEdit} />
+                          <Form.Control type="text" name='comment' placeholder={props.props.comment} defaultValue={props.props.comment} onChange={handleChangeEdit} />
                         <Form.Text className="text-muted"></Form.Text>
                                             
                       </Form.Group>
@@ -352,7 +354,7 @@ useEffect(() => {
               : 
               //AQUI DEVERIA IR EL FOOTER CON EL NOMBRE DEL CREADOR; EN LA PAGINA DE MIS FAVORITOS
 
-                  <Card.Footer className="text-muted">{" "}<i>Created by: </i>{" "} <b> {props?.props?.owner?.username ? props?.props?.owner?.username : user?.username}</b>
+                  <Card.Footer className="text-muted">{" "}<i>Creado por: </i>{" "} <b> {props?.props?.owner?.username ? props?.props?.owner?.username : user?.username}</b>
               {/* <Card.Link style={{ cursor: "pointer" }} onClick={() => setShow(true)}>
                
             </Card.Link> */}
@@ -365,7 +367,7 @@ useEffect(() => {
 
 
         <Card.Footer className="text-muted">
-          <i>Upload: {shortdatum}</i>
+          Subido el: <i>{fechaTransformada}</i>
           </Card.Footer>
           
 
@@ -397,7 +399,7 @@ useEffect(() => {
               
               {props?.props?.likes && (<h6>{props?.props.likes?.length}{" "}{props?.props.likes?.length === 1 ? <i></i> : <i></i> }</h6>)}              
             </div> */}
-       <div style={{display: "flex", flexDirection:"row", justifyContent:"space-around", gap:"2px"}}>
+            <div style={{display: "flex", flexDirection:"row", justifyContent:"space-around", gap:"2px"}}>
                <h6><b>{sketch?.props?.comments?.length} </b> </h6>
               
               <Link to={page + _id} params={_id} key={_id} style={{ disply: "flex", flexDirection: "row", justifyContent: "space-between" }}>

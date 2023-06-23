@@ -140,7 +140,7 @@ const MySketchs = (props: Props) => {
         }}
         className="title"
       >
-        <h1 className='NavtrapBar' style={{textAlign:"center"}}>my Sketches</h1>
+        <h1 className='NavtrapBar' style={{textAlign:"center", fontSize:"xxx-large"}}>Mis Bocetos</h1>
         <Button onClick={handleShow} className="primary">
           <b>+</b>
         </Button>
@@ -153,7 +153,7 @@ const MySketchs = (props: Props) => {
           keyboard={false}
            >
           <Modal.Header closeButton>
-            <Modal.Title>Upload a new Sketch</Modal.Title>
+            <Modal.Title>Sube un nuevo Boceto</Modal.Title>
           </Modal.Header>
 
           <div>
@@ -182,33 +182,33 @@ const MySketchs = (props: Props) => {
 
             <div className="dataform">
               <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label>Name:</Form.Label>
+                <Form.Label>Nombre:</Form.Label>
                 <Form.Control
                   type="text"
                   name="name"
-                  placeholder="name"
+                  placeholder="nombre..."
                   onChange={handleChange}
                 />
                 <Form.Text className="text-muted"></Form.Text>
-                <Form.Label>Comment about it:</Form.Label>
+                <Form.Label>Comentario o descripción sobre el boceto:</Form.Label>
                 <Form.Control
                   type="text"
                   name="comment"
-                  placeholder="comment"
+                  placeholder="descripción..."
                   onChange={handleChange}
                 />
               </Form.Group>
             </div>
             <Modal.Footer style={{display:"flex",flexDirection:"row", justifyContent:"space-between"}}>
               <Button variant="danger" onClick={handleClose}>
-                Close
+                Cancelar
               </Button>
               <Button
                 style={{ cursor: "pointer" }}
                 onClick={handleSubmit}
                 variant="success"
               >
-                Save
+                Guardar
               </Button>
             </Modal.Footer>
           </div>
