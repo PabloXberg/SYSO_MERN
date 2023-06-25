@@ -245,14 +245,14 @@ function NavStrap() {
                       style={{ cursor: "pointer", fontSize: "xx-large" }}
                       onClick={handleShowRegister}
                     >
-                      Register !
+                      Registrarse
                     </Navbar.Brand>
                     <Navbar.Brand
                       style={{ cursor: "pointer", fontSize: "xx-large" }}
                       onClick={handleShowLogin}
                     >
-                      Login !
-                    </Navbar.Brand>
+                        Iniciar Sesión
+                      </Navbar.Brand>
                   </>
 
                   // MODAL PARA LOGIN DE USUSARIO
