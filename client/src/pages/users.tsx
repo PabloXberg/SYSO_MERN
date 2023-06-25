@@ -1,7 +1,7 @@
 import  { Key, useEffect, useState } from "react";
 import UserCard from "../components/UserCard";
 import "../index.css";
-import { serverURL } from "../serverURL";
+// import { serverURL } from "../serverURL";
 
 
 type Props = {};
@@ -29,7 +29,7 @@ const UsersPage = (props: Props) => {
   const getUsers = async () => {
     try {
       const response = await fetch(
-        `${serverURL}users/all`
+        `${process.env.REACT_APP_BASE_URL}users/all`
       );
       const result = await response.json();
       setUsers(result.users);

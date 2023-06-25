@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import SketchCard from "../components/SketchCard";
-import { serverURL } from '../serverURL' 
+// import { serverURL } from '../serverURL' 
 
 const MyFav = () => {
   //////////////////////////////////////////////////////////////////////////////// VARIABLES "STATE"
@@ -20,7 +20,7 @@ const MyFav = () => {
     setID(id);
     try {
       const response = await fetch(
-        `${serverURL}users/id/${id}`
+        `${process.env.REACT_APP_BASE_URL}users/id/${id}`
       );
       const result = await response.json();
 

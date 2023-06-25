@@ -1,5 +1,5 @@
 import { ReactNode, createContext, useEffect, useState } from "react"
-import { serverURL } from "../serverURL"
+// import { serverURL } from "../serverURL"
 
 
 interface User {
@@ -64,7 +64,7 @@ export const AuthContextProvider = ({children} : {children: ReactNode}) => {
       body: urlencoded,
     };
     try {
-      const response = await fetch(`${serverURL}users/login`, requestOptions);
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}users/login`, requestOptions);
 
       // console.log(response);
       // console.log('process.env.REACT_APP_BASE_URL :>> ', process.env.REACT_APP_BASE_URL);
@@ -115,7 +115,7 @@ const fetchActiveUser = async (token: string) => {
   };
 
 try {
-  const response = await fetch(`${serverURL}users/active`, requestOptions);
+  const response = await fetch(`${process.env.REACT_APP_BASE_URL}users/active`, requestOptions);
   const result = await response.json();
   // console.log("active user result", result)
   setUser(result)

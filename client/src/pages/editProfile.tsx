@@ -5,7 +5,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import { Image } from "react-bootstrap";
 import "../index.css";
 import Modal from "react-bootstrap/Modal";
-import { serverURL } from '../serverURL' 
+// import { serverURL } from '../serverURL' 
 
 type Props = {};
 
@@ -63,7 +63,7 @@ const EditProfile = (props: Props) => {
 
     try {
       const response = await fetch(
-        `${serverURL}users/update/${user_ID}`,
+        `${process.env.REACT_APP_BASE_URL}users/update/${user_ID}`,
         requestOptions
       );
       const result = await response.json();
