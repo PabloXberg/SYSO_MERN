@@ -1,8 +1,8 @@
 import  { Key, useEffect, useState } from "react";
 
 import "../index.css";
-import {serverURL} from '../../../server/utils/serverURL' 
 import SketchCard from "../components/SketchCard";
+import { serverURL } from "../serverURL";
 
 type Props = {};
 

@@ -1,7 +1,8 @@
 import  { Key, useEffect, useState } from "react";
 import UserCard from "../components/UserCard";
 import "../index.css";
-import {serverURL} from '../../../server/utils/serverURL' 
+import { serverURL } from "../serverURL";
+
 
 type Props = {};
 

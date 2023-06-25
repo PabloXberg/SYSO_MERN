@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import SketchCard from "../components/SketchCard";
-import { serverURL } from '../../../server/utils/serverURL' 
+import { serverURL } from '../serverURL' 
 
 const MyFav = () => {
   //////////////////////////////////////////////////////////////////////////////// VARIABLES "STATE"

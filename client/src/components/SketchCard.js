@@ -4,7 +4,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import UserModal from "./UserModal";
 import { Link, useLocation } from "react-router-dom";
 import { Button, Form, Modal } from "react-bootstrap";
-import { serverURL } from "../../../server/utils/serverURL";
+import { serverURL } from "../serverURL";
 
 function SketchCard(props) {
   const { user } = useContext(AuthContext);

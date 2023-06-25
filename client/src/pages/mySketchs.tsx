@@ -5,7 +5,7 @@ import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import DefaultImage from "../default-placeholder.png";
-import {serverURL} from '../../../server/utils/serverURL' 
+import {serverURL} from '../serverURL' 
 
 type Props = {};
 

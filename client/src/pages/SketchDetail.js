@@ -5,7 +5,8 @@ import { Button, Form, Modal } from "react-bootstrap";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import { AuthContext } from "../contexts/AuthContext";
 import "../index.css";
-import {serverURL} from '../../../server/utils/serverURL' 
+import { serverURL } from "../serverURL";
+
 
 const SketchDetail = () => {
   const { user } = useContext(AuthContext);

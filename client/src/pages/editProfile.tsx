@@ -5,7 +5,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import { Image } from "react-bootstrap";
 import "../index.css";
 import Modal from "react-bootstrap/Modal";
-import { serverURL } from '../../../server/utils/serverURL' 
+import { serverURL } from '../serverURL' 
 
 type Props = {};
 

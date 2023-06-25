@@ -1,5 +1,5 @@
 import { ReactNode, createContext, useEffect, useState } from "react"
-import { serverURL } from "../../../server/utils/serverURL"
+import { serverURL } from "../serverURL"
 
 
 interface User {

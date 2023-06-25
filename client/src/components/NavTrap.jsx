@@ -10,7 +10,7 @@ import React, { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import "../index.css";
 import Typewriter from "typewriter-effect";
-import { serverURL } from '../../../server/utils/serverURL' 
+import { serverURL } from '../serverURL' 
 
 function NavStrap() {
   const { user, login, logout } = useContext(AuthContext);
