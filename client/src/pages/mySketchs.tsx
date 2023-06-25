@@ -28,7 +28,7 @@ interface User {
   likes: [];
   comments: [];
 }
-
+// eslint-disable-next-line
 type Users = User[];
 type id = any;
 
@@ -43,6 +43,7 @@ const MySketchs = (props: Props) => {
   const sketchsArray = activeUser?.sketchs;
   const [ID, setID] = useState<id>(activeUser?._id);
   const [avatarPreview, setAvatarPreview] = useState(DefaultImage);
+  // eslint-disable-next-line
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -67,6 +68,7 @@ const MySketchs = (props: Props) => {
   };
   useEffect(() => {
     getUserById();
+    // eslint-disable-next-line
   }, []);
 
   ////////////////////////////////////////////////////////////////////////////////// HANDLE CHANGE ON MODAL IMPUTS

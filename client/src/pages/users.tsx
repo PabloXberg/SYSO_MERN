@@ -19,6 +19,7 @@ type Users = User[];
 
 const UsersPage = (props: Props) => {
   const [users, setUsers] = useState<Users>([]);
+  // eslint-disable-next-line
   const [user, setUser] = useState<User | null>(null);
 
   console.log("user :>> ", user);

@@ -7,10 +7,10 @@ const MyFav = () => {
   // const [users, setUsers] = useState<Users>([]);
   const { user } = useContext(AuthContext);
   const [activeUser, setActiveUser] = useState(null);
+  // eslint-disable-next-line
   const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
   const LikesArray = activeUser?.likes;
+  // eslint-disable-next-line
   const [ID, setID] = useState(activeUser?._id);
 
   const getUserById = async () => {
@@ -30,6 +30,7 @@ const MyFav = () => {
   };
   useEffect(() => {
     getUserById();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

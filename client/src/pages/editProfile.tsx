@@ -10,7 +10,8 @@ type Props = {};
 
 const EditProfile = (props: Props) => {
   const { user } = useContext(AuthContext);
-  console.log("user :>> ", user);
+
+  // eslint-disable-next-line
   const [loading, setLoading] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState(user?.avatar);
 

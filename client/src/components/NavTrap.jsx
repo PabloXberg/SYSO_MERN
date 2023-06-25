@@ -21,9 +21,11 @@ function NavStrap() {
   const handleCloseRegister = () => setShowRegister(false);
   const handleShowRegister = () => setShowRegister(true);
   const [avatarPreview, setAvatarPreview] = useState(DefaultImage);
+  // eslint-disable-next-line
   const [loading, setLoading] = useState(false);
-
+// eslint-disable-next-line
   const [password, setPassword] = useState("");
+  // eslint-disable-next-line
   const [isValid, setIsValid] = useState(true);
 
   const [formDataLogin, setFormDataLogin] = useState({

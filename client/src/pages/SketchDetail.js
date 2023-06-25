@@ -46,7 +46,7 @@ const SketchDetail = () => {
       "Authorization",
       `Bearer ${localStorage.getItem("token")}`
     );
-
+// eslint-disable-next-line
     const urlencoded = new URLSearchParams();
 
     const requestOptions = {
@@ -128,6 +128,7 @@ const SketchDetail = () => {
           `${process.env.REACT_APP_BASE_URL}comments/delete/${comment._id}`,
           requestOptions
         );
+        // eslint-disable-next-line
         const result = await response.json();
         // console.log(result);
         setRefresh(true);
