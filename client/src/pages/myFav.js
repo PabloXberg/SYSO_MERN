@@ -17,7 +17,7 @@ const MyFav = () => {
   const getUserById = async () => {
     //  console.log('id :>> ', id);
     const id = user?._id;
-    setID(id);
+    // setID(id);
     try {
       const response = await fetch(
         `${serverURL}users/id/${id}`
@@ -32,7 +32,7 @@ const MyFav = () => {
   useEffect(() => {
     getUserById();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [ID]);
 
   return (
     <div>

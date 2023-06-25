@@ -50,6 +50,7 @@ export const AuthContext = createContext<AuthContextType>(initialAuth);
 export const AuthContextProvider = ({children} : {children: ReactNode}) => {
   const [user, setUser] = useState<User | null>(null);
   // console.log("active user : ", user)
+   // eslint-disable-next-line
   const [error, setError] = useState<Error | null>(null);
 
   const login = async(email: string, password: string) => {
@@ -129,6 +130,7 @@ try {
 
   useEffect(() => {
     checkForToken();
+     // eslint-disable-next-line
   }, [])
 
   return (
