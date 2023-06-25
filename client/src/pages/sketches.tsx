@@ -2,7 +2,7 @@ import  { Key, useEffect, useState } from "react";
 
 import "../index.css";
 import SketchCard from "../components/SketchCard";
-// import { serverURL } from "../serverURL";
+import { serverURL } from "../serverURL";
 
 type Props = {};
 
@@ -24,7 +24,7 @@ const SkechesPage = (props: Props) => {
   const getSketches = async () => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_BASE_URL}sketches/all`
+        `${serverURL}sketches/all`
       );
       const result = await response.json();
       setSketches(result);

@@ -5,7 +5,7 @@ import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import DefaultImage from "../default-placeholder.png";
-// import {serverURL} from '../serverURL' 
+import {serverURL} from '../serverURL' 
 
 type Props = {};
 
@@ -58,7 +58,7 @@ const MySketchs = (props: Props) => {
     setID(id);
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_BASE_URL}users/id/${id}`
+        `${serverURL}users/id/${id}`
       );
       const result = await response.json();
 
@@ -105,7 +105,7 @@ const MySketchs = (props: Props) => {
     /// FETCH
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_BASE_URL}sketches/new`,
+        `${serverURL}sketches/new`,
         requestOptions
       );
       const result = await response.json();
