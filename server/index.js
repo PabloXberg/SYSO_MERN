@@ -23,7 +23,7 @@ const setMiddlewares = () => {
 
   const allowedOrigins = [
     "http://localhost:3000",
-    "https://share-your-sketch-online.vercel.app",
+    "https://shareyoursketchonline.vercel.app",
   ];
   const corsOptions = {
     origin: function (origin, callback) {
