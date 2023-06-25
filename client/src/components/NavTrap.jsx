@@ -42,30 +42,30 @@ function NavStrap() {
     avatar: "",
   });
 
-  function validarPassword(password) {
-    // Verificar la longitud mínima de 10 caracteres
-    if (password.length < 10) {
-      return false;
-    }
+  // function validarPassword(password) {
+  //   // Verificar la longitud mínima de 10 caracteres
+  //   if (password.length < 10) {
+  //     return false;
+  //   }
 
-    // Verificar si hay al menos una mayúscula
-    if (!/[A-Z]/.test(password)) {
-      return false;
-    }
+  //   // Verificar si hay al menos una mayúscula
+  //   if (!/[A-Z]/.test(password)) {
+  //     return false;
+  //   }
 
-    // Verificar si hay al menos un número
-    if (!/\d/.test(password)) {
-      return false;
-    }
+  //   // Verificar si hay al menos un número
+  //   if (!/\d/.test(password)) {
+  //     return false;
+  //   }
 
-    // // Verificar si hay al menos un carácter especial
-    //   if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-    //   return false;
-    // }
+  //   // // Verificar si hay al menos un carácter especial
+  //   //   if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+  //   //   return false;
+  //   // }
 
-    // Si pasa todas las verificaciones, la contraseña es válida
-    return true;
-  }
+  //   // Si pasa todas las verificaciones, la contraseña es válida
+  //   return true;
+  // }
 
   const handleChangeLogin = (e) => {
     setFormDataLogin({ ...formDataLogin, [e.target.name]: e.target.value });
@@ -87,9 +87,9 @@ function NavStrap() {
     e.preventDefault();
     setLoading(true);
 
-    if (validarPassword(password)) {
-      console.log("Contraseña válida");
-      setIsValid(true); //// aqui debo cambiar alguna state variable, para que muestreenable or disable el boton de registrar... y una cruz o tick arriba del input.
+    // if (validarPassword(password)) {
+    //   console.log("Contraseña válida");
+    //   setIsValid(true); //// aqui debo cambiar alguna state variable, para que muestreenable or disable el boton de registrar... y una cruz o tick arriba del input.
 
       const submitData = new FormData();
       submitData.append("email", formDataRegister.email);
@@ -115,12 +115,12 @@ function NavStrap() {
         alert("Something went wrong - check console");
         setLoading(false);
       }
-    } else {
-      alert(
-        "Una contraseña debe contener, al menos, 10 caracteres alfanuméricos aleatorios y una Mayúscula."
-      ); /// podría agregar en cada IF, informacion mas específica... (El password debe tener Numeros... o caracteres especiales...)
-      setIsValid(false);
-    }
+    // } else {
+    //   alert(
+    //     "Una contraseña debe contener, al menos, 10 caracteres alfanuméricos aleatorios y una Mayúscula."
+    //   ); /// podría agregar en cada IF, informacion mas específica... (El password debe tener Numeros... o caracteres especiales...)
+    //   setIsValid(false);
+    // }
   };
 
   const handleFile = (e) => {
