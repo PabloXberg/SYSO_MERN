@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import SketchCard from "../components/SketchCard";
 import { Button } from "react-bootstrap";
@@ -51,14 +51,13 @@ const MySketchs = (props: Props) => {
     url: "",
   });
 
-  // console.log('ID :>> ', ID);
-
   const getUserById = async () => {
-    //  console.log('id :>> ', id);
     const id = user?._id;
     setID(id);
     try {
-      const response = await fetch(`${process.env.REACT_APP_BASE_URL}users/id/${id}`);
+      const response = await fetch(
+        `${process.env.REACT_APP_BASE_URL}users/id/${id}`
+      );
       const result = await response.json();
 
       setActiveUser(result);
@@ -68,7 +67,7 @@ const MySketchs = (props: Props) => {
   };
   useEffect(() => {
     getUserById();
-  }, [user, SketchCard, ID, loading]);
+  }, []);
 
   ////////////////////////////////////////////////////////////////////////////////// HANDLE CHANGE ON MODAL IMPUTS
   const handleChange = (e: { target: { name: any; value: any } }) => {
@@ -111,7 +110,7 @@ const MySketchs = (props: Props) => {
       alert("Success!!! Your new Sketch is uploaded in our data base");
       setLoading(true);
       handleClose();
-     } catch (error) {
+    } catch (error) {
       console.log(error);
       alert("Something went wrong - check console");
       setLoading(false);
@@ -140,7 +139,12 @@ const MySketchs = (props: Props) => {
         }}
         className="title"
       >
-        <h1 className='NavtrapBar' style={{textAlign:"center", fontSize:"xxx-large"}}>Mis Bocetos</h1>
+        <h1
+          className="NavtrapBar"
+          style={{ textAlign: "center", fontSize: "xxx-large" }}
+        >
+          Mis Bocetos
+        </h1>
         <Button onClick={handleShow} className="primary">
           <b>+</b>
         </Button>
@@ -151,7 +155,7 @@ const MySketchs = (props: Props) => {
           onHide={handleClose}
           backdrop="static"
           keyboard={false}
-           >
+        >
           <Modal.Header closeButton>
             <Modal.Title>Sube un nuevo Boceto</Modal.Title>
           </Modal.Header>
@@ -161,7 +165,7 @@ const MySketchs = (props: Props) => {
               <img
                 alt="newSketch"
                 style={{
-                  position:"static",
+                  position: "static",
                   border: "black 2px solid",
                   padding: "5px",
                   width: "20rem",
@@ -190,7 +194,9 @@ const MySketchs = (props: Props) => {
                   onChange={handleChange}
                 />
                 <Form.Text className="text-muted"></Form.Text>
-                <Form.Label>Comentario o descripción sobre el boceto:</Form.Label>
+                <Form.Label>
+                  Comentario o descripción sobre el boceto:
+                </Form.Label>
                 <Form.Control
                   type="text"
                   name="comment"
@@ -199,7 +205,13 @@ const MySketchs = (props: Props) => {
                 />
               </Form.Group>
             </div>
-            <Modal.Footer style={{display:"flex",flexDirection:"row", justifyContent:"space-between"}}>
+            <Modal.Footer
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
               <Button variant="danger" onClick={handleClose}>
                 Cancelar
               </Button>
@@ -215,7 +227,8 @@ const MySketchs = (props: Props) => {
         </Modal>
       </div>
 
-      <div className="cardcontainer">
+      <div className="cardcontainer ">
+        {/* background-image ??? */}
         {sketchsArray &&
           sketchsArray.map((sketch: Sketch) => {
             return <SketchCard bolean={true} key={sketch._id} props={sketch} />;

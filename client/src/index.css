@@ -1,82 +1,53 @@
 @font-face {
-  font-family: 'MiFuente';
-  src: url('../src/fonts/DonGraffiti.otf') format('truetype');
+  font-family: "MiFuente";
+  src: url("../src/fonts/DonGraffiti.otf") format("truetype");
 }
-/* * {
-  font-family: 'MiFuente';
-  color: beige;
-  font-size: large;
-  background-color: black;
-} */
-/* body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-} */
-/* 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-} */
 
 .cardcontainer {
   display: flex;
   flex-wrap: wrap;
-
-  /* gap: 70px; */
-
 }
 
 .updateuser {
-justify-content: space-between;
-border: solid 2px black;
-display: grid;
-grid-template-columns: 2fr 6fr;
-padding: 2rem;
-height: auto;
-
+  justify-content: space-between;
+  border: solid 2px black;
+  display: grid;
+  grid-template-columns: 2fr 6fr;
+  padding: 2rem;
+  height: auto;
 }
 
-.avatar{
-align-self: flex-start;
-
+.avatar {
+  align-self: flex-start;
 }
 .avatarRegister {
-  
-  Display:flex;
+  display: flex;
   flex-direction: row;
   align-self: center;
-
-
 }
 
-.dataform{
+.dataform {
   align-self: flex-end;
 }
 
 .misfavoritos {
-justify-content: space-between;
+  justify-content: space-between;
   border: solid 2px black;
-height: 30rem;
+  height: 30rem;
   padding: 2rem;
-
 }
 
 .missketches {
-height: 30rem;
-justify-content: space-between;
+  height: 30rem;
+  justify-content: space-between;
   border: solid 2px black;
 
   padding: 2rem;
 }
 
-
 .background-image {
-  background-image: url('../images/LOGO.png.png');
-background-size: 60%;
+  background-image: url("../images/LOGO.png.png");
+  background-size: 60%;
   background-repeat: no-repeat;
   background-position: center;
   height: 100vh;
@@ -84,12 +55,12 @@ background-size: 60%;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-    background-color: black;
+  background-color: black;
 }
 
 .background-image:hover {
-  background-image: url('../images/LogoShare.png');
-background-size: 60%;
+  background-image: url("../images/LogoShare.png");
+  background-size: 60%;
   background-repeat: no-repeat;
   background-position: center;
   background-color: black;
@@ -100,8 +71,7 @@ background-size: 60%;
   justify-content: center;
 }
 
-
-.userRegisterModal{
+.userRegisterModal {
   width: 80rem;
   justify-content: space-between;
   border: solid 2px black;
@@ -109,30 +79,28 @@ background-size: 60%;
   grid-template-columns: 2fr 6fr;
   padding: 2rem;
   height: auto;
-
 }
 
 .modal-container {
-    position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      right: 0;
-      bottom: 0;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
   background-color: rgba(0, 0, 0, 0.733);
   display: flex;
   align-items: center;
   justify-content: center;
-width: auto;
-      height: auto;
-      background-color: #fff;
-      border: solid 3px orange;
-      border-radius: 20px;
+  width: auto;
+  height: auto;
+  background-color: #fff;
+  border: solid 3px orange;
+  border-radius: 20px;
 
-      padding-top: 2%; 
-    /*  box-shadow: 10px;
+  padding-top: 2%;
+  /*  box-shadow: 10px;
       box-shadow: 10px green; */
-    
 }
 
 .modal-content {
@@ -149,9 +117,7 @@ width: auto;
 }
 
 .modal-body {
-
   background-color: #fff;
-
   border-radius: 20px;
   align-items: center;
   justify-self: center;
@@ -175,63 +141,32 @@ width: auto;
   align-items: center;
 
   justify-self: center;
-
 }
 
 .modal-title {
   margin: 0;
 }
 
-
-
-/* iframe {
-width: 80rem;
-height: 80rem;
-} */
-
-
-.NavtrapBar{
-font-family: 'MiFuente', cursive;
-font-size: xx-large;
-
+.NavtrapBar {
+  font-family: "MiFuente", cursive;
+  font-size: xx-large;
 }
-.detailsImage{
-  /* border: solid 3px black; */
+.detailsImage {
   height: 800px;
   min-height: 600px;
   max-height: 800px;
   width: 1000px;
   min-width: 800px;
   max-width: 1000px;
-    /* position: fixed; */
-      /* top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%); */
-      /* align-self: flex-start; */
-
-    
 }
 
-.detailsTitle
-{
-  font-family: 'MiFuente';
-    font-size: xx-large;
-  color: white;
-  /* font-size: xx-large; */
-/* font-family: 'Bungee Shade', cursive; */
-}
-
-/* .detailsText1{
-    font-family: 'MiFuente';
+.detailsTitle {
+  font-family: "MiFuente";
   font-size: xx-large;
-} */
-/* .detailsText2 {
-  font-size: large;
-} */
+  color: white;
+}
 
 .sketchDetails {
-  /* font-family: 'MiFuente';
-    font-size: xx-large; */
   position: absolute;
   top: 50%;
   left: 50%;
@@ -245,50 +180,42 @@ font-size: xx-large;
   align-self: flex-end;
 }
 
-.commentFlex{
-border: solid 1px gray;
-background-color: rgba(0, 0, 255, 0.15);
-border-radius: 0 0 15px 15px;
-display: Flex;
-flex-direction: column;
-
-/* flex-wrap: wrap; */
-
-
+.commentFlex {
+  border: solid 1px gray;
+  background-color: rgba(0, 0, 255, 0.15);
+  border-radius: 0 0 15px 15px;
+  display: Flex;
+  flex-direction: column;
 }
 
 .Bedit:hover {
-  scale: 1.20;
+  scale: 1.2;
   cursor: "pointer";
 }
 
 .commentOwner {
-/* border: solid 1px green; */
-justify-content: space-between;
-display: flex;
-flex-direction: row;
+  justify-content: space-between;
+  display: flex;
+  flex-direction: row;
 }
 .commentText {
-  /* border: solid 1px red; */
   display: flex;
-  
 }
 
 .modal-conta {
- 
-    z-index: 1000;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 400px;
-    /* Ajusta el ancho según tus necesidades */
-    height: 200px;
-    /* Ajusta la altura según tus necesidades */
-    background-color: rgba(0, 0, 0, 0.733);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: solid 3px orange;
-    border-radius: 15px;
-  }
+  z-index: 1000;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  /* Ajusta el ancho según tus necesidades */
+  height: 200px;
+  /* Ajusta la altura según tus necesidades */
+  background-color: rgba(0, 0, 0, 0.733);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: solid 3px orange;
+  border-radius: 15px;
+}
