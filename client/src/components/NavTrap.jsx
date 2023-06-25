@@ -10,6 +10,7 @@ import React, { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import "../index.css";
 import Typewriter from "typewriter-effect";
+import { serverURL } from '../../../server/utils/serverURL' 
 
 function NavStrap() {
   const { user, login, logout } = useContext(AuthContext);
@@ -102,7 +103,7 @@ function NavStrap() {
       };
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_BASE_URL}users/new`,
+          `${serverURL}users/new`,
           requestOptions
         );
         const result = await response.json();

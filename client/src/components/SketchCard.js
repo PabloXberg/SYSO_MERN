@@ -4,6 +4,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import UserModal from "./UserModal";
 import { Link, useLocation } from "react-router-dom";
 import { Button, Form, Modal } from "react-bootstrap";
+import { serverURL } from "../../../server/utils/serverURL";
 
 function SketchCard(props) {
   const { user } = useContext(AuthContext);
@@ -68,7 +69,7 @@ function SketchCard(props) {
 
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_BASE_URL}sketches/update/${sketch?.props._id}`,
+          `${serverURL}sketches/update/${sketch?.props._id}`,
           requestOptions
         );
         const result = await response.json();
@@ -109,7 +110,7 @@ function SketchCard(props) {
 
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_BASE_URL}sketches/delete/${sketch._id}`,
+        `${serverURL}sketches/delete/${sketch._id}`,
         requestOptions
       );
       const result = await response.json();
@@ -161,7 +162,7 @@ function SketchCard(props) {
 
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_BASE_URL}sketches/like`,
+        `${serverURL}sketches/like`,
         requestOptions
       );
       const result = await response.json();
@@ -195,7 +196,7 @@ function SketchCard(props) {
 
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_BASE_URL}sketches/unlike`,
+        `${serverURL}sketches/unlike`,
         requestOptions
       );
       const result = await response.json();

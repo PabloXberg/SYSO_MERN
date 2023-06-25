@@ -5,6 +5,7 @@ import { Button, Form, Modal } from "react-bootstrap";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import { AuthContext } from "../contexts/AuthContext";
 import "../index.css";
+import {serverURL} from '../../../server/utils/serverURL' 
 
 const SketchDetail = () => {
   const { user } = useContext(AuthContext);
@@ -56,7 +57,7 @@ const SketchDetail = () => {
 
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_BASE_URL}sketches/id/${ID}`,
+        `${serverURL}sketches/id/${ID}`,
         requestOptions
       );
       const result = await response.json();
@@ -89,7 +90,7 @@ const SketchDetail = () => {
 
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_BASE_URL}comments/new`,
+        `${serverURL}comments/new`,
         requestOptions
       );
       setResultado(await response.json());
@@ -125,7 +126,7 @@ const SketchDetail = () => {
 
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_BASE_URL}comments/delete/${comment._id}`,
+          `${serverURL}comments/delete/${comment._id}`,
           requestOptions
         );
         // eslint-disable-next-line
@@ -165,7 +166,7 @@ const SketchDetail = () => {
 
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_BASE_URL}comments/update/${comment._id}`,
+        `${serverURL}comments/update/${comment._id}`,
         requestOptions
       );
       const result = await response.json();
