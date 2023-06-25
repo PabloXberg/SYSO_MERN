@@ -22,7 +22,7 @@ const UsersPage = (props: Props) => {
   // eslint-disable-next-line
   const [user, setUser] = useState<User | null>(null);
 
-  console.log("user :>> ", user);
+  // console.log("user :>> ", user);
 
   const getUsers = async () => {
     try {
