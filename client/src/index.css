@@ -219,3 +219,28 @@
   border: solid 3px orange;
   border-radius: 15px;
 }
+
+
+@media (max-width: 768px) {
+  /* Estilos para dispositivos móviles */
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  /* Estilos para tabletas */
+}
+
+@media (min-width: 1025px) {
+  /* Estilos para pantallas de escritorio */
+}
+
+@media (max-width: 768px) {
+  .elemento-a-ocultar {
+    display: none;
+  }
+}
+
+@media (min-width: 1025px) {
+  .elemento-a-mostrar {
+    display: none;
+  }
+}

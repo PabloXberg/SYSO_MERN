@@ -107,9 +107,12 @@ function NavStrap() {
           requestOptions
         );
         const result = await response.json();
-        console.log(result);
+        // console.log(result);
         ///  alert("Success! Check console.");
+
         setLoading(false);
+        handleCloseRegister()
+        login(formDataRegister.email, formDataRegister.password);
       } catch (error) {
         console.log(error);
         alert("Something went wrong - check console");
@@ -137,8 +140,8 @@ function NavStrap() {
   return (
     <Navbar bg="dark" variant="dark" expand="lg" className="NavtrapBar">
       <Container fluid>
-        <Navbar.Brand
-          style={{ cursor: "pointer", fontSize: "xx-large" }}
+        {/* <Navbar.Brand
+          style={{ cursor: "pointer", fontSize: "x-large" }}
           href="/"
         >
           {
@@ -159,7 +162,7 @@ function NavStrap() {
               }}
             />
           }{" "}
-        </Navbar.Brand>
+        </Navbar.Brand> */}
 
         <div style={{ display: "flex", gap: "1em" }}>
           <div>
@@ -199,20 +202,20 @@ function NavStrap() {
                       id="navbarScrollingDropdown"
                     >
                       <NavDropdown.Item
-                        style={{ fontSize: "xx-large" }}
+                        style={{ fontSize: "x-large" }}
                         href="/mysketchs"
                       >
                         Mis Bocetos
                       </NavDropdown.Item>
                       <NavDropdown.Item
-                        style={{ fontSize: "xx-large" }}
+                        style={{ fontSize: "x-large" }}
                         href="/myfav"
                       >
                         Mis Favoritos
                       </NavDropdown.Item>
                       <NavDropdown.Divider />
                       <NavDropdown.Item
-                        style={{ fontSize: "xx-large" }}
+                        style={{ fontSize: "x-large" }}
                         href="/edit"
                       >
                         Editar Perfil
@@ -230,7 +233,7 @@ function NavStrap() {
                                                 
                                    </Form>  */}
                     <Button
-                      style={{ fontSize: "xx-large" }}
+                      style={{ fontSize: "x-large" }}
                       variant="outline-danger"
                       href="/"
                       onClick={logout}
@@ -245,13 +248,13 @@ function NavStrap() {
                 {
                   <>
                     <Navbar.Brand
-                      style={{ cursor: "pointer", fontSize: "xx-large" }}
+                      style={{ cursor: "pointer", fontSize: "x-large" }}
                       onClick={handleShowRegister}
                     >
                       Registrarse
                     </Navbar.Brand>
                     <Navbar.Brand
-                      style={{ cursor: "pointer", fontSize: "xx-large" }}
+                      style={{ cursor: "pointer", fontSize: "x-large" }}
                       onClick={handleShowLogin}
                     >
                         Iniciar Sesión
@@ -325,7 +328,7 @@ function NavStrap() {
                   keyboard={false}
                   aria-labelledby="contained-modal-title-vcenter"
                   centered
-                  style={{ height: "70rem" }}
+                  style={{ height: "auto" }}
                 >
                   <Modal.Header closeButton>
                     <Modal.Title>Registrar un nuevo usuario</Modal.Title>
@@ -340,7 +343,7 @@ function NavStrap() {
                           padding: "3px",
                           borderRadius: "50%",
                           width: "8rem",
-                          height: "auto",
+                          height: "8rem",
                           alignSelf: "center",
                           justifySelf: "center",
                         }}
