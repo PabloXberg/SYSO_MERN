@@ -54,7 +54,7 @@ function NavStrap() {
   //   }
 
   //   // Verificar si hay al menos un número
-  //   if (!/\d/.test(password)) {
+  //   if (!/\d/.test(password)) { 
   //     return false;
   //   }
 
