@@ -59,7 +59,6 @@ const connectRoutes = () => {
   app.use("*", (req,res) => {res.status(500).json({error: "Endpoint not found - What for a API is that!?!?!"})})
 }
 
-
 setMiddlewares();
 connectMongoose();
 connectRoutes();

@@ -9,7 +9,7 @@ type Props = {};
 interface Sketch {
   _id: Key | null | undefined;
   name: String;
-  owner: String;
+  owner: String | Key | undefined ;
   comment: String;
   url: String;
   likes: [];
@@ -28,7 +28,7 @@ const SkechesPage = (props: Props) => {
       );
       const result = await response.json();
       setSketches(result);
-      console.log("all users:", result);
+      console.log("all Scketches:", result);
     } catch (error) {
       console.log(error);
     }

@@ -70,10 +70,12 @@ const createUser = async (req, res) => {
     const registeredUser = await newUser.save();
     res
       .status(200)
-      .json({ message: "Succesfully Registered"});
+      .json({ message: "Succesfully Registered" });
+      console.log("Succesfully Registered");
   } catch (error) {
     console.log(error);
     res.status(500).jason("Something went wrong...");
+    console.log("Something went wrong...");
   }
 };
 

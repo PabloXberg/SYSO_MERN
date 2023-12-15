@@ -21,7 +21,7 @@ interface SubmitUpdateData {
   avatar: Avatar,
 }
 interface SubmitUpdateSketch {
-  owner: string,
+  owner: string | object_id | undefined,
   name: string,
   comment: string | Blob,
   url: Avatar,
