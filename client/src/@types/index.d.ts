@@ -20,9 +20,3 @@ interface SubmitUpdateData {
   info: string | Blob,
   avatar: Avatar,
 }
-interface SubmitUpdateSketch {
-  owner: string | object_id | undefined,
-  name: string,
-  comment: string | Blob,
-  url: Avatar,
-}

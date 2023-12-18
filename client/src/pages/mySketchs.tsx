@@ -1,11 +1,10 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import SketchCard from "../components/SketchCard";
 import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import DefaultImage from "../default-placeholder.png";
-import {serverURL} from '../serverURL' 
 
 type Props = {};
 
@@ -29,7 +28,7 @@ interface User {
   likes: [];
   comments: [];
 }
-// eslint-disable-next-line
+
 type Users = User[];
 type id = any;
 
@@ -44,7 +43,6 @@ const MySketchs = (props: Props) => {
   const sketchsArray = activeUser?.sketchs;
   const [ID, setID] = useState<id>(activeUser?._id);
   const [avatarPreview, setAvatarPreview] = useState(DefaultImage);
-  // eslint-disable-next-line
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -53,13 +51,14 @@ const MySketchs = (props: Props) => {
     url: "",
   });
 
+  // console.log('ID :>> ', ID);
+
   const getUserById = async () => {
+    //  console.log('id :>> ', id);
     const id = user?._id;
     setID(id);
     try {
-      const response = await fetch(
-        `${serverURL}users/id/${id}`
-      );
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}users/id/${id}`);
       const result = await response.json();
 
       setActiveUser(result);
@@ -69,8 +68,7 @@ const MySketchs = (props: Props) => {
   };
   useEffect(() => {
     getUserById();
-    // eslint-disable-next-line
-  }, []);
+  }, [user, SketchCard]);
 
   ////////////////////////////////////////////////////////////////////////////////// HANDLE CHANGE ON MODAL IMPUTS
   const handleChange = (e: { target: { name: any; value: any } }) => {
@@ -81,7 +79,7 @@ const MySketchs = (props: Props) => {
   //////////////////////////////////////////////////////////////////////////////////// HANDLE SUBMIT - SAVE A NEEW SKETCH
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    ///setLoading(true); /// FUTURE SPINNER
+    setLoading(true); /// FUTURE SPINNER
 
     ////////////////////////////////////////////////////////////// HEADERS
     const myHeaders = new Headers();
@@ -105,14 +103,13 @@ const MySketchs = (props: Props) => {
     /// FETCH
     try {
       const response = await fetch(
-        `${serverURL}sketches/new`,
+        `${process.env.REACT_APP_BASE_URL}sketches/new`,
         requestOptions
       );
       const result = await response.json();
       console.log(result);
       alert("Success!!! Your new Sketch is uploaded in our data base");
-      setLoading(true);
-      handleClose();
+      setLoading(false);
     } catch (error) {
       console.log(error);
       alert("Something went wrong - check console");
@@ -142,17 +139,13 @@ const MySketchs = (props: Props) => {
         }}
         className="title"
       >
-        <h1
-          className="NavtrapBar"
-          style={{ textAlign: "center", fontSize: "xxx-large" }}
-        >
-          Mis Bocetos
-        </h1>
+        <h1 className='NavtrapBar' style={{textAlign:"center"}}>my Sketches</h1>
         <Button onClick={handleShow} className="primary">
           <b>+</b>
         </Button>
 
         <Modal
+          size="lg"
           className="userRegisterModal"
           show={show}
           onHide={handleClose}
@@ -160,19 +153,18 @@ const MySketchs = (props: Props) => {
           keyboard={false}
         >
           <Modal.Header closeButton>
-            <Modal.Title>Sube un nuevo Boceto</Modal.Title>
+            <Modal.Title>Upload a new Sketch</Modal.Title>
           </Modal.Header>
 
           <div>
             <div className="avatar">
               <img
-                alt="newSketch"
+                alt="User Avatar"
                 style={{
-                  position: "static",
                   border: "black 2px solid",
                   padding: "5px",
-                  width: "20rem",
-                  height: "15rem",
+                  width: "15rem",
+                  height: "auto",
                 }}
                 src={avatarPreview ? avatarPreview : DefaultImage}
               />
@@ -189,49 +181,40 @@ const MySketchs = (props: Props) => {
 
             <div className="dataform">
               <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label>Nombre:</Form.Label>
+                <Form.Label>Name:</Form.Label>
                 <Form.Control
                   type="text"
                   name="name"
-                  placeholder="nombre..."
+                  placeholder="name"
                   onChange={handleChange}
                 />
                 <Form.Text className="text-muted"></Form.Text>
-                <Form.Label>
-                  Comentario o descripción sobre el boceto:
-                </Form.Label>
+                <Form.Label>Comment about it:</Form.Label>
                 <Form.Control
                   type="text"
                   name="comment"
-                  placeholder="descripción..."
+                  placeholder="comment"
                   onChange={handleChange}
                 />
               </Form.Group>
             </div>
-            <Modal.Footer
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
+            <Modal.Footer>
               <Button variant="danger" onClick={handleClose}>
-                Cancelar
+                Close
               </Button>
               <Button
                 style={{ cursor: "pointer" }}
                 onClick={handleSubmit}
                 variant="success"
               >
-                Guardar
+                Save
               </Button>
             </Modal.Footer>
           </div>
         </Modal>
       </div>
 
-      <div className="cardcontainer ">
-        {/* background-image ??? */}
+      <div className="cardcontainer">
         {sketchsArray &&
           sketchsArray.map((sketch: Sketch) => {
             return <SketchCard bolean={true} key={sketch._id} props={sketch} />;

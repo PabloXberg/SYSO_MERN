@@ -20,23 +20,7 @@ const setMiddlewares = () => {
     extended: true,
   })
   );
-
-  const allowedOrigins = [
-    "http://localhost:3000",
-    "https://shareyoursketchonline.vercel.app",
-  ];
-  const corsOptions = {
-    origin: function (origin, callback) {
-      if (allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-  };
-
-  //app.use(cors());
-  app.use(cors(corsOptions));
+  app.use(cors());
   cloudinaryConfig();
   passportConfig();
 }
@@ -58,6 +42,7 @@ const connectRoutes = () => {
   app.use("/api/comments", commentRouter);
   app.use("*", (req,res) => {res.status(500).json({error: "Endpoint not found - What for a API is that!?!?!"})})
 }
+
 
 setMiddlewares();
 connectMongoose();

@@ -11,7 +11,6 @@ import { serverURL } from "../serverURL";
 const SketchDetail = () => {
   const { user } = useContext(AuthContext);
   const { id } = useParams();
-  console.log(id, "id");
   const [sketch, setSketch] = useState();
   const [commentImput, setCommentInput] = useState("");
   const [commentEditImput, setCommentEditInput] = useState("");
@@ -131,9 +130,8 @@ const SketchDetail = () => {
           `${serverURL}comments/delete/${comment._id}`,
           requestOptions
         );
-        // eslint-disable-next-line
-        const result = await response.json();
-        // console.log(result);
+         const result = await response.json();
+         console.log(result);
         setRefresh(true);
         setDeleteStates((prevState) => ({
           ...prevState,
@@ -184,7 +182,7 @@ const SketchDetail = () => {
   useEffect(() => {
     geSketchbyID(id);
     setRefresh(false);
-  }, []);
+  }, [resultado, refresh, id]);
 
   ///////////////  FORMATEANDO LA FECHA EN DIFERENTES FORMATOS PARA QUE SEA MAS AMIGABLE ////////////
   const datum = sketch?.createdAt;

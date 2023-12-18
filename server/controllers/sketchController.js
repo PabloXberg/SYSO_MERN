@@ -116,7 +116,7 @@ const addSketchToUser = async (userId, sharedPost) => {
       { $push: { sketchs: sharedPost._id } },
       { new: true }
     );
-     console.log("user making post....", result);
+    // console.log("user making post....", result);
     return true;
   } catch (error) {
     console.log(error);
