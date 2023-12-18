@@ -10,7 +10,8 @@ import React, { ChangeEvent, FormEvent, useContext, useState } from 'react'
 import { AuthContext } from '../contexts/AuthContext'
 import { Link } from 'react-router-dom';
 import '../index.css';
-import Typewriter from 'typewriter-effect';
+import logo from '../LogoShare.png'
+//import Typewriter from 'typewriter-effect';
 
 function NavStrap() {
 
@@ -95,70 +96,65 @@ function NavStrap() {
   return (
     <Navbar bg="dark" variant="dark" expand="lg" className='NavtrapBar'>
       <Container fluid>
-        <Navbar.Brand style={{ cursor: "pointer" }} href="/">{<Typewriter
-          
-                                                                  options={{
-                                                          strings: ['Share Your Sketch Online'],
-                                                          autoStart: true,
-                                                          loop: true,
-                                                        }}
-                                                      onInit={(typewriter) => {
-                                                        typewriter.typeString('Share Your Sketch Online ')
-                                                          .callFunction(() => {
-                                                            console.log('String typed out!');
-                                                          })
-                                                          .pauseFor(1500)
-                                                          .deleteAll()
-                                                          .callFunction(() => {
-                                                            console.log('All strings were deleted');
-                                                          })
-                                                          .start();
-  }}
-/> }  </Navbar.Brand>
+        <Navbar.Brand style={{ cursor: "pointer" }} href="/">
+   
+                 <Button
+                      style={{ fontSize: "xx-large" }}
+                      variant="outline-danger"
+                      href="/"
+                      onClick={logout}
+                    >
+                      Salir
+                    </Button> 
+       </Navbar.Brand>
+                       <Navbar.Brand style={{ cursor: "pointer" }} href="/">
+   <img style={{ height:"4em", width:"4em"} } src={logo}></img> 
+               
+       </Navbar.Brand>
                         
-               <div style={{ display: "flex", gap: "1em" }}>
+               <div style={{ display: "flex" }}>
                           
                   <div>{user ? <div>
                             <Navbar.Toggle aria-controls="navbarScroll" />
                              <Navbar.Collapse id="navbarScroll">
                   
-                          <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '100px' }} navbarScroll>
-                                 <Nav.Link href="#action6" disabled>
-                                  {<img className='NavAtar' style={{gap:"1em", height:"2em", width:"2em", borderRadius:"50%"} } alt="User Avatar" src={user.avatar}></img>}{user.username}
+                 <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '50px' }} navbarScroll>0
+                                        {/* <Nav.Link href="/events">Events</Nav.Link> */}
+                                    <Nav.Link style={{ fontSize: "xx-large"}} href="/sketches">Bocetos</Nav.Link>
+                <Nav.Link style={{ fontSize: "xx-large"}} href="/users">Usuarios</Nav.Link>
+                   <Nav.Link href="#action6" disabled>
+                                  {<img className='NavAtar' style={{gap:"1em", height:"2em", width:"2em", borderRadius:"50%"} } alt="User Avatar" src={user.avatar}></img>}
                               </Nav.Link>
-                                    {/* <Nav.Link href="/events">Events</Nav.Link> */}
-                                    <Nav.Link href="/sketches">Sketches</Nav.Link>
-                                    <Nav.Link href="/users">Users</Nav.Link>
-                                      <NavDropdown title="Profile" id="navbarScrollingDropdown">
-                                        <NavDropdown.Item  href="/mysketchs">My Sketchs</NavDropdown.Item>
-                                        <NavDropdown.Item  href="/myfav">
-                                            My Favourites
+                                      <NavDropdown style={{ fontSize: "xx-large"}} title= {user.username}id="navbarScrollingDropdown">
+                                        <NavDropdown.Item style={{ fontSize: "x-large"}}  href="/mysketchs">Mis Bocetos</NavDropdown.Item>
+                                        <NavDropdown.Item  style={{ fontSize: "x-large"}} href="/myfav">
+                                            Favoritos
                                         </NavDropdown.Item>
                                         <NavDropdown.Divider />
-                                        <NavDropdown.Item href="/edit">
-                                            Edit Profile
+                                        <NavDropdown.Item style={{ fontSize: "x-large"}} href="/edit">
+                                            Editar Usuario
                                         </NavDropdown.Item>
                                 </NavDropdown>
-                                <Nav.Link href="#action6" disabled>
+                                <Nav.Link style={{ fontSize: "xx-large"}} href="#action6" disabled>
                                     Shop
                               </Nav.Link>
                                  </Nav>
                         <Form className="d-flex">
-                            <Form.Control
+                            {/* <Form.Control
                             type="search"
                             placeholder="Search"
                             className="me-2"
                             aria-label="Search"
-                            />
+                            /> */}
                               {/* <Button variant="outline-success"></Button> */}
-                              <Button variant="outline-danger" href="/" onClick={logout}>logout</Button> 
+                              {/* <Button variant="outline-danger" href="/" onClick={logout}>Salir</Button>  */}
                     </Form>
                     </Navbar.Collapse>
                           </div>
                               :
                       <div style={{ display: "flex", gap: "1em" }}>{
-                          <><Navbar.Brand style={{cursor: "pointer"}} onClick={handleShowRegister}>Register</Navbar.Brand>
-                            <Navbar.Brand style={{cursor: "pointer"}} onClick={handleShowLogin}>Login!</Navbar.Brand></>
+                          <><Navbar.Brand style={{cursor: "pointer", fontSize: "x-large"}} onClick={handleShowRegister}>Register</Navbar.Brand>
+                            <Navbar.Brand style={{cursor: "pointer", fontSize: "x-large"}} onClick={handleShowLogin}>Login!</Navbar.Brand></>
 
               // MODAL PARA LOGIN DE USUSARIO
             }

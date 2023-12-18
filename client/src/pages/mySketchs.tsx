@@ -139,9 +139,9 @@ const MySketchs = (props: Props) => {
         }}
         className="title"
       >
-        <h1 className='NavtrapBar' style={{textAlign:"center"}}>my Sketches</h1>
-        <Button onClick={handleShow} className="primary">
-          <b>+</b>
+        <h1 className='NavtrapBar' style={{textAlign:"center", fontSize: "xxx-large"}}>Mis Bocetos ~ </h1>
+        <Button onClick={handleShow} style={{gap: "2em"}} variant="success">
+          <b>Subir Nuevo Boceto</b>
         </Button>
 
         <Modal
@@ -153,7 +153,7 @@ const MySketchs = (props: Props) => {
           keyboard={false}
         >
           <Modal.Header closeButton>
-            <Modal.Title>Upload a new Sketch</Modal.Title>
+            <Modal.Title>Subir un nuevo Boceto</Modal.Title>
           </Modal.Header>
 
           <div>
@@ -181,7 +181,7 @@ const MySketchs = (props: Props) => {
 
             <div className="dataform">
               <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label>Name:</Form.Label>
+                <Form.Label>Nombre:</Form.Label>
                 <Form.Control
                   type="text"
                   name="name"
@@ -189,7 +189,7 @@ const MySketchs = (props: Props) => {
                   onChange={handleChange}
                 />
                 <Form.Text className="text-muted"></Form.Text>
-                <Form.Label>Comment about it:</Form.Label>
+                <Form.Label>Comentario sobre el boceto:</Form.Label>
                 <Form.Control
                   type="text"
                   name="comment"
@@ -200,14 +200,14 @@ const MySketchs = (props: Props) => {
             </div>
             <Modal.Footer>
               <Button variant="danger" onClick={handleClose}>
-                Close
+                Cerrar
               </Button>
               <Button
                 style={{ cursor: "pointer" }}
                 onClick={handleSubmit}
                 variant="success"
               >
-                Save
+                Subir
               </Button>
             </Modal.Footer>
           </div>
