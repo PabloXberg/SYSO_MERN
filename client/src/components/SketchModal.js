@@ -16,7 +16,7 @@ console.log('props in sketchmodal :>> ', props);
   return (
     <>
       
-     <div className='modal-container' onClick={props.onClose} >
+     <div className='modal-container background-image' onClick={props.onClose} >
          <div className='modal-content'onClick={e => e.stopPropagation()} >
           <div className='modal-header'>
    
@@ -27,7 +27,7 @@ console.log('props in sketchmodal :>> ', props);
         </div>
                   </div>
            <div className='modal-footer'>
-             <Button onClick={props.onClose} className='modal-close-btn'>Close</Button>
+             <Button onClick={props.onClose} variant= 'danger'className='modal-close-btn'>Close</Button>
            </div>
          </div>   
        </div>

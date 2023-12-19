@@ -23,13 +23,14 @@ function App() {
                   <Routes>
                     <Route path='/' element={ <Homepage />} />
                     <Route path='register' element={ <Register /> } />
-            
                     <Route path='sketchdetail/:id' element={<SketchDetail/>}/>
                     <Route path='sketches' element={<Sketches />} />
                     <Route path='users' element={<UsersPage />} />
                     <Route path='mysketchs' element={<MySketchs />} />
                     <Route path='myfav' element={<MyFav/>} />
-                    <Route path='edit' element={ <EditProfile /> } />
+                    <Route path='edit' element={<EditProfile />} />
+                    {/* <Route path='shop' element={<Shop/>} />
+                    <Route path='battle' element={ <Battle /> } /> */}
                   </Routes>
               </BrowserRouter>
           </AuthContextProvider>

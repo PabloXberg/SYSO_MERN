@@ -96,17 +96,7 @@ function NavStrap() {
   return (
     <Navbar bg="dark" variant="dark" expand="lg" className='NavtrapBar'>
       <Container fluid>
-        <Navbar.Brand style={{ cursor: "pointer" }} href="/">
-   
-                 <Button
-                      style={{ fontSize: "xx-large" }}
-                      variant="outline-danger"
-                      href="/"
-                      onClick={logout}
-                    >
-                      Salir
-                    </Button> 
-       </Navbar.Brand>
+       
                        <Navbar.Brand style={{ cursor: "pointer" }} href="/">
    <img style={{ height:"4em", width:"4em"} } src={logo}></img> 
                
@@ -114,11 +104,13 @@ function NavStrap() {
                         
                <div style={{ display: "flex" }}>
                           
-                  <div>{user ? <div>
-                            <Navbar.Toggle aria-controls="navbarScroll" />
+          
+          <div>{user ? <div>
+            
+                             <Navbar.Toggle aria-controls="navbarScroll" />
                              <Navbar.Collapse id="navbarScroll">
                   
-                 <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '50px' }} navbarScroll>0
+                 <Nav className="me-auto my-2 my-lg-2" style={{ maxHeight: '70px' }} navbarScroll>0
                                         {/* <Nav.Link href="/events">Events</Nav.Link> */}
                                     <Nav.Link style={{ fontSize: "xx-large"}} href="/sketches">Bocetos</Nav.Link>
                 <Nav.Link style={{ fontSize: "xx-large"}} href="/users">Usuarios</Nav.Link>
@@ -135,11 +127,11 @@ function NavStrap() {
                                             Editar Usuario
                                         </NavDropdown.Item>
                                 </NavDropdown>
-                                <Nav.Link style={{ fontSize: "xx-large"}} href="#action6" disabled>
+                                {/* <Nav.Link style={{ fontSize: "xx-large", borderRight:'10px', gap: '2rem'}} href="#action6" disabled>
                                     Shop
-                              </Nav.Link>
+                              </Nav.Link> */}
                                  </Nav>
-                        <Form className="d-flex">
+                        <Form className="d-flex" style={{borderTop: '1px'}}>
                             {/* <Form.Control
                             type="search"
                             placeholder="Search"
@@ -147,14 +139,21 @@ function NavStrap() {
                             aria-label="Search"
                             /> */}
                               {/* <Button variant="outline-success"></Button> */}
-                              {/* <Button variant="outline-danger" href="/" onClick={logout}>Salir</Button>  */}
+                                  <Button
+                                      style={{ fontSize: "xx-large" }}
+                                      variant="outline-danger"
+                                      href="/"
+                                      onClick={logout}
+                                    >
+                                      Salir
+                                  </Button> 
                     </Form>
                     </Navbar.Collapse>
                           </div>
                               :
                       <div style={{ display: "flex", gap: "1em" }}>{
-                          <><Navbar.Brand style={{cursor: "pointer", fontSize: "x-large"}} onClick={handleShowRegister}>Register</Navbar.Brand>
-                            <Navbar.Brand style={{cursor: "pointer", fontSize: "x-large"}} onClick={handleShowLogin}>Login!</Navbar.Brand></>
+                          <><Navbar.Brand style={{cursor: "pointer", fontSize: "xx-large"}} onClick={handleShowRegister}>Register</Navbar.Brand>
+                            <Navbar.Brand style={{cursor: "pointer", fontSize: "xx-large"}} onClick={handleShowLogin}>Login!</Navbar.Brand></>
 
               // MODAL PARA LOGIN DE USUSARIO
             }

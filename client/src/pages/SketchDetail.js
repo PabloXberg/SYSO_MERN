@@ -198,7 +198,7 @@ const SketchDetail = () => {
     <div className="sketchDetails">
       <div className="detailsImage">
         <Card className="bg-light ">
-          <Card.Img variant="top" src={sketch?.url} alt={sketch?.name} />
+          <Card.Img variant="top" style={{width: "62.5rem", height: "50rem"}} src={sketch?.url} alt={sketch?.name} />
 
           <span
             style={{

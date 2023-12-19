@@ -19,19 +19,19 @@ interface User {
 type Users = User[]
 
 const Homepage = (props: Props) => {
-  const [users, setUsers] = useState<Users>([]);
-  const [user, setUser] = useState<User | null>(null);
+  //const [users, setUsers] = useState<Users>([]);
+  //const [user, setUser] = useState<User | null>(null);
 
-  const getUsers = async() => {
-    try {
-      const response = await fetch("http://localhost:5000/api/users/all");
-      const result = await response.json();
-      setUsers(result);
-      console.log("all users:", result)
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  // const getUsers = async() => {
+  //   try {
+  //     const response = await fetch("http://localhost:5000/api/users/all");
+  //     const result = await response.json();
+  //     setUsers(result);
+  //     console.log("all users:", result)
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 
 
   // +++++++++++ PARA BUSCAR UN USUARIO EN PARTICULAR
