@@ -16,11 +16,11 @@ const sketchRouter = express.Router();
 sketchRouter.get("/all", getAllSketches);
 sketchRouter.get("/id/:id", jwtAuth, getSketchbyID);
 
-sketchRouter.post("/new", jwtAuth, multerUploads.single("url"), createSketch);
+sketchRouter.post("/new", jwtAuth, multerUploads.single("sketches"), createSketch); // no deberia ser "multerUploads.single("sketches")"?
 sketchRouter.post(
   "/update/:id",
   jwtAuth,
-  multerUploads.single("url"),
+  multerUploads.single("sketches"),  // no deberia ser "multerUploads.single("sketches")"?
   updateSketch
 ); /// debería ser method PUT???
 

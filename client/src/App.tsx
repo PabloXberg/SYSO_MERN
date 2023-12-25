@@ -12,6 +12,7 @@ import MySketchs from './pages/mySketchs';
 import MyFav from './pages/myFav';
 import EditProfile from './pages/editProfile';
 import SketchDetail from './pages/SketchDetail';
+import Battle from './pages/battle';
 
 function App() {
 
@@ -29,8 +30,8 @@ function App() {
                     <Route path='mysketchs' element={<MySketchs />} />
                     <Route path='myfav' element={<MyFav/>} />
                     <Route path='edit' element={<EditProfile />} />
-                    {/* <Route path='shop' element={<Shop/>} />
-                    <Route path='battle' element={ <Battle /> } /> */}
+                    {/* <Route path='shop' element={<Shop/>} /> */}
+                    <Route path='battle' element={ <Battle /> } />
                   </Routes>
               </BrowserRouter>
           </AuthContextProvider>

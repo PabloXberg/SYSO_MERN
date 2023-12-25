@@ -28,7 +28,7 @@ const UsersPage = (props: Props) => {
       const response = await fetch(`${process.env.REACT_APP_BASE_URL}users/all`)
       const result = await response.json();
       setUsers(result.users);
-      console.log("all users:", result)
+    //  console.log("all users:", result)
     } catch (error) {
       console.log(error);
     }

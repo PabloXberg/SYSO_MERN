@@ -100,9 +100,14 @@ function NavStrap() {
                        <Navbar.Brand style={{ cursor: "pointer" }} href="/">
    <img style={{ height:"4em", width:"4em"} } src={logo}></img> 
                
-       </Navbar.Brand>
-                        
-               <div style={{ display: "flex" }}>
+        </Navbar.Brand>
+        <Nav className="me-auto my-2 my-lg-2" style={{ maxHeight: '80px' }} navbarScroll>
+        <Nav.Link style={{ fontSize: "xxx-large"}} href="/Battle">B a t t l e</Nav.Link>
+
+        </Nav>
+                               
+        <div style={{ display: "flex" }}>
+          
                           
           
           <div>{user ? <div>
@@ -110,10 +115,11 @@ function NavStrap() {
                              <Navbar.Toggle aria-controls="navbarScroll" />
                              <Navbar.Collapse id="navbarScroll">
                   
-                 <Nav className="me-auto my-2 my-lg-2" style={{ maxHeight: '70px' }} navbarScroll>0
+              <Nav className="me-auto my-2 my-lg-2" style={{ maxHeight: '90px' }} navbarScroll>
+                 
                                         {/* <Nav.Link href="/events">Events</Nav.Link> */}
-                                    <Nav.Link style={{ fontSize: "xx-large"}} href="/sketches">Bocetos</Nav.Link>
-                <Nav.Link style={{ fontSize: "xx-large"}} href="/users">Usuarios</Nav.Link>
+                                    <Nav.Link style={{ fontSize: "xx-large"}} href="/sketches">B o c e t o s   - </Nav.Link>
+                <Nav.Link style={{ fontSize: "xx-large"}} href="/users">U s u a r i o s</Nav.Link>
                    <Nav.Link href="#action6" disabled>
                                   {<img className='NavAtar' style={{gap:"1em", height:"2em", width:"2em", borderRadius:"50%"} } alt="User Avatar" src={user.avatar}></img>}
                               </Nav.Link>
@@ -152,38 +158,38 @@ function NavStrap() {
                           </div>
                               :
                       <div style={{ display: "flex", gap: "1em" }}>{
-                          <><Navbar.Brand style={{cursor: "pointer", fontSize: "xx-large"}} onClick={handleShowRegister}>Register</Navbar.Brand>
-                            <Navbar.Brand style={{cursor: "pointer", fontSize: "xx-large"}} onClick={handleShowLogin}>Login!</Navbar.Brand></>
+                          <><Navbar.Brand style={{cursor: "pointer", fontSize: "xx-large"}} onClick={handleShowRegister}>R e g i s t r a r</Navbar.Brand>
+                            <Navbar.Brand style={{cursor: "pointer", fontSize: "xx-large"}} onClick={handleShowLogin}>E n t r a r</Navbar.Brand></>
 
               // MODAL PARA LOGIN DE USUSARIO
             }
               <Modal
                size="sm"
                 show={showLogin}
-                style={{height:"23rem"}}
-          onHide={handleCloseLogin}
-          backdrop="static"
-          keyboard={false}
-          aria-labelledby="contained-modal-title-vcenter"
-      centered
+               // style={{ maxHeight:"22rem"}}
+                onHide={handleCloseLogin}
+                backdrop="static"
+                keyboard={false}
+              //  aria-labelledby="contained-modal-title-vcenter"
+                centered
         >
           <Modal.Header closeButton>
-            <Modal.Title>User Login</Modal.Title>
+            <Modal.Title>Iniciar Sesión</Modal.Title>
           </Modal.Header>
                 <Modal.Body>
                   
                 <Form.Group className="mb-1" controlId="formBasicPassword">
-                    <Form.Label ><i>Email address</i></Form.Label>
+                    <Form.Label ><i>Correo Electrónico</i></Form.Label>
                     <Form.Control type='email' name='email' placeholder='email' onChange={handleChangeLogin}/>
-                    <Form.Label className="text-muted"><i>Password</i></Form.Label>
+                    <Form.Label className="text-muted"><i>Contraseña</i></Form.Label>
                     <Form.Control type="password" name='password' placeholder="Password" onChange={handleChangeLogin}/>
                     
                   
                   <Modal.Footer>
                     <Button variant="danger" onClick={handleCloseLogin}>
-                      Close
+                      Cerrar
                     </Button>
-                  <Button style={{ cursor: "pointer" }} onClick={handleSubmitLogin} variant="success">Login</Button>
+                  <Button style={{ cursor: "pointer" }} onClick={handleSubmitLogin} variant="success">Aceptar</Button>
                   </Modal.Footer>
                     </Form.Group>
                    </Modal.Body>
@@ -198,13 +204,13 @@ function NavStrap() {
                     show={showRegister}
                     onHide={handleCloseRegister}
                     backdrop="static"
-                keyboard={false}
-                 aria-labelledby="contained-modal-title-vcenter"
-                centered
-                style={{height:"70rem"}}
+                    keyboard={false}
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
+                   // style={{height:"70rem"}}
                   >
                   <Modal.Header closeButton>
-                    <Modal.Title>User Register</Modal.Title>
+                    <Modal.Title>Registrar Usuario</Modal.Title>
                   </Modal.Header>
                
                 <div >
@@ -213,7 +219,7 @@ function NavStrap() {
                   <div className='avatar'>
                    
 
-                      <img alt='User Avatar' style={{border: "black 2px solid",padding:"3px" ,borderRadius: "50%", width: "8rem", height: "auto", alignSelf:"center"}} src={avatarPreview ? avatarPreview : DefaultImage} />
+                      <img alt='Imagen de perfil' style={{border: "black 2px solid",padding:"3px" ,borderRadius: "50%", width: "8rem", height: "auto", alignSelf:"center"}} src={avatarPreview ? avatarPreview : DefaultImage} />
                        <br />
 
                        {/* eslint-disable-next-line react/jsx-pascal-case */}
@@ -227,32 +233,34 @@ function NavStrap() {
                     
            
                         <Form.Group className="mb-4" controlId="formBasicEmail">
-                          <Form.Label >(*) Email address:</Form.Label>
+                          <Form.Label >(*) Correo Electrónico:</Form.Label>
                           <Form.Control type='email' name='email' placeholder='email' onChange={handleChangeRegister}/>
                           <Form.Text className="text-muted">
                             
                             </Form.Text>
-                          <Form.Label >(*) Password:</Form.Label>
+                          <Form.Label >(*) Contraseña:</Form.Label>
                           <Form.Control type="password" name='password' placeholder="Password" onChange={handleChangeRegister} />
                         <Form.Text className="text-muted"></Form.Text>
                                             
-                    <Form.Label >(*) User Name:</Form.Label>
-                  <Form.Control  name='username' placeholder="username" onChange={handleChangeRegister}/>
+                    <Form.Label >(*) Nombre de Usuario:</Form.Label>
+                  <Form.Control   name='username' placeholder="username" onChange={handleChangeRegister}/>
                     <Form.Text className="text-muted">
                      
                     </Form.Text>
                   
-                     <Form.Label >Personal Info</Form.Label>
+                     <Form.Label >Información sobre ti (opcional...)</Form.Label>
                     <Form.Control type='email' name='info' placeholder='Personal Info' onChange={handleChangeRegister}/>
                     {/* <Form.Text className="text-muted">
                       We'll never share your email with anyone else.
                     </Form.Text> */}
                   </Form.Group></div>      
-                  <Modal.Footer>
+                  <Modal.Footer style={{
+                    display: "flex", flexDirection: "row", alignContent:"space-around"
+                  }}> 
                     <Button variant="danger" onClick={handleCloseRegister}>
-                      Close
+                      Cancelar
                     </Button>
-                  <Button style={{ cursor: "pointer" }} onClick={handleSubmitRegister} variant="success">Register</Button>
+                  <Button style={{ cursor: "pointer" }} onClick={handleSubmitRegister} variant="success">Registrar</Button>
                   </Modal.Footer>
 
                   
