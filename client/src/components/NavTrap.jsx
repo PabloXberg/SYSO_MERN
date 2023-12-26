@@ -6,9 +6,9 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Modal from 'react-bootstrap/Modal';
 import DefaultImage from '../placeholder.png'
-import React, { ChangeEvent, FormEvent, useContext, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { AuthContext } from '../contexts/AuthContext'
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 import '../index.css';
 import logo from '../LogoShare.png'
 //import Typewriter from 'typewriter-effect';
@@ -93,16 +93,33 @@ function NavStrap() {
     }
   }
 
+  
+  function agregarEspaciosEntreLetras(nombreUsuario) {
+  // Convierte el nombre de usuario en un array de letras
+    if (nombreUsuario !== undefined)
+    {
+      const letras = nombreUsuario.split('');
+
+  // Usa el método join para unir las letras con espacios entre ellas
+  const nombreConEspacios = letras.join(' ');
+
+      return nombreConEspacios;
+    }
+
+  }
+  const nombreConEspacios = agregarEspaciosEntreLetras(user?.username);
+
+
   return (
     <Navbar bg="dark" variant="dark" expand="lg" className='NavtrapBar'>
       <Container fluid>
        
-                       <Navbar.Brand style={{ cursor: "pointer" }} href="/">
-   <img style={{ height:"4em", width:"4em"} } src={logo}></img> 
+         <Navbar.Brand style={{ cursor: "pointer" }} href="/">
+          <img style={{ height: "4em", width: "4em" }} alt={"Share Your Sketch"} src={logo}></img> 
                
-        </Navbar.Brand>
-        <Nav className="me-auto my-2 my-lg-2" style={{ maxHeight: '80px' }} navbarScroll>
-        <Nav.Link style={{ fontSize: "xxx-large"}} href="/Battle">B a t t l e</Nav.Link>
+         </Navbar.Brand>
+         <Nav className="me-auto my-2 my-lg-2"  navbarScroll>
+        <Nav.Link style={{ fontSize: "xx-large"}} href="/Battle">B a t t l e</Nav.Link>
 
         </Nav>
                                
@@ -111,6 +128,8 @@ function NavStrap() {
                           
           
           <div>{user ? <div>
+
+            
             
                              <Navbar.Toggle aria-controls="navbarScroll" />
                              <Navbar.Collapse id="navbarScroll">
@@ -123,7 +142,7 @@ function NavStrap() {
                    <Nav.Link href="#action6" disabled>
                                   {<img className='NavAtar' style={{gap:"1em", height:"2em", width:"2em", borderRadius:"50%"} } alt="User Avatar" src={user.avatar}></img>}
                               </Nav.Link>
-                                      <NavDropdown style={{ fontSize: "xx-large"}} title= {user.username}id="navbarScrollingDropdown">
+                                      <NavDropdown style={{ fontSize: "xx-large"}} title= {nombreConEspacios}id="navbarScrollingDropdown">
                                         <NavDropdown.Item style={{ fontSize: "x-large"}}  href="/mysketchs">Mis Bocetos</NavDropdown.Item>
                                         <NavDropdown.Item  style={{ fontSize: "x-large"}} href="/myfav">
                                             Favoritos
@@ -133,9 +152,9 @@ function NavStrap() {
                                             Editar Usuario
                                         </NavDropdown.Item>
                                 </NavDropdown>
-                                {/* <Nav.Link style={{ fontSize: "xx-large", borderRight:'10px', gap: '2rem'}} href="#action6" disabled>
-                                    Shop
-                              </Nav.Link> */}
+                                <Nav.Link style={{ fontSize: "xx-large", borderRight:'10px', gap: '2rem'}} href="#action6" disabled>
+                                    S h o p 
+                              </Nav.Link>
                                  </Nav>
                         <Form className="d-flex" style={{borderTop: '1px'}}>
                             {/* <Form.Control
@@ -158,19 +177,20 @@ function NavStrap() {
                           </div>
                               :
                       <div style={{ display: "flex", gap: "1em" }}>{
-                          <><Navbar.Brand style={{cursor: "pointer", fontSize: "xx-large"}} onClick={handleShowRegister}>R e g i s t r a r</Navbar.Brand>
-                            <Navbar.Brand style={{cursor: "pointer", fontSize: "xx-large"}} onClick={handleShowLogin}>E n t r a r</Navbar.Brand></>
+                           <><Navbar.Brand style={{ cursor: "pointer", fontSize: "xx-large" }} className={ "registrarse"} onClick={handleShowRegister}>R e g i s t r a r</Navbar.Brand>
+                            <Navbar.Brand style={{cursor: "pointer", fontSize: "xx-large"}}  className={ "entrar"} onClick={handleShowLogin}>E n t r a r</Navbar.Brand></>
 
               // MODAL PARA LOGIN DE USUSARIO
             }
               <Modal
                size="sm"
                 show={showLogin}
-               // style={{ maxHeight:"22rem"}}
+                style={{
+                  maxHeight: "24rem", padding:"3rem"}}
                 onHide={handleCloseLogin}
                 backdrop="static"
                 keyboard={false}
-              //  aria-labelledby="contained-modal-title-vcenter"
+                aria-labelledby="contained-modal-title-vcenter"
                 centered
         >
           <Modal.Header closeButton>

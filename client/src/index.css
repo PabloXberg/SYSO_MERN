@@ -226,14 +226,31 @@
 
 @media (max-width: 768px) {
   /* Estilos para dispositivos móviles */
+.homepagebody{
+  max-width: 100%;
+  max-height:50% ;
+}
+.NavtrapBar{
+    max-width: 100%;
+      max-height: 20%;
+}
+    .registrarse {
+      font-size: "large"
+    }
+  
+    .entrar {
+      font-size: "xxx-large"
+    }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
   /* Estilos para tabletas */
+
 }
 
 @media (min-width: 1025px) {
   /* Estilos para pantallas de escritorio */
+
 }
 
 @media (max-width: 768px) {
@@ -243,7 +260,8 @@
 }
 
 @media (min-width: 1025px) {
-  .elemento-a-mostrar {
+  /* .elemento-a-mostrar {
     display: none;
-  }
+  } */
+
 }
