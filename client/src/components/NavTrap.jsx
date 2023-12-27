@@ -111,19 +111,23 @@ function NavStrap() {
 
 
   return (
-    <Navbar bg="dark" variant="dark" expand="lg" className='NavtrapBar'>
-      <Container fluid>
-       
+    <Navbar collapseOnSelect bg="dark" variant="dark" expand="lg"
+      className="bg-body-tertiary
+     NavtrapBar"
+    
+    >
+      <Container>
+       {/* <Navbar.Toggle aria-controls="responsive-navbar-nav" /> */}
          <Navbar.Brand style={{ cursor: "pointer" }} href="/">
           <img style={{ height: "4em", width: "4em" }} alt={"Share Your Sketch"} src={logo}></img> 
                
          </Navbar.Brand>
          <Nav className="me-auto my-2 my-lg-2"  navbarScroll>
-        <Nav.Link style={{ fontSize: "xx-large"}} href="/Battle">B a t t l e</Nav.Link>
+        <Nav.Link href="/Battle">Battle</Nav.Link>
 
         </Nav>
                                
-        <div style={{ display: "flex" }}>
+        <div style={{ display: "flex" , alignContent:"space-between"}}>
           
                           
           
@@ -132,53 +136,53 @@ function NavStrap() {
             
             
                              <Navbar.Toggle aria-controls="navbarScroll" />
-                             <Navbar.Collapse id="navbarScroll">
-                  
-              <Nav className="me-auto my-2 my-lg-2" style={{ maxHeight: '90px' }} navbarScroll>
+                             <Navbar.Collapse id="responsive-navbar-nav">
+                            {/* <Navbar.Toggle aria-controls="responsive-navbar-nav" /> */}
+                               <Nav className="me-auto my-2 my-lg-2" >
                  
                                         {/* <Nav.Link href="/events">Events</Nav.Link> */}
-                                    <Nav.Link style={{ fontSize: "xx-large"}} href="/sketches">B o c e t o s   - </Nav.Link>
-                <Nav.Link style={{ fontSize: "xx-large"}} href="/users">U s u a r i o s</Nav.Link>
+                                    <Nav.Link  href="/sketches">Bocetos</Nav.Link>
+                <Nav.Link  href="/users">Usuarios</Nav.Link>
                    <Nav.Link href="#action6" disabled>
                                   {<img className='NavAtar' style={{gap:"1em", height:"2em", width:"2em", borderRadius:"50%"} } alt="User Avatar" src={user.avatar}></img>}
                               </Nav.Link>
-                                      <NavDropdown style={{ fontSize: "xx-large"}} title= {nombreConEspacios}id="navbarScrollingDropdown">
-                                        <NavDropdown.Item style={{ fontSize: "x-large"}}  href="/mysketchs">Mis Bocetos</NavDropdown.Item>
-                                        <NavDropdown.Item  style={{ fontSize: "x-large"}} href="/myfav">
+                                      <NavDropdown title= {user?.username}id="collapsible-nav-dropdown">
+                                        <NavDropdown.Item  href="/mysketchs">Mis Bocetos</NavDropdown.Item>
+                                        <NavDropdown.Item  href="/myfav">
                                             Favoritos
                                         </NavDropdown.Item>
                                         <NavDropdown.Divider />
-                                        <NavDropdown.Item style={{ fontSize: "x-large"}} href="/edit">
+                                        <NavDropdown.Item  href="/edit">
                                             Editar Usuario
                                         </NavDropdown.Item>
                                 </NavDropdown>
-                                <Nav.Link style={{ fontSize: "xx-large", borderRight:'10px', gap: '2rem'}} href="#action6" disabled>
-                                    S h o p 
+                                <Nav.Link  href="#action6" disabled>
+                                    Shop 
                               </Nav.Link>
                                  </Nav>
-                        <Form className="d-flex" style={{borderTop: '1px'}}>
-                            {/* <Form.Control
+                        {/* <Form className="d-flex" style={{borderTop: '1px'}}>
+                            <Form.Control
                             type="search"
                             placeholder="Search"
                             className="me-2"
                             aria-label="Search"
-                            /> */}
-                              {/* <Button variant="outline-success"></Button> */}
-                                  <Button
-                                      style={{ fontSize: "xx-large" }}
+                            />
+                              <Button variant="outline-success"></Button>
+                                
+              </Form> */}
+                <Button
                                       variant="outline-danger"
                                       href="/"
                                       onClick={logout}
                                     >
                                       Salir
                                   </Button> 
-                    </Form>
                     </Navbar.Collapse>
                           </div>
                               :
                       <div style={{ display: "flex", gap: "1em" }}>{
-                           <><Navbar.Brand style={{ cursor: "pointer", fontSize: "xx-large" }} className={ "registrarse"} onClick={handleShowRegister}>R e g i s t r a r</Navbar.Brand>
-                            <Navbar.Brand style={{cursor: "pointer", fontSize: "xx-large"}}  className={ "entrar"} onClick={handleShowLogin}>E n t r a r</Navbar.Brand></>
+                           <><Navbar.Brand style={{ cursor: "pointer"}} className={ "registrarse"} onClick={handleShowRegister}>Registrar</Navbar.Brand>
+                            <Navbar.Brand style={{cursor: "pointer"}}  className={ "entrar"} onClick={handleShowLogin}>Entrar</Navbar.Brand></>
 
               // MODAL PARA LOGIN DE USUSARIO
             }
