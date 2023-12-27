@@ -9,25 +9,26 @@ function UserCard(props: any) {
 
   return (
     <div style={{ display: "Flex" }}>
-      <Card>
+      <Card className="UserCard">
         <Card.Img
           variant="top"
           src={props.props.avatar}
           style={{
-            borderRadius: "50%",
-            width: "15rem",
-            height: "15rem",
-            alignSelf: "center",
-            padding: "1rem",
+        
+            width: "26rem",
+            height: "26rem",
+             alignSelf: "center",
+               padding: "1rem",
+            borderRadius:"50%"
           }}
         />
         <Card.Body
-          style={{
-            width: "18rem",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-          }}
+          // style={{
+          //   width: "18rem",
+          //   display: "flex",
+          //   flexDirection: "column",
+          //   justifyContent: "space-between",
+          // }}
         >
           <Card.Title
             style={{
@@ -48,7 +49,7 @@ function UserCard(props: any) {
           >
             {props.props.info
               ? props.props.info
-              : "Hier we can see some info about the User"}
+              : "Aqui podríamos ver alguna informacion del usuario..."}
           </Card.Text>
           <div>
             <Card.Footer

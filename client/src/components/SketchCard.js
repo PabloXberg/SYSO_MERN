@@ -214,23 +214,24 @@ function SketchCard(props) {
   const page = "/sketchdetail/";
   return (
     ////////////////////////////////////////////////////////////////////////////////////COMIENZA LA CARD
-    <Card style={{ width: "18rem", height: "auto" }}>
+    <Card lassName="SketchCard">
       <Link to={page + _id} params={_id} key={_id}>
         <Card.Img
           variant="top"
           alt="Sketch"
           src={props.props.url}
-          style={{ cursor: "pointer", height: "18rem", width: "18rem" }}
+          style={{ cursor: "pointer", width: "26rem",
+            height: "26rem" }}
         />
       </Link>
 
       <Card.Body
-        style={{
-          width: "18rem",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-        }}
+        // style={{
+        //   width: "18rem",
+        //   display: "flex",
+        //   flexDirection: "column",
+        //   justifyContent: "space-between",
+        // }}
       >
         <Card.Title>{props?.props.name}</Card.Title>
         <Card.Text>

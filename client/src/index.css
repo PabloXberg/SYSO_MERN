@@ -241,6 +241,16 @@
     .entrar {
       font-size: "xxx-large"
     }
+    .UserCard{
+      max-width: "100%";
+      min-width: "100%"
+      ;
+    }
+    .SketchCard{
+      max-width: "100%";
+        min-width: "100%"
+        ;
+    }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {

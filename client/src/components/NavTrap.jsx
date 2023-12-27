@@ -123,7 +123,7 @@ function NavStrap() {
                
          </Navbar.Brand>
          <Nav className="me-auto my-2 my-lg-2"  navbarScroll>
-        <Nav.Link href="/Battle">Battle</Nav.Link>
+          <Nav.Link style={{fontSize:"x-large"}} href="/Battle">Battle</Nav.Link>
 
         </Nav>
                                
@@ -141,22 +141,22 @@ function NavStrap() {
                                <Nav className="me-auto my-2 my-lg-2" >
                  
                                         {/* <Nav.Link href="/events">Events</Nav.Link> */}
-                                    <Nav.Link  href="/sketches">Bocetos</Nav.Link>
-                <Nav.Link  href="/users">Usuarios</Nav.Link>
+                                    <Nav.Link style={{fontSize:"x-large"}} href="/sketches">Bocetos</Nav.Link>
+                <Nav.Link style={{fontSize:"x-large"}} href="/users">Usuarios</Nav.Link>
                    <Nav.Link href="#action6" disabled>
                                   {<img className='NavAtar' style={{gap:"1em", height:"2em", width:"2em", borderRadius:"50%"} } alt="User Avatar" src={user.avatar}></img>}
                               </Nav.Link>
-                                      <NavDropdown title= {user?.username}id="collapsible-nav-dropdown">
-                                        <NavDropdown.Item  href="/mysketchs">Mis Bocetos</NavDropdown.Item>
-                                        <NavDropdown.Item  href="/myfav">
+                                      <NavDropdown style={{fontSize:"x-large"}} title= {user?.username}id="collapsible-nav-dropdown">
+                                        <NavDropdown.Item style={{fontSize:"x-large"}} href="/mysketchs">Mis Bocetos</NavDropdown.Item>
+                                        <NavDropdown.Item style={{fontSize:"x-large"}} href="/myfav">
                                             Favoritos
                                         </NavDropdown.Item>
                                         <NavDropdown.Divider />
-                                        <NavDropdown.Item  href="/edit">
+                                        <NavDropdown.Item style={{fontSize:"x-large"}} href="/edit">
                                             Editar Usuario
                                         </NavDropdown.Item>
                                 </NavDropdown>
-                                <Nav.Link  href="#action6" disabled>
+                                <Nav.Link style={{fontSize:"x-large"}} href="#action6" disabled>
                                     Shop 
                               </Nav.Link>
                                  </Nav>
