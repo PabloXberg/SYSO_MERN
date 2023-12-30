@@ -32,23 +32,24 @@ function UserModal(props) {
   // console.log('props  lalalala :>> ', props);
   return (
     <div
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-around",
-        alignItems: "center",
-      }}
+      className="userModal"
+      // style={{
+      //   display: "flex",
+      //   flexDirection: "row",
+      //   justifyContent: "space-around",
+      //   alignItems: "center",
+      // }}
     >
       <div
-        className="modal-conta"
-        style={{
-          height: "50rem",
-          width: "40rem",
-          alignSelf: "center",
-        }}
+        className="modal-conta userModal"
+        // style={{
+        //   height: "50rem",
+        //   width: "40rem",
+        //   alignSelf: "center",
+        // }}
         onClick={props.onClose}
       >
-        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-content userModal" onClick={(e) => e.stopPropagation()}>
           <div className="modal-header" style={{ color: "White" }}>
             <h3 style={{ fontFamily: "MiFuente", fontSize: "xxx-large" }}>
               {nombreConEspacios}

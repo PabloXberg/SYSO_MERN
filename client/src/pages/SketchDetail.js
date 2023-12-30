@@ -195,10 +195,12 @@ const SketchDetail = () => {
   // console.log('sketch :>> ', sketch);
   // Contenido y lógica del componente
   return (
-    <div className="sketchDetails">
+    <div className="sketchDetails sketchDetailsBody">
       <div className="detailsImage">
         <Card className="bg-light ">
-          <Card.Img variant="top" style={{width: "62.5rem", height: "50rem"}} src={sketch?.url} alt={sketch?.name} />
+          <Card.Img className="sketchDetailsImg" variant="top"
+            // style={{ width: "62.5rem", height: "50rem" }}
+            src={sketch?.url} alt={sketch?.name} />
 
           <span
             style={{
@@ -207,8 +209,8 @@ const SketchDetail = () => {
               justifyContent: "space-between",
             }}
           >
-            <h1>{sketch?.name}</h1>
-            <Card.Text>
+            <h1 className="DetailsTitle">{sketch?.name}</h1>
+            <Card.Text className="DetailsOwner">
               Subido el:{" "}
               <i>
                 <b>{shortdatum}</b>
@@ -228,7 +230,7 @@ const SketchDetail = () => {
               justifyContent: "space-between",
             }}
           >
-            <Card.Text className="detailsText1">{sketch?.comment}</Card.Text>
+            <Card.Text className="detailsText">{sketch?.comment}</Card.Text>
 
             {sketch?.likes && (
               <h5>
@@ -258,8 +260,9 @@ const SketchDetail = () => {
             label="agrega un comentario..."
           >
             <Form.Control
+              className="sketchDetailsBody"
               as="textarea"
-              style={{ height: "70px", width: "100%" }}
+              // style={{ height: "100", width: "100%" }}
               name="comment"
               onChange={handleChange}
               value={commentImput}
@@ -274,7 +277,7 @@ const SketchDetail = () => {
           </FloatingLabel>
         </Card>
 
-        <div>
+        <div className="sketchDetailsBody">
           {sketch?.comments?.length >= 0 ? (
             <>
               {sketch?.comments &&
@@ -368,7 +371,9 @@ const SketchDetail = () => {
                               )}
                             </div>
                           </div>
-                          <div key={comment._id} className="commentText">
+                          <div key={comment._id}
+                            // className="commentText "
+                          >
                             <p>
                               <i>{comment.comment}</i>
                             </p>
@@ -376,7 +381,8 @@ const SketchDetail = () => {
                         </div>
 
                         <Modal
-                          style={{ height: "20rem" }}
+                            className="detailsEditModal"
+                          // style={{ height: "20rem" }}
                           show={deleteStates[comment._id]}
                           onHide={() =>
                             setDeleteStates((prevState) => ({
@@ -426,7 +432,7 @@ const SketchDetail = () => {
                         </Modal>
 
                         <Modal
-                          style={{ height: "23rem" }}
+                        className="detailsEditModal"
                           show={editStates[comment._id]}
                           onHide={() =>
                             setEditStates((prevState) => ({

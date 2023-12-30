@@ -45,7 +45,7 @@ const SkechesPage = (props: Props) => {
 
       <>
        
-        <h1 className='NavtrapBar' style={{textAlign:"center", fontSize: "xxx-large"}}>Bocetos Subidos</h1>
+        <h1 className='NavtrapBar' style={{textAlign:"center", fontSize: "xx-large"}}>Bocetos Subidos</h1>
         
         <div className='cardcontainer'>
            {sketches && sketches.map((sketch: Sketch) => {

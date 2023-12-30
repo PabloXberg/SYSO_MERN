@@ -217,6 +217,7 @@ function SketchCard(props) {
     <Card lassName="SketchCard">
       <Link to={page + _id} params={_id} key={_id}>
         <Card.Img
+          className="sketchCardImg"
           variant="top"
           alt="Sketch"
           src={props.props.url}
@@ -226,6 +227,7 @@ function SketchCard(props) {
       </Link>
 
       <Card.Body
+        className="sketchCardBody"
         // style={{
         //   width: "18rem",
         //   display: "flex",
@@ -261,12 +263,13 @@ function SketchCard(props) {
         ) : location.pathname === "/mysketchs" ? (
           <>
             {" "}
-            <Card.Footer
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
+              <Card.Footer 
+                className="sketchCardFooter"
+              // style={{
+              //   display: "flex",
+              //   flexDirection: "row",
+              //   justifyContent: "space-between",
+              // }}
             >
               <div>Creado por mí</div>
               <div>
