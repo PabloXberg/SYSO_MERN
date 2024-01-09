@@ -2,6 +2,10 @@
   font-family: "MiFuente";
   src: url("../src/fonts/DonGraffiti.otf") format("truetype");
 }
+@font-face {
+  font-family: "MiFuente2";
+  src: url("../src/fonts/THUG.TTF") format("truetype");
+}
 
 .cardcontainer {
   display: flex;
@@ -307,14 +311,14 @@
 
     .battleText {
       background-color: transparent;
-      font-family: MiFuente;
+      font-family: 'MiFuente2';
       padding: 1%;
       color: #fff
     }
   
     .homeInfo {
       background-color: transparent;
-      font-family: MiFuente;
+      font-family: 'MiFuente2';
       padding: 1%;
       color: #fff;
     }
@@ -402,14 +406,14 @@
   }
 .battleText{
   background-color: transparent;
-  font-family: MiFuente;
+  font-family: 'MiFuente2';
   padding: 1%;
   color:#fff
   
 }
 .homeInfo{
     background-color: transparent;
-      font-family: MiFuente;
+      font-family: 'MiFuente2';
       padding: 1%;
       color: #fff;
 }
