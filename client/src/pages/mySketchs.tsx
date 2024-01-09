@@ -138,10 +138,11 @@ const MySketchs = (props: Props) => {
           justifyContent: "center",
         }}
         className="title"
-      >
-        <h1 className='NavtrapBar' style={{textAlign:"center", fontSize: "xxx-large"}}>Mis Bocetos ~ </h1>
-        <Button onClick={handleShow} style={{gap: "2em"}} variant="success">
-          <b>Subir Nuevo Boceto</b>
+      >,
+        
+        <h1  style={{textAlign:"center", fontSize: "xxx-large", fontFamily: 'MiFuente', padding:'2%'}}>Mis Bocetos</h1>
+        <Button onClick={handleShow} style={{gap: "1em", fontFamily:'Mifuente2', fontSize:'x-large'}} variant="success">
+          <b>Subir  Boceto</b>
         </Button>
 
         <Modal
@@ -153,7 +154,7 @@ const MySketchs = (props: Props) => {
           keyboard={false}
         >
           <Modal.Header closeButton>
-            <Modal.Title>Subir un nuevo Boceto</Modal.Title>
+            <Modal.Title>Subir un Boceto</Modal.Title>
           </Modal.Header>
 
           <div>
