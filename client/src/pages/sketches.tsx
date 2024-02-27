@@ -1,7 +1,8 @@
 import React, { Key, useEffect, useState } from 'react'
-import UserCard from '../components/UserCard'
 import '../index.css'
 import SketchCard from '../components/SketchCard'
+import SubHomeNav from '../components/SubHomeNav'
+
 
 type Props = {}
 
@@ -43,7 +44,7 @@ const SkechesPage = (props: Props) => {
   return (
     <div>
 
-      <>
+      <><SubHomeNav/>
        
         <h1 style={{textAlign:"center", fontSize: "xx-large", fontFamily: 'MiFuente'}}>Bocetos Subidos</h1>
         

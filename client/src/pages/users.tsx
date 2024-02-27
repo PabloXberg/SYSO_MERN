@@ -1,6 +1,8 @@
 import React, { Key, useEffect, useState } from 'react'
 import UserCard from '../components/UserCard'
 import '../index.css'
+import SubHomeNav from '../components/SubHomeNav'
+
 
 type Props = {}
 
@@ -43,7 +45,7 @@ const UsersPage = (props: Props) => {
   return (
     <div>
 
-      <>
+      <><SubHomeNav/>
        
        <h1 style={{textAlign:"center", fontSize: "xx-large", fontFamily: 'MiFuente'}}>Usuarios Registrados</h1>
         <div className='cardcontainer'>

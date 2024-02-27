@@ -134,9 +134,86 @@ function NavStrap() {
             onMouseLeave={handleHover}
           />
         </Navbar.Brand>
+        
         <Nav className="me-auto my-2 my-lg-2" navbarScroll>
+      
           <Nav.Link style={{fontSize: "x-large"}} className="battle" href="/Battle">
             Battle
+          </Nav.Link>
+{/* 
+     <NavDropdown
+                     style={{ fontSize: "xx-large"}}
+                        id="collapsible-nav-dropdown"
+                  title={"Home"}
+                  href="/"
+                      >
+                      
+                      <NavDropdown.Item
+                        style={{ fontSize: "x-large", backgroundColor:"Black", color:"White" }}
+                        href="/mysketchs"
+                      >
+                        Bocetos
+                   </NavDropdown.Item>
+                 <NavDropdown.Item
+                        style={{ fontSize: "x-large", backgroundColor:"Black" , color:"White" }}
+                        href="/usuarios"
+                      >
+                        Usuarios
+            </NavDropdown.Item>
+                 <NavDropdown.Item
+                        style={{ fontSize: "x-large", backgroundColor:"Black", color:"White"}}
+                        href="/contact"
+                      >
+                        Contact
+                      </NavDropdown.Item>
+                      <NavDropdown.Item
+                        style={{ fontSize: "x-large", backgroundColor:"Black" , color:"White" }}
+                        href="/suppoters"
+                      >
+                        Supporters
+                  </NavDropdown.Item>
+          </NavDropdown>
+          
+            <NavDropdown
+                     style={{ fontSize: "xx-large" }}
+                          id="collapsible-nav-dropdown"
+                  title={"Battle"}
+                  href="/Battle"
+                      >
+                      
+                      <NavDropdown.Item
+                        style={{ fontSize: "x-large" }}
+                        href="/mysketchs"
+                      >
+                        Bases
+                   </NavDropdown.Item>
+                 <NavDropdown.Item
+                        style={{ fontSize: "x-large" }}
+                        href="/prices"
+                      >
+                        Premios
+            </NavDropdown.Item>
+                 <NavDropdown.Item
+                        style={{ fontSize: "x-large" }}
+                        href="/lastbattle"
+                      >
+                        Last Battle
+                      </NavDropdown.Item>
+                      <NavDropdown.Item
+                        style={{ fontSize: "x-large" }}
+                        href="/battlehistory"
+                      >
+                        History
+                  </NavDropdown.Item>
+            </NavDropdown> */}
+
+
+            <Nav.Link
+               style={{ fontSize: "x-large" }}
+               href="#action6"
+               disabled
+            >
+              Shop
           </Nav.Link>
         </Nav>
 
@@ -206,15 +283,7 @@ function NavStrap() {
                         Editar Usuario
                       </NavDropdown.Item>
                         </NavDropdown>
-                
-                      
-                    <Nav.Link
-                      style={{ fontSize: "x-large" }}
-                      href="#action6"
-                      disabled
-                    >
-                      Shop
-                    </Nav.Link>
+              
                   </Nav>
                   {/* <Form className="d-flex" style={{borderTop: '1px'}}>
                             <Form.Control
@@ -236,14 +305,14 @@ function NavStrap() {
                 {
                   <>
                     <Navbar.Brand
-                      style={{ cursor: "pointer", fontSize:'x-large'}}
+                      style={{ cursor: "pointer", fontSize:'large'}}
                       className={"registrarse"}
                       onClick={handleShowRegister}
                     >
                       Registrar
                     </Navbar.Brand>
                     <Navbar.Brand
-                      style={{ cursor: "pointer", fontSize:'x-large'}}
+                      style={{ cursor: "pointer", fontSize:'large'}}
                       className={"entrar"}
                       onClick={handleShowLogin}
                     >

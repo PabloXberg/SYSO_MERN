@@ -1,12 +1,14 @@
 import React, { Key, useEffect, useState } from "react";
 import "../../src/index.css";
 import { InstagramEmbed } from "react-social-media-embed";
+import SubBatlleNav from "../components/SubBattleNav";
 
 const Battle = () => {
   useEffect(() => {}, []);
 
   return (
     <>
+      <SubBatlleNav />
       {" "}
       <div className="Battle-container">
         {/* WIDget para instagram */}
@@ -18,19 +20,21 @@ const Battle = () => {
           <h4>
             A lo largo del año realizaremos varios "Sketchs Battles", donde
             cualquiera de nuestros seguidores desde cualquier parte del mundo
-            podra participar enviandonos su mejor boceto para hacerse con el
-            lote de premios ofrecido para ese concurso. Los jueces variaran en
-            cada una de las batallas, tambien algunas de sus reglas.
+            podra participar enviandonos su mejor boceto. <br />
+            Los jueces elegidos para dicha batalla valoraran los bocetos recibidos
+            y el ganador recibira un maravilloso lote de premios. <br />
+
+            Las reglas de las batallas variaran segun las modalidades elegidas por los jueces. <br />
+            Tanto los jueces, como los premios, seran anunciados antes de cada batalla.
+
             <br />
             <br />
             <h2 style={{fontFamily: 'MiFuente'}}>Requisitos:</h2>
             <br />
-            Seguirnos en la pagina de Instagram y registrase en esta Web. Subir
-            el boceto a la Web antes de la fecha indicada , comentando Sketch
-            Battle junto con la palabra elegida del mes a dibujar. Crear un
-            Storie en Instagram mencionandonos. <br />
+          * Seguirnos en la pagina de Instagram. <br />
+          * Realizar un Storie mencionandonos y escribiendo Sketch Battle.<br />
+          * Registrarse en esta Web antes de la fecha indicada. <br />
             <br />
-            <h2 style={{fontFamily: 'MiFuente'}}>Premios: (se anunciaran pronto...)</h2>
             <br />
             No dudes en participar y estar atentos a nuestras publicaciones !!
             Hasta pronto Sketchers !!!
