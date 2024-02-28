@@ -1,34 +1,37 @@
 import Card from "react-bootstrap/Card";
-import SketchModal from "../components/SketchModal";
-import { useState } from "react";
+// import SketchModal from "./SketchModal";
+// import { useState } from "react";
 
 function UserCard(props: any) {
   const datum = props.props.createdAt;
   const shortdatum = datum.substring(0, 10);
-  const [show, setShow] = useState(false);
+  // const [show, setShow] = useState(false);
+
 
   return (
     <div style={{ display: "Flex" }}>
       <Card className="UserCard">
         <Card.Img
+          className="UserAvatar"
           variant="top"
           src={props.props.avatar}
           style={{
         
-            width: "26rem",
-            height: "26rem",
+            width: "23rem",
+            height: "23rem",
              alignSelf: "center",
                padding: "1rem",
             borderRadius:"50%"
           }}
         />
         <Card.Body
-          // style={{
-          //   width: "18rem",
-          //   display: "flex",
-          //   flexDirection: "column",
-          //   justifyContent: "space-between",
-          // }}
+
+          style={{
+            width: "23rem",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+          }}
         >
           <Card.Title
             style={{
@@ -42,38 +45,28 @@ function UserCard(props: any) {
 
           <Card.Text
             style={{
+                 width: "22rem",
               display: "flex",
               flexDirection: "row",
               justifyContent: "space-around",
             }}
           >
+            
             {props.props.info
               ? props.props.info
               : "Aqui podríamos ver alguna informacion del usuario..."}
           </Card.Text>
           <div>
+       
             <Card.Footer
               style={{
+                   width: "22rem",
                 display: "flex",
                 flexDirection: "row",
-                justifyContent: "space-around",
-              }}
-            >
-              <Card.Link
-                style={{ cursor: "pointer" }}
-                onClick={() => setShow(true)}
-              >
-                <i>{props.props.sketchs.length} Bocetos Subidos</i>
-              </Card.Link>
-            </Card.Footer>
-            <Card.Footer
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-around",
+                justifyContent: "space-between",
               }}
               className="text-muted"
-            >
+            > <i>{props.props.sketchs.length} Bocetos Subidos</i>
               <i>Registrado el: {shortdatum}</i>
             </Card.Footer>
           </div>
@@ -81,12 +74,12 @@ function UserCard(props: any) {
           {/* <Button variant="primary">Details</Button> */}
         </Card.Body>
       </Card>
-      <SketchModal
+      {/* <SketchModal
         style={{ cursor: "pointer" }}
         onClose={() => setShow(false)}
         show={show}
         character={props.props}
-      />
+      /> */}
     </div>
   );
 }

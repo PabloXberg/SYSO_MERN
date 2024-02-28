@@ -1,7 +1,8 @@
 import React, { Key, useEffect, useState } from 'react'
-import UserCard from '../components/UserCard'
 import '../index.css'
 import SubHomeNav from '../components/SubHomeNav'
+import UserCard from '../components/UserCard'
+
 
 
 type Props = {}

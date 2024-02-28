@@ -247,8 +247,10 @@ function SketchCard(props) {
         {location.pathname === "/sketches" ? (
           <Card.Footer className="text-muted">
             {" "}
-            <i>Creado por: </i>{" "}
-            <Card.Link
+            <i>Creado por: </i>{" "} <i>  {props?.props.owner.username
+                  ? props?.props.owner.username
+                  : user?.username}</i>
+            {/* <Card.Link
               style={{ cursor: "pointer" }}
               onClick={() => setShow(true)}
             >
@@ -258,7 +260,7 @@ function SketchCard(props) {
                   ? props?.props.owner.username
                   : user?.username}
               </b>
-            </Card.Link>
+            </Card.Link> */}
           </Card.Footer>
         ) : location.pathname === "/mysketchs" ? (
           <>

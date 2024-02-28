@@ -21,18 +21,19 @@ function SubHomeNav() {
         {/* <Navbar.Toggle aria-controls="responsive-navbar-nav" /> */}
 
         <Nav className="me-auto my-2 my-lg-2" navbarScroll>
-          <Nav.Link style={{ fontSize: "x-large" }} href="/suppoters">
-            Supporters
-          </Nav.Link>
-          <Nav.Link style={{ fontSize: "x-large" }} href="/contacto">
-            Contacto
-          </Nav.Link>
-          <Nav.Link style={{ fontSize: "x-large" }} href="/sketches">
+           <Nav.Link style={{ fontSize: "x-large" }} href="/sketches">
             Bocetos
           </Nav.Link>
           <Nav.Link style={{ fontSize: "x-large" }} href="/users">
             Usuarios
           </Nav.Link>
+          <Nav.Link style={{ fontSize: "x-large" }} href="/suppoters" disabled>
+            Supporters
+          </Nav.Link>
+          <Nav.Link style={{ fontSize: "x-large" }} href="/contacto" disabled>
+            Contacto
+          </Nav.Link>
+         
         </Nav>
       </Container>
     </Navbar>

@@ -87,7 +87,7 @@
 } */
 
 .modal-container {
-  position: fixed;
+  position: relative;
   z-index: 1000;
   left: 0;
   top: 0;
@@ -240,8 +240,12 @@
   }
 
   .UserCard {
-    max-width: "100%";
-    min-width: "100%";
+    max-width: "25rem";
+    min-width: "23rem";
+  }
+  .UserAvatar{
+    max-width: "25rem";
+      min-width: "23rem";
   }
   .SketchCard {
     max-width: "100%";
@@ -257,7 +261,7 @@
   }
   .sketchCardFooter {
     max-width: "100%";
-    min-width: "90%";
+    min-width: "100%";
   }
   .userModal {
     max-width: "100%";
@@ -354,7 +358,7 @@
   
     .homeContainer {
       /* background-image: url("../src/images/IMG-20231228-WA0004.jpg"); */
-      background-size: 60%;
+      background-size: 100%;
       background-repeat: no-repeat;
       background-position: center;
       height: 100vh;
@@ -397,6 +401,93 @@
 
 @media (min-width: 769px) and (max-width: 1024px) {
   /* Estilos para tabletas */
+  .navTrapImg:hover {
+      scale: 1.1;
+    }
+  
+    .battleText {
+      background-color: transparent;
+      font-family: 'MiFuente2';
+      padding: 1%;
+      color: #fff
+    }
+  
+    .homeInfo {
+      background-color: transparent;
+      font-family: 'MiFuente2';
+      padding: 1%;
+      color: #fff;
+    }
+  
+    .Battle-container {
+      /* background-image: url("../src/images/IMG-20231228-WA0004.jpg"); */
+      background-size: 60%;
+      background-repeat: no-repeat;
+      background-position: center;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      /* align-items: center;
+    justify-content: center; */
+      background-color: black;
+      opacity: 0.7;
+  
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: url("../src/images/IMG-20231228-WA0005.jpg");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center;
+        opacity: 0.15;
+        /* Ajusta el valor de 0 a 1 para cambiar la opacidad */
+      }
+    }
+  
+    .homeContainer {
+      /* background-image: url("../src/images/IMG-20231228-WA0004.jpg"); */
+      background-size: 60%;
+      background-repeat: no-repeat;
+      background-position: center;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      /* align-items: center;
+    justify-content: center; */
+      background-color: black;
+      opacity: 0.7;
+  
+  
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: url("../src/images/IMG-20231228-WA0004.jpg");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center;
+        opacity: 0.15;
+        /* Ajusta el valor de 0 a 1 para cambiar la opacidad */
+      }
+  
+    }
+  
+    .NavtrapBar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1;
+      /* Asegura que la barra de navegación esté por encima del pseudo-elemento */
+    }
+
 
 }
 
@@ -439,7 +530,7 @@
         bottom: 0;
         left: 0;
         background: url("../src/images/IMG-20231228-WA0005.jpg");
-        background-size: 60%;
+        background-size: 100%;
         background-repeat: no-repeat;
         background-position: center;
         opacity: 0.15;
@@ -468,7 +559,7 @@
     bottom: 0;
     left: 0;
     background: url("../src/images/IMG-20231228-WA0004.jpg");
-    background-size: 60%;
+    background-size: 100%;
     background-repeat: no-repeat;
     background-position: center;
     opacity: 0.15;
@@ -484,4 +575,9 @@
   z-index: 1;
   /* Asegura que la barra de navegación esté por encima del pseudo-elemento */
 }
+
+    .UserCard {
+      max-width: "20rem";
+      min-width: "18rem";
+    }
 }

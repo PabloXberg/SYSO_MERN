@@ -23,11 +23,9 @@ function SubBatlleNav() {
           <Nav.Link style={{ fontSize: "x-large" }} href="/battle">
             Bases
           </Nav.Link>
-          <Nav.Link style={{ fontSize: "x-large" }} href="/lastbattle">
-            Last Battle
-          </Nav.Link>
-          <Nav.Link style={{ fontSize: "x-large" }} href="/battlehistory">
-            History
+       
+          <Nav.Link style={{ fontSize: "x-large" }} href="/battlehistory" disabled>
+            Battle History
           </Nav.Link>
         </Nav>
       </Container>

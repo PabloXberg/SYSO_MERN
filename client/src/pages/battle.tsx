@@ -32,7 +32,7 @@ const Battle = () => {
             <h2 style={{fontFamily: 'MiFuente'}}>Requisitos:</h2>
             <br />
           * Seguirnos en la pagina de Instagram. <br />
-          * Realizar un Storie mencionandonos y escribiendo Sketch Battle.<br />
+          * Realizar un Storie de tu boceto, mencionandonos y escribiendo Sketch Battle.<br />
           * Registrarse en esta Web antes de la fecha indicada. <br />
             <br />
             <br />
