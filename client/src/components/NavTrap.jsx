@@ -138,9 +138,9 @@ function NavStrap() {
         <Nav
           className="me-auto my-2 my-lg-2"
           navbarScroll>
-            <Nav.Link style={{fontSize: "x-large"}}  href="/">
+            {/* <Nav.Link style={{fontSize: "x-large"}}  href="/">
             Home
-          </Nav.Link>
+          </Nav.Link> */}
           <Nav.Link style={{fontSize: "x-large"}} className="battle" href="/Battle">
             Battle
           </Nav.Link>
@@ -158,10 +158,12 @@ function NavStrap() {
           <div>
             {user ? (
               <div>
-                <Navbar.Toggle aria-controls="navbarScroll" />
-                <Navbar.Collapse id="responsive-navbar-nav">
+                {/* <Navbar.Toggle aria-controls="navbarScroll" /> */}
+                {/* <Navbar.Collapse id="responsive-navbar-nav"> */}
                   {/* <Navbar.Toggle aria-controls="responsive-navbar-nav" /> */}
-                  <Nav className="me-auto my-2 my-lg-2">
+                  <Nav
+                    // className="me-auto my-2 my-lg-2"
+                  >
                     {/* <Nav.Link href="/events">Events</Nav.Link> */}
                  
                     {/* <Nav.Link href="#action6" disabled>
@@ -181,15 +183,18 @@ function NavStrap() {
                     </Nav.Link> */}
                    
                     
-                       <img style={{           
+                  <img style={{   
+                        marginLeft:"2em", 
                             gap:"1rem",
                             height: "2.5rem",
                             width: "2.5rem",
                             borderRadius: "50%",
                       }} src={user.avatar} alt="Avatar" className="NavAtar" />
                       
-                    
-                    <NavDropdown
+                     <Nav.Link style={{fontSize: "x-large"}}  href="/mysketchs">
+                        {user.username}
+                     </Nav.Link>
+                    {/* <NavDropdown
                      style={{ fontSize: "x-large" }}
                           id="collapsible-nav-dropdown"
                           title={user.username}
@@ -214,9 +219,9 @@ function NavStrap() {
                       >
                         Editar Usuario
                       </NavDropdown.Item>
-                        </NavDropdown>
+                        </NavDropdown> */}
               
-                  </Nav>
+                
                   {/* <Form className="d-flex" style={{borderTop: '1px'}}>
                             <Form.Control
                             type="search"
@@ -230,7 +235,8 @@ function NavStrap() {
                   <Button variant="outline-danger" href="/" onClick={logout}>
                     Salir
                   </Button>
-                </Navbar.Collapse>
+                  {/* </Navbar.Collapse> */}
+                    </Nav>
               </div>
             ) : (
               <div style={{ display: "flex" }}>

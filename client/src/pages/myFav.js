@@ -3,6 +3,7 @@ import { AuthContext } from "../contexts/AuthContext"
 import SketchCard from "../components/SketchCard";
 
 import DefaultImage from "../default-placeholder.png";
+import SubUserNav from "../components/SubUserNav";
 
 
 
@@ -40,8 +41,10 @@ const MyFav = () => {
 
 
   
-    return (
-      <div>
+  return (
+      
+   <> <SubUserNav/>
+      <div className="">
 
 
          <div className="cardcontainer">
@@ -55,6 +58,7 @@ const MyFav = () => {
 
 
       </div>
+      </>
     )
   }
 

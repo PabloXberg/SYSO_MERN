@@ -48,8 +48,7 @@ const UsersPage = (props: Props) => {
 
       <><SubHomeNav/>
        
-       <h1 style={{textAlign:"center", fontSize: "xx-large", fontFamily: 'MiFuente'}}>Usuarios Registrados</h1>
-        <div className='cardcontainer'>
+       <div className='cardcontainer'>
            {users && users.map((user: User) => {
             return <UserCard key={user._id} props={user} />
          })}

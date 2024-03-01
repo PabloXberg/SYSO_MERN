@@ -5,7 +5,7 @@ import { AuthContext } from '../contexts/AuthContext';
 import { Image } from 'react-bootstrap';
 import '../index.css'
 import Modal from 'react-bootstrap/Modal';
-
+import SubUserNav from "../components/SubUserNav";
 
 type Props = {}
 
@@ -88,6 +88,10 @@ const EditProfile = (props: Props) => {
 
   return (
     <>
+      <SubUserNav />
+      <div
+        // className="user-conteiner"
+      >
       <div className="updateuser">
         <div className="avatar">
 
@@ -182,7 +186,7 @@ const EditProfile = (props: Props) => {
         
 
     </div>
-      
+ </div>
   </>
   );
 }

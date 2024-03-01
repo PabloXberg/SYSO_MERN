@@ -46,9 +46,7 @@ const SkechesPage = (props: Props) => {
 
       <><SubHomeNav/>
        
-        <h1 style={{textAlign:"center", fontSize: "xx-large", fontFamily: 'MiFuente'}}>Bocetos Subidos</h1>
-        
-        <div className='cardcontainer'>
+       <div className='cardcontainer'>
            {sketches && sketches.map((sketch: Sketch) => {
              return <SketchCard bolean={false} key={sketch._id} props={sketch} />
          })}

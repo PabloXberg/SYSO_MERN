@@ -24,7 +24,7 @@ const Battle = () => {
             Los jueces elegidos para dicha batalla valoraran los bocetos recibidos
             y el ganador recibira un maravilloso lote de premios. <br />
 
-            Las reglas de las batallas variaran segun las modalidades elegidas por los jueces. <br />
+            Las reglas de las batallas variaran segun las modalidades elegidas por los jueces. <br /><br />
             Tanto los jueces, como los premios, seran anunciados antes de cada batalla.
 
             <br />

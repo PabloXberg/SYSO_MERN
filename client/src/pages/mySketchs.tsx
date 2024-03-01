@@ -5,6 +5,7 @@ import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import DefaultImage from "../default-placeholder.png";
+import SubUserNav from "../components/SubUserNav";
 
 type Props = {};
 
@@ -44,6 +45,7 @@ const MySketchs = (props: Props) => {
   const [ID, setID] = useState<id>(activeUser?._id);
   const [avatarPreview, setAvatarPreview] = useState(DefaultImage);
   const [loading, setLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     name: "",
     comment: "",
@@ -130,8 +132,13 @@ const MySketchs = (props: Props) => {
   };
 
   return (
-    <div>
+    <>
+      
+    <SubUserNav/>
       <div
+        // className="user-conteiner"
+      >
+      <div 
         style={{
           display: "flex",
           alignItems: "center",
@@ -140,9 +147,9 @@ const MySketchs = (props: Props) => {
         className="title"
       >,
         
-        <h1  style={{textAlign:"center", fontSize: "xxx-large", fontFamily: 'MiFuente', padding:'2%'}}>Mis Bocetos</h1>
-        <Button onClick={handleShow} style={{gap: "1em", fontFamily:'Mifuente2', fontSize:'x-large'}} variant="success">
-          <b>Subir  Boceto</b>
+       
+        <Button onClick={handleShow} style={{gap: "1em", fontFamily:'Mifuente2', fontSize:'large'}} variant="success">
+          <b>Subir Nuevo Boceto</b>
         </Button>
 
         <Modal
@@ -157,7 +164,7 @@ const MySketchs = (props: Props) => {
             <Modal.Title>Subir un Boceto</Modal.Title>
           </Modal.Header>
 
-          <div>
+          <div >
             <div className="avatar">
               <img
                 alt="User Avatar"
@@ -221,7 +228,8 @@ const MySketchs = (props: Props) => {
             return <SketchCard bolean={true} key={sketch._id} props={sketch} />;
           })}
       </div>
-    </div>
+      </div>
+      </>
   );
 };
 

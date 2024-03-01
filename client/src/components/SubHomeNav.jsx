@@ -1,13 +1,28 @@
 /* eslint-disable react/jsx-pascal-case */
-import Button from "react-bootstrap/Button";
+import React, { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
-import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import React from "react";
+
 import "../index.css";
 
 function SubHomeNav() {
+
+    const getLastSegment = () => {
+    const url = new URL(window.location.href);
+    const lastSegment = url.pathname
+      .split("/")
+      .filter((segment) => segment !== "")
+      .pop();
+    return lastSegment;
+  };
+
+  const [segmentValue, setSegmentValue] = useState(getLastSegment());
+
+  useEffect(() => {
+    setSegmentValue(getLastSegment());
+    console.log(segmentValue)
+  }, []);
  
   return (
     <Navbar
@@ -20,11 +35,17 @@ function SubHomeNav() {
       <Container>
         {/* <Navbar.Toggle aria-controls="responsive-navbar-nav" /> */}
 
-        <Nav className="me-auto my-2 my-lg-2" navbarScroll>
-           <Nav.Link style={{ fontSize: "x-large" }} href="/sketches">
+        <Nav navbarScroll>
+           {/* <Nav.Link style={{ fontSize: "x-large",
+              color: segmentValue === undefined ? "red" : "black"}} href="/">
+            Home
+          </Nav.Link> */}
+           <Nav.Link style={{ fontSize: "x-large",
+              color: segmentValue === "sketches" ? "red" : "black"}} href="/sketches">
             Bocetos
           </Nav.Link>
-          <Nav.Link style={{ fontSize: "x-large" }} href="/users">
+          <Nav.Link style={{ fontSize: "x-large",
+              color: segmentValue === "users" ? "red" : "black" }} href="/users">
             Usuarios
           </Nav.Link>
           <Nav.Link style={{ fontSize: "x-large" }} href="/suppoters" disabled>

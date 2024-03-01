@@ -140,7 +140,7 @@ function SketchCard(props) {
     setRefresh(false);
     setLoading(false);
   }, [refresh, loading]);
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////////////
 
   const likeSketch = async (props) => {
     const myHeaders = new Headers();
@@ -204,7 +204,7 @@ function SketchCard(props) {
       setLoading(true);
       setRefresh(true);
       /// fetchActiveUser(localStorage.getItem("token"));
-      window.location.reload(); ///////////////////////////////////////////////////////////////////// PROVISORIO
+      window.location.reload(); ///////////////////////////////////////////////////////// PROVISORIO
     } catch (error) {
       console.log("error", error);
     }
@@ -213,8 +213,8 @@ function SketchCard(props) {
   const _id = props?.props._id;
   const page = "/sketchdetail/";
   return (
-    ////////////////////////////////////////////////////////////////////////////////////COMIENZA LA CARD
-    <Card lassName="SketchCard">
+    /////////////////////////////////////////////////////////////////////////COMIENZA LA CARD
+    <Card className="SketchCard">
       <Link to={page + _id} params={_id} key={_id}>
         <Card.Img
           className="sketchCardImg"
