@@ -80,21 +80,21 @@ const MySketchs = (props: Props) => {
 
   //////////////////////////////////////////////////////////////////////////////////// HANDLE SUBMIT - SAVE A NEEW SKETCH
   const handleSubmit = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    setLoading(true); /// FUTURE SPINNER
+   e.preventDefault();
+   // setLoading(true); /// FUTURE SPINNER
 
     ////////////////////////////////////////////////////////////// HEADERS
     const myHeaders = new Headers();
     const token = localStorage.getItem("token");
     myHeaders.append("Authorization", `Bearer ${token}`);
-
+    console.log('token :>> ', token);
     //// DATA TO SAVE - BODY -
     const submitData = new FormData();
     submitData.append("name", formData.name);
     submitData.append("comment", formData.comment);
     submitData.append("owner", ID);
     submitData.append("url", formData.url);
-
+   
     //////  OPTION BODY
     const requestOptions = {
       method: "POST",
@@ -102,11 +102,18 @@ const MySketchs = (props: Props) => {
       body: submitData,
     };
 
+ console.log('ID :>> ', ID);
+    console.log('formData :>> ', formData);
+      console.log('submitData :>> ', submitData);
+    console.log('requestOptions :>> ', requestOptions);
+    console.log('FormData :>> ', FormData);
+    console.log('requestOptions.body :>> ', requestOptions.body);
+
+
     /// FETCH
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_BASE_URL}sketches/new`,
-        requestOptions
+        'http://localhost:5000/api/sketches/new',        requestOptions
       );
       const result = await response.json();
       console.log(result);
@@ -121,6 +128,7 @@ const MySketchs = (props: Props) => {
 
   /// HANDLE THE FILE FROM THE IMPUT - NEW SKETCH FILE
   const handleFile = (e: any) => {
+       e.preventDefault();
     console.log("e.target :>> ", e.target.files);
     if (e.target.files) {
       let arrayURL = URL.createObjectURL(e.target.files[0]);

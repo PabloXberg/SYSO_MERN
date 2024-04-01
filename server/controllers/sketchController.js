@@ -127,7 +127,7 @@ const addSketchToUser = async (userId, sharedPost) => {
 ///////////////////////////////////////////////////////////// CREATE FUNCTION - NEW SKETCH COLLECTION
 const createSketch = async (req, res) => {
   const URL = await imageUpload(req.file, "user_sketches"); //// ADDING TO CLOUDINARY AND SAVING URL ADRESS
-
+console.log('req.body :>> ', req.body);
   const newSketch = new SketchModel({
     /////////////////// PREPARING MOGOOSE MODEL
     ...req.body,
@@ -140,7 +140,8 @@ const createSketch = async (req, res) => {
   try {
     const sketchToSave = await newSketch.save();
     const updatedUser = await addSketchToUser(req.body.owner, sketchToSave);
-
+    console.log('sketchToSave :>> ', sketchToSave);
+    console.log('updatedUser :>> ', updatedUser);
     res.status(200).json({
       update_status: updatedUser,
       message: "Sketch Successfully Upload, Yeahhhh!",
@@ -148,6 +149,7 @@ const createSketch = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    console.log('error.message :>> ', error.message);
     res.status(500).json("Algo no quedo muy bien que digamos....");
   }
 };
