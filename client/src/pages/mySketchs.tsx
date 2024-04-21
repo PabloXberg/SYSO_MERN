@@ -6,6 +6,7 @@ import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import DefaultImage from "../default-placeholder.png";
 import SubUserNav from "../components/SubUserNav";
+import { serverURL } from "../serverURL";
 
 type Props = {};
 
@@ -60,7 +61,7 @@ const MySketchs = (props: Props) => {
     const id = user?._id;
     setID(id);
     try {
-      const response = await fetch(`${process.env.REACT_APP_BASE_URL}users/id/${id}`);
+      const response = await fetch(`${serverURL}users/id/${id}`);
       const result = await response.json();
 
       setActiveUser(result);
@@ -87,7 +88,7 @@ const MySketchs = (props: Props) => {
     const myHeaders = new Headers();
     const token = localStorage.getItem("token");
     myHeaders.append("Authorization", `Bearer ${token}`);
-    console.log('token :>> ', token);
+    // console.log('token :>> ', token);
     //// DATA TO SAVE - BODY -
     const submitData = new FormData();
     submitData.append("name", formData.name);
@@ -102,19 +103,17 @@ const MySketchs = (props: Props) => {
       body: submitData,
     };
 
- console.log('ID :>> ', ID);
-    console.log('formData :>> ', formData);
-      console.log('submitData :>> ', submitData);
-    console.log('requestOptions :>> ', requestOptions);
-    console.log('FormData :>> ', FormData);
-    console.log('requestOptions.body :>> ', requestOptions.body);
+//  console.log('ID :>> ', ID);
+//     console.log('formData :>> ', formData);
+//       console.log('submitData :>> ', submitData);
+//     console.log('requestOptions :>> ', requestOptions);
+//     console.log('FormData :>> ', FormData);
+//     console.log('requestOptions.body :>> ', requestOptions.body);
 
 
     /// FETCH
     try {
-      const response = await fetch(
-        'http://localhost:5000/api/sketches/new',        requestOptions
-      );
+      const response = await fetch(`${serverURL}api/sketches/new`,requestOptions);
       const result = await response.json();
       console.log(result);
       alert("Success!!! Your new Sketch is uploaded in our data base");
@@ -186,7 +185,8 @@ const MySketchs = (props: Props) => {
               />
               <br />
 
-              <input
+                <input
+                  placeholder="avatar"
                 style={{ padding: "1rem" }}
                 type="file"
                 name="loading..."

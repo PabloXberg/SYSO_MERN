@@ -1,4 +1,5 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react'
+import { serverURL } from '../serverURL';
 
 type Props = {}
 
@@ -38,7 +39,7 @@ const Register = (props: Props) => {
       body: submitData,
     };
     try {
-      const response = await fetch(`${process.env.REACT_APP_BASE_URL}users/new`, requestOptions);
+      const response = await fetch(`${serverURL}users/new`, requestOptions);
       const result = await response.json();
       console.log(result);
       alert("Success! Check console.");
@@ -57,7 +58,7 @@ const Register = (props: Props) => {
         <input type='email' name='email' placeholder='email' onChange={handleChange}/>
         <input type='password' name='password' placeholder='password'onChange={handleChange}/>
         <input name='username' placeholder='username' onChange={handleChange}/>
-        <input type='file' name='avatar' onChange={handleFile} />
+        <input  placeholder='avatar'type='file' name='avatar' onChange={handleFile} />
         <button type='submit' style={{ marginRight: "1em" }}>Register me!</button>
         { loading && <>Loading...</> }
       </form>

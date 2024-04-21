@@ -4,6 +4,7 @@ import SketchCard from "../components/SketchCard";
 
 import DefaultImage from "../default-placeholder.png";
 import SubUserNav from "../components/SubUserNav";
+import { serverURL } from "../serverURL";
 
 
 
@@ -26,7 +27,7 @@ const MyFav = () => {
       const id = user?._id;
       setID(id);
       try {
-        const response = await fetch(`${process.env.REACT_APP_BASE_URL}users/id/${id}`);
+        const response = await fetch(`${serverURL}users/id/${id}`);
         const result = await response.json();
 
         setActiveUser(result);

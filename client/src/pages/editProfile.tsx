@@ -6,6 +6,7 @@ import { Image } from 'react-bootstrap';
 import '../index.css'
 import Modal from 'react-bootstrap/Modal';
 import SubUserNav from "../components/SubUserNav";
+import { serverURL } from "../serverURL";
 
 type Props = {}
 
@@ -67,7 +68,7 @@ const EditProfile = (props: Props) => {
     };
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_BASE_URL}users/update/${user_ID}`, requestOptions);
+      const response = await fetch(`${serverURL}users/update/${user_ID}`, requestOptions);
       const result = await response.json();
       console.log(result);
       alert("Success!!! User Updated");
@@ -101,7 +102,7 @@ const EditProfile = (props: Props) => {
             <br />
 
           {/* eslint-disable-next-line react/jsx-pascal-case */}
-          <input style={{padding: "1rem"}} type='file' name='loading...' accept= 'image/jpg, image/jpeg, image/png' onChange={handleFile} />
+          <input placeholder='avatar' style={{padding: "1rem"}} type='file' name='loading...' accept= 'image/jpg, image/jpeg, image/png' onChange={handleFile} />
 
           </Form>
 

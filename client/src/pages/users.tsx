@@ -2,7 +2,7 @@ import React, { Key, useEffect, useState } from 'react'
 import '../index.css'
 import SubHomeNav from '../components/SubHomeNav'
 import UserCard from '../components/UserCard'
-
+import { serverURL } from '../serverURL'
 
 
 type Props = {}
@@ -28,7 +28,7 @@ const UsersPage = (props: Props) => {
   
   const getUsers = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_BASE_URL}users/all`)
+      const response = await fetch(`${serverURL}users/all`)
       const result = await response.json();
       setUsers(result.users);
     //  console.log("all users:", result)

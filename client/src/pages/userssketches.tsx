@@ -2,6 +2,7 @@ import React, { Key, useEffect, useState } from 'react'
 import '../index.css'
 import SketchCard from '../components/SketchCard'
 import SubHomeNav from '../components/SubHomeNav'
+import { serverURL } from '../serverURL'
 
 
 type Props = {}
@@ -42,7 +43,7 @@ console.log(props, "props");
   
   const getSketches = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_BASE_URL}sketches/all`)
+      const response = await fetch(`${serverURL}sketches/all`)
       const result = await response.json();
       setSketches(result);
       console.log("all users:", result)
