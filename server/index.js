@@ -61,7 +61,7 @@ import userRouter from './routes/userRoutes.js'
 
 import cors from "cors";
 import passportConfig from "./config/passport.js";
-
+import bodyParser from "body-parser";
 
 const app = express();
 const port = process.env.PORT || 5000;
