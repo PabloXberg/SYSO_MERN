@@ -1,10 +1,10 @@
-import React, { Key, useEffect, useState } from 'react'
+import {  useEffect, useState } from 'react'
 import '../index.css'
 import SketchCard from '../components/SketchCard'
 import SubHomeNav from '../components/SubHomeNav'
 import { serverURL } from '../serverURL'
 
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type Props = {}
 
 interface Sketch {
@@ -28,8 +28,9 @@ interface User {
   likes: [];
   comments: [];
 }
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type Users = User[];
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type id = any;
 
 

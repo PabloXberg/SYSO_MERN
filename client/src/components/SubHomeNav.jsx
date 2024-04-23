@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/jsx-pascal-case */
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
@@ -7,8 +8,7 @@ import Navbar from "react-bootstrap/Navbar";
 import "../index.css";
 
 function SubHomeNav() {
-
-    const getLastSegment = () => {
+  const getLastSegment = () => {
     const url = new URL(window.location.href);
     const lastSegment = url.pathname
       .split("/")
@@ -21,9 +21,9 @@ function SubHomeNav() {
 
   useEffect(() => {
     setSegmentValue(getLastSegment());
-    console.log(segmentValue)
-  }, []);
- 
+    console.log(segmentValue);
+  },[]);
+
   return (
     <Navbar
       // collapseOnSelect
@@ -36,16 +36,26 @@ function SubHomeNav() {
         {/* <Navbar.Toggle aria-controls="responsive-navbar-nav" /> */}
 
         <Nav navbarScroll>
-           {/* <Nav.Link style={{ fontSize: "x-large",
+          {/* <Nav.Link style={{ fontSize: "x-large",
               color: segmentValue === undefined ? "red" : "black"}} href="/">
             Home
           </Nav.Link> */}
-           <Nav.Link style={{ fontSize: "x-large",
-              color: segmentValue === "sketches" ? "red" : "black"}} href="/sketches">
+          <Nav.Link
+            style={{
+              fontSize: "x-large",
+              color: segmentValue === "sketches" ? "red" : "black",
+            }}
+            href="/sketches"
+          >
             Bocetos
           </Nav.Link>
-          <Nav.Link style={{ fontSize: "x-large",
-              color: segmentValue === "users" ? "red" : "black" }} href="/users">
+          <Nav.Link
+            style={{
+              fontSize: "x-large",
+              color: segmentValue === "users" ? "red" : "black",
+            }}
+            href="/users"
+          >
             Usuarios
           </Nav.Link>
           <Nav.Link style={{ fontSize: "x-large" }} href="/suppoters" disabled>
@@ -54,7 +64,6 @@ function SubHomeNav() {
           <Nav.Link style={{ fontSize: "x-large" }} href="/contacto" disabled>
             Contacto
           </Nav.Link>
-         
         </Nav>
       </Container>
     </Navbar>

@@ -1,12 +1,12 @@
-import React, { ChangeEvent, FormEvent, useContext, useState } from 'react'
+import { ChangeEvent, FormEvent, useContext, useState } from 'react'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { AuthContext } from '../contexts/AuthContext';
 import { Image } from 'react-bootstrap';
 import '../index.css'
 import Modal from 'react-bootstrap/Modal';
-import SubUserNav from "../components/SubUserNav";
-import { serverURL } from "../serverURL";
+import { serverURL } from '../serverURL';
+
 
 type Props = {}
 
@@ -16,6 +16,8 @@ const EditProfile = (props: Props) => {
   
   const { user  } = useContext(AuthContext);
   console.log('user :>> ', user);
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState(false);
   const[avatarPreview, setAvatarPreview] = useState(user?.avatar) 
 
@@ -89,10 +91,6 @@ const EditProfile = (props: Props) => {
 
   return (
     <>
-      <SubUserNav />
-      <div
-        // className="user-conteiner"
-      >
       <div className="updateuser">
         <div className="avatar">
 
@@ -102,7 +100,7 @@ const EditProfile = (props: Props) => {
             <br />
 
           {/* eslint-disable-next-line react/jsx-pascal-case */}
-          <input placeholder='avatar' style={{padding: "1rem"}} type='file' name='loading...' accept= 'image/jpg, image/jpeg, image/png' onChange={handleFile} />
+          <input style={{padding: "1rem"}} placeholder='UserAvatar' type='file' name='loading...' accept= 'image/jpg, image/jpeg, image/png' onChange={handleFile} />
 
           </Form>
 
@@ -136,7 +134,7 @@ const EditProfile = (props: Props) => {
               <Form.Check type="checkbox" label="Check me out" />
             </Form.Group> */}
             <div className="botones">
-                  <Button variant="dark" onClick={handleShow}>
+                  <Button variant="dark" disabled onClick={handleShow}>
                 change password
                 </Button>
                   <Button variant="success" type="submit" >
@@ -187,7 +185,7 @@ const EditProfile = (props: Props) => {
         
 
     </div>
- </div>
+      
   </>
   );
 }

@@ -1,4 +1,4 @@
-import React, { Key, useEffect, useState } from 'react'
+import  { Key, useEffect} from 'react'
 import '../../src/index.css'
 import SubHomeNav from '../components/SubHomeNav'
 
@@ -18,7 +18,7 @@ interface User {
   comments:[]
 
 }
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type Users = User[]
 
 const Homepage = (props: Props) => {

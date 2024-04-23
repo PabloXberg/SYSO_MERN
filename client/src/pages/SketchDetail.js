@@ -49,7 +49,7 @@ const SketchDetail = () => {
       `Bearer ${localStorage.getItem("token")}`
     );
 // eslint-disable-next-line
-    const urlencoded = new URLSearchParams();
+    // const urlencoded = new URLSearchParams();
 
     const requestOptions = {
       method: "GET",

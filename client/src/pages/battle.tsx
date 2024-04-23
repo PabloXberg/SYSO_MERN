@@ -1,6 +1,6 @@
-import React, { Key, useEffect, useState } from "react";
+import  { useEffect } from "react";
 import "../../src/index.css";
-import { InstagramEmbed } from "react-social-media-embed";
+//import { InstagramEmbed } from "react-social-media-embed";
 import SubBatlleNav from "../components/SubBattleNav";
 
 const Battle = () => {
@@ -15,6 +15,7 @@ const Battle = () => {
         {/* <div className="elfsight-app-26d13d88-234a-4eed-b7a3-a4622ef81e45"></div> */}
 
         <div className="battleText">
+          
           <h2 style={{fontFamily: 'MiFuente'}}>Bases del concurso:</h2>
           <br />
           <h4>

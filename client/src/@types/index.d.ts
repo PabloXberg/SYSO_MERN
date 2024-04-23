@@ -20,3 +20,9 @@ interface SubmitUpdateData {
   info: string | Blob,
   avatar: Avatar,
 }
+interface SubmitUpdateSketch {
+  owner: string | Blob,
+  name: string,
+  comment: string | Blob,
+  url: Avatar,
+}

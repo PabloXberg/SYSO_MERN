@@ -4,7 +4,7 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
+//import NavDropdown from "react-bootstrap/NavDropdown";
 import Modal from "react-bootstrap/Modal";
 import DefaultImage from "../placeholder.png";
 import React, { useContext, useState } from "react";
@@ -14,6 +14,7 @@ import "../index.css";
 import Logo1 from "../images/IMG-20231228-WA0004-removebg-preview.png";
 import Logo2 from "../images/IMG-20231228-WA0005-removebg-preview.png";
 //import Typewriter from 'typewriter-effect';
+import { serverURL } from "../serverURL";
 
 function NavStrap() {
   const { user, login, logout } = useContext(AuthContext);
@@ -25,7 +26,8 @@ function NavStrap() {
   const handleCloseRegister = () => setShowRegister(false);
   const handleShowRegister = () => setShowRegister(true);
   const [avatarPreview, setAvatarPreview] = useState(DefaultImage);
-  const [loading, setLoading] = useState(false);
+
+  //const [loading, setLoading] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
   const handleHover = () => {
@@ -47,14 +49,14 @@ function NavStrap() {
 
   const handleChangeLogin = (e) => {
     setFormDataLogin({ ...formDataLogin, [e.target.name]: e.target.value });
-    // console.log('formData :>> ', formDataLogin);
+
   };
   const handleChangeRegister = (e) => {
     setFormDataRegister({
       ...formDataRegister,
       [e.target.name]: e.target.value,
     });
-    // console.log('formData :>> ', formDataRegister);
+
   };
   const handleSubmitLogin = (e) => {
     e.preventDefault();
@@ -63,7 +65,7 @@ function NavStrap() {
 
   const handleSubmitRegister = async (e) => {
     e.preventDefault();
-    setLoading(true);
+  // setLoading(true);
     const submitData = new FormData();
     submitData.append("email", formDataRegister.email);
     submitData.append("username", formDataRegister.username);
@@ -74,18 +76,15 @@ function NavStrap() {
       body: submitData,
     };
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_BASE_URL}users/new`,
-        requestOptions
-      );
+      const response = await fetch(`${serverURL}users/new`, requestOptions);
       const result = await response.json();
       console.log(result);
       alert("Success! Check console.");
-      setLoading(false);
+      //setLoading(false);
     } catch (error) {
       console.log(error);
       alert("Something went wrong - check console");
-      setLoading(false);
+      //setLoading(false);
     }
   };
 
@@ -100,18 +99,19 @@ function NavStrap() {
     }
   };
 
-  function agregarEspaciosEntreLetras(nombreUsuario) {
-    // Convierte el nombre de usuario en un array de letras
-    if (nombreUsuario !== undefined) {
-      const letras = nombreUsuario.split("");
+  // function agregarEspaciosEntreLetras(nombreUsuario) {
+  //   // Convierte el nombre de usuario en un array de letras
+  //   if (nombreUsuario !== undefined) {
+  //     const letras = nombreUsuario.split("");
 
-      // Usa el método join para unir las letras con espacios entre ellas
-      const nombreConEspacios = letras.join(" ");
+  //     // Usa el método join para unir las letras con espacios entre ellas
+  //     const nombreConEspacios = letras.join(" ");
 
-      return nombreConEspacios;
-    }
-  }
-  const nombreConEspacios = agregarEspaciosEntreLetras(user?.username);
+  //     return nombreConEspacios;
+  //   }
+  // }
+  // eslint-disable-next-line no-unused-vars
+  //const nombreConEspacios = agregarEspaciosEntreLetras(user?.username);
 
   return (
     <Navbar
@@ -120,7 +120,6 @@ function NavStrap() {
       variant="dark"
       expand="lg"
       className="bg-body-tertiary NavtrapBar"
-
     >
       <Container>
         {/* <Navbar.Toggle aria-controls="responsive-navbar-nav" /> */}
@@ -134,23 +133,21 @@ function NavStrap() {
             onMouseLeave={handleHover}
           />
         </Navbar.Brand>
-        
-        <Nav
-          className="me-auto my-2 my-lg-2"
-          navbarScroll>
-            {/* <Nav.Link style={{fontSize: "x-large"}}  href="/">
+
+        <Nav className="me-auto my-2 my-lg-2" navbarScroll>
+          {/* <Nav.Link style={{fontSize: "x-large"}}  href="/">
             Home
           </Nav.Link> */}
-          <Nav.Link style={{fontSize: "x-large"}} className="battle" href="/Battle">
+          <Nav.Link
+            style={{ fontSize: "x-large" }}
+            className="battle"
+            href="/Battle"
+          >
             Battle
           </Nav.Link>
 
-            <Nav.Link
-               style={{ fontSize: "x-large" }}
-               href="#action6"
-               disabled
-            >
-              Shop
+          <Nav.Link style={{ fontSize: "x-large" }} href="#action6" disabled>
+            Shop
           </Nav.Link>
         </Nav>
 
@@ -160,15 +157,15 @@ function NavStrap() {
               <div>
                 {/* <Navbar.Toggle aria-controls="navbarScroll" /> */}
                 {/* <Navbar.Collapse id="responsive-navbar-nav"> */}
-                  {/* <Navbar.Toggle aria-controls="responsive-navbar-nav" /> */}
-                  <Nav
-                    // className="me-auto my-2 my-lg-2"
-                  >
-                    {/* <Nav.Link href="/events">Events</Nav.Link> */}
-                 
-                    {/* <Nav.Link href="#action6" disabled>
+                {/* <Navbar.Toggle aria-controls="responsive-navbar-nav" /> */}
+                <Nav
+                // className="me-auto my-2 my-lg-2"
+                >
+                  {/* <Nav.Link href="/events">Events</Nav.Link> */}
+
+                  {/* <Nav.Link href="#action6" disabled>
                       { */}
-                        {/* <img
+                  {/* <img
                           className="NavAtar"
                           style={{
                          
@@ -179,22 +176,26 @@ function NavStrap() {
                           alt="User Avatar"
                           src={user.avatar}
                         /> */}
-                      {/* }
+                  {/* }
                     </Nav.Link> */}
-                   
-                    
-                  <img style={{   
-                        marginLeft:"2em", 
-                            gap:"1rem",
-                            height: "2.5rem",
-                            width: "2.5rem",
-                            borderRadius: "50%",
-                      }} src={user.avatar} alt="Avatar" className="NavAtar" />
-                      
-                     <Nav.Link style={{fontSize: "x-large"}}  href="/mysketchs">
-                        {user.username}
-                     </Nav.Link>
-                    {/* <NavDropdown
+
+                  <img
+                    style={{
+                      marginLeft: "2em",
+                      gap: "1rem",
+                      height: "2.5rem",
+                      width: "2.5rem",
+                      borderRadius: "50%",
+                    }}
+                    src={user.avatar}
+                    alt="Avatar"
+                    className="NavAtar"
+                  />
+
+                  <Nav.Link style={{ fontSize: "x-large" }} href="/mysketchs">
+                    {user.username}
+                  </Nav.Link>
+                  {/* <NavDropdown
                      style={{ fontSize: "x-large" }}
                           id="collapsible-nav-dropdown"
                           title={user.username}
@@ -220,8 +221,7 @@ function NavStrap() {
                         Editar Usuario
                       </NavDropdown.Item>
                         </NavDropdown> */}
-              
-                
+
                   {/* <Form className="d-flex" style={{borderTop: '1px'}}>
                             <Form.Control
                             type="search"
@@ -236,21 +236,21 @@ function NavStrap() {
                     Salir
                   </Button>
                   {/* </Navbar.Collapse> */}
-                    </Nav>
+                </Nav>
               </div>
             ) : (
               <div style={{ display: "flex" }}>
                 {
                   <>
                     <Navbar.Brand
-                      style={{ cursor: "pointer", fontSize:'large'}}
+                      style={{ cursor: "pointer", fontSize: "large" }}
                       className={"registrarse"}
                       onClick={handleShowRegister}
                     >
                       Registrar
                     </Navbar.Brand>
                     <Navbar.Brand
-                      style={{ cursor: "pointer", fontSize:'large'}}
+                      style={{ cursor: "pointer", fontSize: "large" }}
                       className={"entrar"}
                       onClick={handleShowLogin}
                     >
@@ -383,7 +383,7 @@ function NavStrap() {
                         <Form.Text className="text-muted"></Form.Text>
 
                         <Form.Label>
-                          Información sobre ti (opcional...)
+                          Información sobre ti (opcional......)
                         </Form.Label>
                         <Form.Control
                           type="email"

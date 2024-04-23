@@ -60,8 +60,7 @@ const createUser = async (req, res) => {
   // console.log('avatar.public_id :>> ', avatar.public_id);
   // let avatar_public_id = "Avatar_default"
   // avatar.public_id ? avatar_public_id = avatar.public_id : avatar_public_id = "Default_avatar";
-  console.log('avatar :>> ', avatar);
-  res.status(req.body)
+
   const newUser = new UserModel({
     // email: req.body.email,
     // username: req.body.username,
@@ -104,6 +103,10 @@ const updateUser = async (req, res) => {
   
     }
 
+
+const deleteUser = async (req, res) => {
+      
+    }
 
     
 const loginUser = async (req,res) => {
@@ -161,4 +164,4 @@ const getActiveUser = async (req, res) => {
 }
 
 
-export {testingRoute, getUsers, getUser, createUser, updateUser, loginUser, getActiveUser}
+export {testingRoute, getUsers, getUser, createUser, updateUser, loginUser, getActiveUser, deleteUser}

@@ -1,12 +1,15 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ReactNode, createContext, useEffect, useState } from "react"
+import { serverURL } from "../serverURL"
 
 
 interface User {
-  _id: String | null | undefined
+  _id:  string,
   email?: string,
   username: string,
   avatar: string,
-  sketchs: string[],
+  sketchs: string[], 
   likes: string[],
   comments: string[],
   info:string
@@ -19,7 +22,7 @@ interface fetchResult {
 }
 
 interface fetchFailed {
-  error: string
+  error: String
 }
 
 interface AuthContextType {
@@ -63,7 +66,7 @@ export const AuthContextProvider = ({children} : {children: ReactNode}) => {
       body: urlencoded,
     };
     try {
-      const response = await fetch(`${process.env.REACT_APP_BASE_URL}users/login`, requestOptions);
+      const response = await fetch(`${serverURL}users/login`, requestOptions);
 
       // console.log(response);
       // console.log('process.env.REACT_APP_BASE_URL :>> ', process.env.REACT_APP_BASE_URL);
@@ -71,11 +74,11 @@ export const AuthContextProvider = ({children} : {children: ReactNode}) => {
         const result = await response.json() as fetchResult
         if (result.user) {
           setUser(result.user);
-          console.log(result.user)
+          // console.log(result.user)
           localStorage.setItem("token", result.token);
    
         }
-        console.log(result);
+        // console.log(result);
       } else {
         const result = await response.json() as fetchFailed
         alert(result.error)
@@ -95,11 +98,11 @@ export const AuthContextProvider = ({children} : {children: ReactNode}) => {
   const checkForToken = () => {
     const token = localStorage.getItem("token");
     if (token) {
-      console.log("There is a token")
+      // console.log("There is a token")
       fetchActiveUser(token);
       // setUser(true)
     } else {
-      console.log("There is no token")
+      // console.log("There is no token")
       setUser(null)
     }
   }
@@ -114,9 +117,9 @@ const fetchActiveUser = async (token: string) => {
   };
 
 try {
-  const response = await fetch(`${process.env.REACT_APP_BASE_URL}users/active`, requestOptions);
+  const response = await fetch(`${serverURL}users/active`, requestOptions);
   const result = await response.json();
-  console.log("active user result", result)
+  // console.log("active user result", result)
   setUser(result)
   return result;
  

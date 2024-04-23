@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext"
 import SketchCard from "../components/SketchCard";
-
+import { serverURL } from "../serverURL";
 import DefaultImage from "../default-placeholder.png";
 import SubUserNav from "../components/SubUserNav";
-import { serverURL } from "../serverURL";
 
 
 

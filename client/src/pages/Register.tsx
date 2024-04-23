@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useState } from 'react'
+import  { ChangeEvent, FormEvent, useState } from 'react'
 import { serverURL } from '../serverURL';
 
 type Props = {}
@@ -58,7 +58,7 @@ const Register = (props: Props) => {
         <input type='email' name='email' placeholder='email' onChange={handleChange}/>
         <input type='password' name='password' placeholder='password'onChange={handleChange}/>
         <input name='username' placeholder='username' onChange={handleChange}/>
-        <input  placeholder='avatar'type='file' name='avatar' onChange={handleFile} />
+        <input placeholder='AVATAR' type='file' name='avatar' onChange={handleFile} />
         <button type='submit' style={{ marginRight: "1em" }}>Register me!</button>
         { loading && <>Loading...</> }
       </form>

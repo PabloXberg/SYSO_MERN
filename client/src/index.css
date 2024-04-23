@@ -2,6 +2,7 @@
   font-family: "MiFuente";
   src: url("../src/fonts/DonGraffiti.otf") format("truetype");
 }
+
 @font-face {
   font-family: "MiFuente2";
   src: url("../src/fonts/THUG.TTF") format("truetype");
@@ -10,6 +11,9 @@
 .cardcontainer {
   display: flex;
   flex-wrap: wrap;
+}
+.usercard{
+  display: "Flex"
 }
 
 .updateuser {
@@ -156,6 +160,7 @@
   font-family: "MiFuente", cursive;
   /* font-size: xx-large; */
 }
+
 /* 
 .detailsImage {
   height: 800px;
@@ -193,10 +198,6 @@
   display: Flex;
   flex-direction: column;
 }
-.Bedit:hover {
-  scale: 1.2;
-  cursor: "pointer";
-}
 
 .commentOwner {
   justify-content: space-between;
@@ -227,11 +228,13 @@
 }
 
 @media (max-width: 768px) {
+
   /* Estilos para dispositivos móviles */
   .homepagebody {
     max-width: 100%;
     max-height: 50%;
   }
+
   .NavtrapBar {
     max-width: 100%;
     min-width: 100%;
@@ -243,48 +246,59 @@
     max-width: "25rem";
     min-width: "23rem";
   }
-  .UserAvatar{
+
+  .UserAvatar {
     max-width: "25rem";
-      min-width: "23rem";
+    min-width: "23rem";
   }
+
   .SketchCard {
     max-width: "100%";
     min-width: "100%";
   }
+
   .sketchCardImg {
     max-width: "100%";
     min-width: "90%";
   }
+
   .sketchCardBody {
     max-width: "100%";
     min-width: "90%";
   }
+
   .sketchCardFooter {
     max-width: "100%";
     min-width: "100%";
   }
+
   .userModal {
     max-width: "100%";
     min-width: "100%";
     max-height: "100%";
   }
+
   .modal-conta {
     width: 90%;
     height: 80%;
   }
+
   .sketchDetailsImg {
     max-width: "100%";
     min-width: "90%";
     max-height: "100%";
   }
+
   .sketchDetailsBody {
     width: 100%;
     justify-self: center;
     align-self: center;
   }
+
   .detailsEditModal {
     max-height: 40%;
   }
+
   .commentOwner {
     justify-content: space-between;
     display: flex;
@@ -296,379 +310,397 @@
     display: flex;
     font-size: smaller;
   }
+
   .detailsText {
     font-size: smaller;
   }
+
   .DetailsTitle {
     font-size: x-large;
   }
+
   .DetailsOwner {
     font-size: small;
   }
+
   .modal-container {
     display: flex;
     flex-direction: column;
     max-width: 100%;
     scroll-behavior: smooth;
   }
-   
 
-    .battleText {
-      background-color: transparent;
-      font-family: 'MiFuente2';
-      padding: 1%;
-      color: #fff
-    }
-  
-    .homeInfo {
-      background-color: transparent;
-      font-family: 'MiFuente2';
-      padding: 1%;
-      color: #fff;
-    }
-  
-    .Battle-container {
-      /* background-image: url("../src/images/IMG-20231228-WA0004.jpg"); */
-      background-size: 60%;
-      background-repeat: no-repeat;
-      background-position: center;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      /* align-items: center;
+
+  .battleText {
+    background-color: transparent;
+    font-family: 'MiFuente2';
+    padding: 1%;
+    color: #fff
+  }
+
+  .homeInfo {
+    background-color: transparent;
+    font-family: 'MiFuente2';
+    padding: 1%;
+    color: #fff;
+  }
+
+  .Battle-container {
+    /* background-image: url("../src/images/IMG-20231228-WA0004.jpg"); */
+    background-size: 60%;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center;
       justify-content: center; */
-      background-color: black;
-      opacity: 0.7;
-  
-      &::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        background: url("../src/images/IMG-20231228-WA0005.jpg");
-        background-size: 100%;
-        background-repeat: no-repeat;
-        background-position: center;
-        opacity: 0.25;
-        /* Ajusta el valor de 0 a 1 para cambiar la opacidad */
-      }
-    }
-  
-    .homeContainer {
-      /* background-image: url("../src/images/IMG-20231228-WA0004.jpg"); */
+    background-color: black;
+    opacity: 0.7;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: url("../src/images/IMG-20231228-WA0005.jpg");
       background-size: 100%;
       background-repeat: no-repeat;
       background-position: center;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      /* align-items: center;
-      justify-content: center; */
-      background-color: black;
-      opacity: 0.7;
-        height: auto;
-          min-height: 90%;
-  
-      &::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        background: url("../src/images/IMG-20231228-WA0004.jpg");
-        background-size: 100%;
-        background-repeat: no-repeat;
-        background-position: center;
-        opacity: 0.25;
-        /* Ajusta el valor de 0 a 1 para cambiar la opacidad */
-      }
-  
+      opacity: 0.25;
+      /* Ajusta el valor de 0 a 1 para cambiar la opacidad */
     }
+  }
 
-        .user-conteiner {
-          /* background-image: url("../src/images/IMG-20231228-WA0004.jpg"); */
-          background-size: 60%;
-          background-repeat: no-repeat;
-          background-position: center;
-          height: 100vh;
-          display: flex;
-          flex-direction: column;
-          /* align-items: center;
+  .homeContainer {
+    /* background-image: url("../src/images/IMG-20231228-WA0004.jpg"); */
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center;
       justify-content: center; */
-          background-color: black;
-          opacity: 0.7;
-    
-    
-          &::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            background: url("../src/images/IMG-20231228-WA0003.jpg");
-            background-size: 100%;
-            background-repeat: no-repeat;
-            background-position: center;
-            opacity: 0.15;
-            /* Ajusta el valor de 0 a 1 para cambiar la opacidad */
-          }
-    
-        }
-  
-    .NavtrapBar {
+    background-color: black;
+    opacity: 0.7;
+    height: auto;
+    min-height: 90%;
+
+    &::before {
+      content: "";
       position: absolute;
       top: 0;
+      right: 0;
+      bottom: 0;
       left: 0;
-      width: 100%;
-      z-index: 1;
-      /* Asegura que la barra de navegación esté por encima del pseudo-elemento */
+      background: url("../src/images/IMG-20231228-WA0004.jpg");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0.25;
+      /* Ajusta el valor de 0 a 1 para cambiar la opacidad */
     }
-       
+
+  }
+
+  .user-conteiner {
+    /* background-image: url("../src/images/IMG-20231228-WA0004.jpg"); */
+    background-size: 60%;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center;
+      justify-content: center; */
+    background-color: black;
+    opacity: 0.7;
+
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: url("../src/images/IMG-20231228-WA0003.jpg");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0.15;
+      /* Ajusta el valor de 0 a 1 para cambiar la opacidad */
+    }
+
+  }
+
+  .NavtrapBar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+    /* Asegura que la barra de navegación esté por encima del pseudo-elemento */
+  }
+
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
+
   /* Estilos para tabletas */
-  .navTrapImg:hover {
-      scale: 1.1;
-    }
-  
-    .battleText {
-      background-color: transparent;
-      font-family: 'MiFuente2';
-      padding: 1%;
-      color: #fff
-    }
-  
-    .homeInfo {
-      background-color: transparent;
-      font-family: 'MiFuente2';
-      padding: 1%;
-      color: #fff;
-    }
-  
-    .Battle-container {
-      /* background-image: url("../src/images/IMG-20231228-WA0004.jpg"); */
-      background-size: 60%;
-      background-repeat: no-repeat;
-      background-position: center;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      /* align-items: center;
+  /* .navTrapImg:hover {
+    scale: 1.1;
+  } */
+
+  .battleText {
+    background-color: transparent;
+    font-family: 'MiFuente2';
+    padding: 1%;
+    color: #fff
+  }
+
+  .homeInfo {
+    background-color: transparent;
+    font-family: 'MiFuente2';
+    padding: 1%;
+    color: #fff;
+  }
+
+  .Battle-container {
+    /* background-image: url("../src/images/IMG-20231228-WA0004.jpg"); */
+    background-size: 60%;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center;
     justify-content: center; */
-      background-color: black;
-      opacity: 0.7;
-  
-      &::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        background: url("../src/images/IMG-20231228-WA0005.jpg");
-        background-size: 100%;
-        background-repeat: no-repeat;
-        background-position: center;
-        opacity: 0.15;
-        /* Ajusta el valor de 0 a 1 para cambiar la opacidad */
-      }
-    }
-  
-    .homeContainer {
-      /* background-image: url("../src/images/IMG-20231228-WA0004.jpg"); */
-      background-size: 60%;
-      background-repeat: no-repeat;
-      background-position: center;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      /* align-items: center;
-    justify-content: center; */
-      background-color: black;
-      opacity: 0.7;
-  
-  
-      &::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        background: url("../src/images/IMG-20231228-WA0004.jpg");
-        background-size: 100%;
-        background-repeat: no-repeat;
-        background-position: center;
-        opacity: 0.15;
-        /* Ajusta el valor de 0 a 1 para cambiar la opacidad */
-      }
-  
-    }
-        .user-conteiner {
-          /* background-image: url("../src/images/IMG-20231228-WA0004.jpg"); */
-          background-size: 60%;
-          background-repeat: no-repeat;
-          background-position: center;
-          height: 100vh;
-          display: flex;
-          flex-direction: column;
-          /* align-items: center;
-      justify-content: center; */
-          background-color: black;
-          opacity: 0.7;
-    
-    
-          &::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            background: url("../src/images/IMG-20231228-WA0003.jpg");
-            background-size: 100%;
-            background-repeat: no-repeat;
-            background-position: center;
-            opacity: 0.15;
-            /* Ajusta el valor de 0 a 1 para cambiar la opacidad */
-          }
-    
-        }
-  
-    .NavtrapBar {
+    background-color: black;
+    opacity: 0.7;
+
+    &::before {
+      content: "";
       position: absolute;
       top: 0;
+      right: 0;
+      bottom: 0;
       left: 0;
-      width: 100%;
-      z-index: 1;
-      /* Asegura que la barra de navegación esté por encima del pseudo-elemento */
+      background: url("../src/images/IMG-20231228-WA0005.jpg");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0.15;
+      /* Ajusta el valor de 0 a 1 para cambiar la opacidad */
     }
+  }
+
+  .homeContainer {
+    /* background-image: url("../src/images/IMG-20231228-WA0004.jpg"); */
+    background-size: 60%;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center;
+    justify-content: center; */
+    background-color: black;
+    opacity: 0.7;
 
 
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: url("../src/images/IMG-20231228-WA0004.jpg");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0.15;
+      /* Ajusta el valor de 0 a 1 para cambiar la opacidad */
     }
+
+  }
+
+  .user-conteiner {
+    /* background-image: url("../src/images/IMG-20231228-WA0004.jpg"); */
+    background-size: 60%;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center;
+      justify-content: center; */
+    background-color: black;
+    opacity: 0.7;
+
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: url("../src/images/IMG-20231228-WA0003.jpg");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0.15;
+      /* Ajusta el valor de 0 a 1 para cambiar la opacidad */
+    }
+
+  }
+
+  .NavtrapBar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+    /* Asegura que la barra de navegación esté por encima del pseudo-elemento */
+  }
+
+
+}
 
 @media (min-width: 1025px) {
   /* Estilos para pantallas de escritorio */
 
-  .navTrapImg:hover {
+  /* .Bedit:hover {
+    
+      scale: 1.2;
+      cursor: "pointer";
+    } */
+
+  /* .navTrapImg:hover {
     scale: 1.1;
-  }
-.battleText{
-  background-color: transparent;
-  font-family: 'MiFuente2';
-  padding: 1%;
-  color:#fff
-  
-}
-.homeInfo{
+  } */
+
+  .battleText {
     background-color: transparent;
-      font-family: 'MiFuente2';
-      padding: 1%;
-      color: #fff;
-}
-.Battle-container {
-  /* background-image: url("../src/images/IMG-20231228-WA0004.jpg"); */
-  background-size: 60%;
-  background-repeat: no-repeat;
-  background-position: center;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  /* align-items: center;
-  justify-content: center; */
-  background-color: black;
-  opacity: 0.7;
-    &::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        background: url("../src/images/IMG-20231228-WA0005.jpg");
-        background-size: 100%;
-        background-repeat: no-repeat;
-        background-position: center;
-        opacity: 0.15;
-        /* Ajusta el valor de 0 a 1 para cambiar la opacidad */
-      }
-}
-.homeContainer {
-  /* background-image: url("../src/images/IMG-20231228-WA0004.jpg"); */
-  background-size: 60%;
-  background-repeat: no-repeat;
-  background-position: center;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  /* align-items: center;
-  justify-content: center; */
-  background-color: black;
-  opacity: 0.7;
-
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background: url("../src/images/IMG-20231228-WA0004.jpg");
-    background-size: 100%;
-    background-repeat: no-repeat;
-    background-position: center;
-    opacity: 0.15;
-    /* Ajusta el valor de 0 a 1 para cambiar la opacidad */
- }
-  
-}
-.user-conteiner {
-  /* background-image: url("../src/images/IMG-20231228-WA0004.jpg"); */
-  background-size: 60%;
-  background-repeat: no-repeat;
-  background-position: center;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  /* align-items: center;
-  justify-content: center; */
-  background-color: black;
-  opacity: 0.7;
-
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background: url("../src/images/IMG-20231228-WA0003.jpg");
-    background-size: 100%;
-    background-repeat: no-repeat;
-    background-position: center;
-    opacity: 0.15;
-    /* Ajusta el valor de 0 a 1 para cambiar la opacidad */
+    font-family: 'MiFuente2';
+    padding: 1%;
+    color: #fff
   }
 
-}
-.NavtrapBar {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1;
-  /* Asegura que la barra de navegación esté por encima del pseudo-elemento */
-}
+  .homeInfo {
+    background-color: transparent;
+    font-family: 'MiFuente2';
+    padding: 1%;
+    color: #fff;
+  }
 
-    .UserCard {
-      max-width: "20rem";
-      min-width: "18rem";
+  .Battle-container {
+    /* background-image: url("../src/images/IMG-20231228-WA0004.jpg"); */
+    background-size: 60%;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center;
+  justify-content: center; */
+    background-color: black;
+    opacity: 0.7;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: url("../src/images/IMG-20231228-WA0005.jpg");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0.15;
+      /* Ajusta el valor de 0 a 1 para cambiar la opacidad */
     }
+  }
+
+  .homeContainer {
+    /* background-image: url("../src/images/IMG-20231228-WA0004.jpg"); */
+    background-size: 60%;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center;
+  justify-content: center; */
+    background-color: black;
+    opacity: 0.7;
+
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: url("../src/images/IMG-20231228-WA0004.jpg");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0.15;
+      /* Ajusta el valor de 0 a 1 para cambiar la opacidad */
+    }
+
+  }
+
+  .user-conteiner {
+    /* background-image: url("../src/images/IMG-20231228-WA0004.jpg"); */
+    background-size: 60%;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center;
+  justify-content: center; */
+    background-color: black;
+    opacity: 0.7;
+
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: url("../src/images/IMG-20231228-WA0003.jpg");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0.15;
+      /* Ajusta el valor de 0 a 1 para cambiar la opacidad */
+    }
+
+  }
+
+  .NavtrapBar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+    /* Asegura que la barra de navegación esté por encima del pseudo-elemento */
+  }
+
+  .UserCard {
+    max-width: "20rem";
+    min-width: "18rem";
+  }
 }

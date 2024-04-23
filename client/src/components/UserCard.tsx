@@ -9,7 +9,7 @@ function UserCard(props: any) {
 
 
   return (
-    <div style={{ display: "Flex" }}>
+    <div className={"usercard"}>
       <Card className="UserCard">
         <Card.Img
           className="UserAvatar"
