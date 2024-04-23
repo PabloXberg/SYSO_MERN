@@ -7,6 +7,7 @@
 // import cloudinaryConfig from "./config/cloudinary.js";
 // import cors from "cors";
 // import passportConfig from "./config/passport.js";
+//import sketchRouter from "./routes/sketchRoutes.js";
 // import commentRouter from "./routes/commentsRoutes.js";
 
 
@@ -48,6 +49,8 @@
 // connectMongoose();
 // connectRoutes();
 
+import sketchRouter from "./routes/sketchRoutes.js";
+import commentRouter from "./routes/commentsRoutes.js";
 import express from "express";
 import mongoose from "mongoose";
 import cloudinaryConfig from "./config/cloudinary.js";
@@ -57,7 +60,6 @@ dotenv.config();
 import userRouter from './routes/userRoutes.js'
 
 import cors from "cors";
-import petRouter from "./routes/petRoutes.js";
 import passportConfig from "./config/passport.js";
 
 
@@ -88,8 +90,9 @@ const connectMongoose = () => {
 }
 
 const connectRoutes = () => {
-  app.use('/api/users', userRouter);
-  app.use('/api/pets', petRouter);
+  app.use("/api/users", userRouter);
+   app.use("/api/sketches", sketchRouter);
+   app.use("/api/comments", commentRouter);
   app.use('*', (req, res) => { res.status(500).json({ error: "Endpoint not found" }) });
 }
 
