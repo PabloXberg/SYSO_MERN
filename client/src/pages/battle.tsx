@@ -16,9 +16,9 @@ const Battle = () => {
 
         <div className="battleText">
           
-          <h2 style={{fontFamily: 'MiFuente'}}>Bases del concurso:</h2>
+          <h2 >Bases del concurso:</h2>
           <br />
-          <h4>
+          <h4> PROBANDO!
             A lo largo del año realizaremos varios "Sketchs Battles", donde
             cualquiera de nuestros seguidores desde cualquier parte del mundo
             podra participar enviandonos su mejor boceto. <br />
@@ -30,7 +30,7 @@ const Battle = () => {
 
             <br />
             <br />
-            <h2 style={{fontFamily: 'MiFuente'}}>Requisitos:</h2>
+            <h2 >Requisitos:</h2>
             <br />
           * Seguirnos en la pagina de Instagram. <br />
           * Realizar un Storie de tu boceto, mencionandonos y escribiendo Sketch Battle.<br />

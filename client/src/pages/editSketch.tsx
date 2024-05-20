@@ -101,7 +101,9 @@ console.log('props on edit sketch page:>> ', props);
             <br />
 
           {/* eslint-disable-next-line react/jsx-pascal-case */}
-          <input style={{padding: "1rem"}} placeholder='Sketch' type='file' name='loading...' accept= 'image/jpg, image/jpeg, image/png' onChange={handleFile} />
+            <input
+              // style={{ padding: "1rem" }}
+              placeholder='Sketch' type='file' name='loading...' accept='image/jpg, image/jpeg, image/png' onChange={handleFile} />
 
           </Form>
 

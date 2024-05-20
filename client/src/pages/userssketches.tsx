@@ -64,7 +64,9 @@ console.log(props, "props");
 
       <><SubHomeNav/>
        
-        <h1 style={{ textAlign: "center", fontSize: "xx-large", fontFamily: 'MiFuente' }}>Bocetos de ....</h1>
+        <h1
+          // style={{ textAlign: "center", fontSize: "xx-large", fontFamily: 'MiFuente' }}
+        >Bocetos de -....--...---</h1>
         
         <div className='cardcontainer'>
            {sketches && sketches.map((sketch: Sketch) => {

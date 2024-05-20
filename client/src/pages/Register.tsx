@@ -59,7 +59,7 @@ const Register = (props: Props) => {
         <input type='password' name='password' placeholder='password'onChange={handleChange}/>
         <input name='username' placeholder='username' onChange={handleChange}/>
         <input placeholder='AVATAR' type='file' name='avatar' onChange={handleFile} />
-        <button type='submit' style={{ marginRight: "1em" }}>Register me!</button>
+        <button type='submit' >Register me!</button>
         { loading && <>Loading...</> }
       </form>
     </div>

@@ -1,4 +1,4 @@
-import React, { Key, useEffect, useState } from 'react'
+import  { Key, useEffect, useState } from 'react'
 import '../index.css'
 import SketchCard from '../components/SketchCard'
 import SubHomeNav from '../components/SubHomeNav'

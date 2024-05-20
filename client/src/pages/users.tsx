@@ -1,4 +1,4 @@
-import React, { Key, useEffect, useState } from 'react'
+import  { Key, useEffect, useState } from 'react'
 import '../index.css'
 import SubHomeNav from '../components/SubHomeNav'
 import UserCard from '../components/UserCard'
@@ -22,7 +22,8 @@ interface User {
 type Users = User[]
 
 const UsersPage = (props: Props) => {
- const [users, setUsers] = useState<Users>([]);
+  const [users, setUsers] = useState<Users>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [user, setUser] = useState<User | null>(null);
 
    console.log('user :>> ', user);

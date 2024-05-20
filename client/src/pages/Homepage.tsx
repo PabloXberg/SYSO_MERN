@@ -35,7 +35,7 @@ const Homepage = (props: Props) => {
       {/* <div className="elfsight-app-26d13d88-234a-4eed-b7a3-a4622ef81e45"></div> */}
 
       <div className="homeInfo">
-        <h2 style={{ fontFamily: 'MiFuente' }}>Asociacion artistica sin animo de lucro.  </h2><br />
+        <h2 >Asociacion artistica sin animo de lucro.  </h2><br />
           <h3>Somos un colectivo en pleno desarrollo, como objetivo principal, la realizacion de eventos relacionados con la cultura Hip Hop,<br /><br />
             dando oportunidad y ofreciendo espacios a toda persona que desee expresar su arte con total libertad. <br /><br />
           Organizamos tanto quedadas de bocetos como exposiciones, exhibiciones de Graffiti, conciertos y batallas de freestyle. <br /><br />
