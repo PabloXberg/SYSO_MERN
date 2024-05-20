@@ -16,9 +16,9 @@ const Battle = () => {
 
         <div className="battleText">
           
-          <h2 >Bases del concurso:</h2>
+          <h2 className="tituloFuente">Bases del concurso:</h2>
           <br />
-          <h4> PROBANDO!
+          <h4>
             A lo largo del año realizaremos varios "Sketchs Battles", donde
             cualquiera de nuestros seguidores desde cualquier parte del mundo
             podra participar enviandonos su mejor boceto. <br />

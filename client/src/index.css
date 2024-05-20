@@ -450,10 +450,6 @@
 
 @media (min-width: 769px) and (max-width: 1024px) {
 
-  /* Estilos para tabletas */
-  /* .navTrapImg:hover {
-    scale: 1.1;
-  } */
 
   .battleText {
     background-color: transparent;
@@ -575,15 +571,12 @@
 @media (min-width: 1025px) {
   /* Estilos para pantallas de escritorio */
 
-  /* .Bedit:hover {
-    
-      scale: 1.2;
-      cursor: "pointer";
-    } */
 
-  /* .navTrapImg:hover {
-    scale: 1.1;
-  } */
+        .sketchDetailsImg {
+          max-width: "100%";
+          min-width: "90%";
+          max-height: "100%";
+        }
 
   .battleText {
     background-color: transparent;
