@@ -149,14 +149,14 @@ const MySketchs = (props: Props) => {
     <>
       <SubUserNav />
       <div
-      className="user-conteiner"
+      // className="user-conteiner"
       >
         <div
-          // style={{
-          //   display: "flex",
-          //   alignItems: "center",
-          //   justifyContent: "center",
-          // }}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
           className="title"
         >
           ,
