@@ -149,7 +149,7 @@ const MySketchs = (props: Props) => {
     <>
       <SubUserNav />
       <div
-      // className="user-conteiner"
+      className="user-conteiner"
       >
         <div
           // style={{
@@ -181,21 +181,22 @@ const MySketchs = (props: Props) => {
 
             <div>
               <div className="avatar">
+         
                 <img
                   alt="User Avatar"
-                  // style={{
-                  //   border: "black 2px solid",
-                  //   padding: "5px",
-                  //   width: "15rem",
-                  //   height: "auto",
-                  // }}
+                  style={{
+                    border: "black 2px solid",
+                    padding: "5px",
+                    width: "15rem",
+                    height: "auto",
+                  }}
                   src={avatarPreview ? avatarPreview : DefaultImage}
                 />
                 <br />
 
                 <input
                   placeholder="avatar"
-                  // style={{ padding: "1rem" }}
+                  style={{ padding: "1rem" }}
                   type="file"
                   name="loading..."
                   accept="image/jpg, image/jpeg, image/png"
