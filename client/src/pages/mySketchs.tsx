@@ -7,6 +7,8 @@ import Modal from "react-bootstrap/Modal";
 import DefaultImage from "../default-placeholder.png";
 import SubUserNav from "../components/SubUserNav";
 import { serverURL } from "../serverURL";
+import SpinnerShare from "../components/Spinner";
+import '../index.css'
 
 type Props = {};
 
@@ -40,7 +42,10 @@ const MySketchs = (props: Props) => {
   const { user } = useContext(AuthContext);
   const [activeUser, setActiveUser] = useState<User | null>(null);
   const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setShow(false)
+     window.location.reload();
+   }
   const handleShow = () => setShow(true);
   const sketchsArray = activeUser?.sketchs;
   const [ID, setID] = useState<id>(activeUser?._id);
@@ -88,7 +93,16 @@ const MySketchs = (props: Props) => {
   //////////////////////////////////////////////////////////////////////////////////// HANDLE SUBMIT - SAVE A NEEW SKETCH
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    // setLoading(true); /// FUTURE SPINNER
+
+      if (
+      !formData.name ||
+      !formData.comment ||
+      !formData.url
+    ) {
+      alert("Falta rellenar alguno de los campos");
+      return;
+    }
+    setLoading(true); /// FUTURE SPINNER
 
     ////////////////////////////////////////////////////////////// HEADERS
     if (ID !== undefined) {
@@ -111,10 +125,10 @@ const MySketchs = (props: Props) => {
       };
 
           /// FETCH
-      console.log(
-        "process.env.REACT_APP_BASE_URL :>> ",
-        process.env.REACT_APP_BASE_URL
-      );
+      // console.log(
+      //   "process.env.REACT_APP_BASE_URL :>> ",
+      //   process.env.REACT_APP_BASE_URL
+      // );
       try {
         const response = await fetch(
           `${serverURL}sketches/new`,
@@ -122,13 +136,15 @@ const MySketchs = (props: Props) => {
         );
         const result = await response.json();
         console.log(result);
-        alert("Success!!! Your new Sketch is uploaded in our data base");
+        // alert("Success!!! Your new Sketch is uploaded in our data base");
         setLoading(false);
+       
       } catch (error) {
         console.log(error);
         alert("Something went wrong - check console");
         setLoading(false);
       }
+       handleClose();
     }
   };
 
@@ -146,8 +162,10 @@ const MySketchs = (props: Props) => {
   };
 
   return (
-    <>
-      <SubUserNav />
+    <div className="mySketch">
+      {loading ? (
+        <SpinnerShare/>
+      ) : (<> <SubUserNav />
       <div
       // className="user-conteiner"
       >
@@ -173,22 +191,30 @@ const MySketchs = (props: Props) => {
             show={show}
             onHide={handleClose}
             backdrop="static"
-            keyboard={false}
+                keyboard={false}
+                centered
           >
             <Modal.Header closeButton>
               <Modal.Title>Subir un Boceto</Modal.Title>
             </Modal.Header>
 
             <div>
-              <div className="avatar">
+                  <div
+                    className="Avatar"
+                           style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                        }}
+                  >
          
                 <img
                   alt="User Avatar"
                   style={{
                     border: "black 2px solid",
                     padding: "5px",
-                    width: "15rem",
-                    height: "auto",
+                    width: "20rem",
+                    height: "15rem",
                   }}
                   src={avatarPreview ? avatarPreview : DefaultImage}
                 />
@@ -196,7 +222,7 @@ const MySketchs = (props: Props) => {
 
                 <input
                   placeholder="avatar"
-                  style={{ padding: "1rem" }}
+                  // style={{ padding: "1rem" }}
                   type="file"
                   name="loading..."
                   accept="image/jpg, image/jpeg, image/png"
@@ -247,8 +273,13 @@ const MySketchs = (props: Props) => {
               );
             })}
         </div>
-      </div>
-    </>
+      </div></>)
+
+
+      }
+      
+     
+    </div>
   );
 };
 

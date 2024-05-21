@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Register from './pages/Register';
+// import Register from './pages/Register';
 import Homepage from './pages/Homepage';
-import { AuthContext, AuthContextProvider } from './contexts/AuthContext';
+import { AuthContextProvider } from './contexts/AuthContext';
 import NavStrap from './components/NavTrap';
 import Sketches from './pages/sketches';
 import UsersSketches from './pages/userssketches';
@@ -22,7 +22,7 @@ function App() {
                 <NavStrap/>
                   <Routes>
                     <Route path='/' element={ <Homepage />} />
-                    <Route path='register' element={ <Register /> } />
+                    {/* <Route path='register' element={ <Register /> } /> */}
                     <Route path='sketchdetail/:id' element={<SketchDetail/>}/>
                     <Route path='sketches' element={<Sketches />} />
                     <Route path='userssketches' element={<UsersSketches/>} />
