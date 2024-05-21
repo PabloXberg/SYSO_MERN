@@ -61,13 +61,25 @@ function NavStrap() {
   //  e.preventDefault();
     if ((formDataLogin.password !== undefined || null || "") && (formDataLogin.email !== undefined || null || ""))
     { login(formDataLogin.email, formDataLogin.password); }
-    else {
-      login(formDataRegister.email, formDataRegister.password);
+    else { 
+      if ((formDataRegister.password !== undefined || null || "") && (formDataRegister.email!== undefined || null || "")) {
+          login(formDataRegister.email, formDataRegister.password);
+      }
+      else{
+        alert("Falta rellenar alguno de los campos");
+      }
+      
     }
       
   };
 
   const handleSubmitRegister = async (e) => {
+
+     if (!formDataRegister.username || !formDataRegister.email || !formDataRegister.password) {
+       alert("Falta rellnar alguno de los campos obligatorios (*)") 
+       return
+  }
+
    //e.preventDefault();
   // setLoading(true);
     const submitData = new FormData();
@@ -292,12 +304,13 @@ function NavStrap() {
                 {/* MODAL PARA REGISTRO DE USUSARIO */}
 
                 <Modal
-                  className="userRegisterModal"
+                    className="userRegisterModal"
+                    
                   show={showRegister}
                   onHide={handleCloseRegister}
                   backdrop="static"
                   keyboard={false}
-                  aria-labelledby="contained-modal-title-vcenter"
+                  // aria-labelledby="contained-modal-title-vcenter"
                   centered
                   // style={{height:"70rem"}}
                 >
@@ -305,32 +318,34 @@ function NavStrap() {
                     <Modal.Title>Registrar Usuario</Modal.Title>
                   </Modal.Header>
 
-                  <div>
+                    <div>
                       <div
                         // className="avatar"
-                        style={{
-                          padding: "0.5rem"
-                      }}
+                      style={{
+                            display: "flex",
+                            flexDirection: "column",
+                          alignItems:"center"
+                        }}
                       >
                         <img
                           // className="avatarRegister"
                           alt="Imagen de perfil"
                         style={{
                           border: "black 2px solid",
-                          padding: "5px",
+               
                           borderRadius: "50%",
                           width: "8rem",
                           height: "8rem",
                           alignSelf: "center",
-                          gap: "1rem"
+                     
                         }}
                         src={avatarPreview ? avatarPreview : DefaultImage}
                       />
                       <br />
 
                   
-                      <input
-                        style={{ padding: "0.5rem" }}
+                        <input
+                          // style={{gap:"1rem"}}
                         type="file"
                         name="loading..."
                         accept="image/jpg, image/jpeg, image/png"
@@ -340,9 +355,15 @@ function NavStrap() {
                     </div>
 
                     <div className="dataform">
-                      <Form.Group className="mb-4" controlId="formBasicEmail">
+                        <Form.Group className="mb-4" controlId="formBasicEmail"
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                          alignItems:"center"
+                        }}>
                         <Form.Label>(*) Correo Electrónico:</Form.Label>
-                        <Form.Control
+                          <Form.Control
+                            style={{maxWidth:"20rem"}}
                           type="email"
                           name="email"
                           placeholder="email"
@@ -350,7 +371,8 @@ function NavStrap() {
                         />
                         <Form.Text className="text-muted"></Form.Text>
                         <Form.Label>(*) Contraseña:</Form.Label>
-                        <Form.Control
+                          <Form.Control
+                             style={{maxWidth:"20rem"}}
                           type="password"
                           name="password"
                           placeholder="Password"
@@ -359,7 +381,8 @@ function NavStrap() {
                         <Form.Text className="text-muted"></Form.Text>
 
                         <Form.Label>(*) Nombre de Usuario:</Form.Label>
-                        <Form.Control
+                          <Form.Control
+                             style={{maxWidth:"20rem"}}
                           name="username"
                           placeholder="username"
                           onChange={handleChangeRegister}
@@ -369,7 +392,8 @@ function NavStrap() {
                         <Form.Label>
                           Información sobre ti (opcional......)
                         </Form.Label>
-                        <Form.Control
+                          <Form.Control
+                             style={{maxWidth:"20rem"}}
                           type="email"
                           name="info"
                           placeholder="Personal Info"

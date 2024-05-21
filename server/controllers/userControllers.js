@@ -18,12 +18,15 @@ const getUsers = async(req, res) => {
 
     res.status(200).json({msg: "Success!", users});
   } catch (e) {
-      res.status(500).json({error: "Something went wrong..."});
+      res.status(500).json({error: "Algo salió mal..."});
     console.log(e);
   }
 }
 
-const getUser = async(req, res) => {
+const getUser = async (req, res) => {
+  //   if (!req.body.email || !req.body.password ) {
+  //   return res.status(406).json({ error: "Falta rellnar alguno de los campos obligatorios (*)" })
+  // }
 
   const params = req.params;
   // console.log(params);  should show {id: bla bla bla}
@@ -45,14 +48,14 @@ const getUser = async(req, res) => {
       .populate("comments")
         res.status(200).json(user)
     } catch (error) {
-        res.status(500).json({error:"Something went wrong..."})
+        res.status(500).json({error:"Algo salió mal..."})
         console.log(error);
     }
  }
 
 const createUser = async (req, res) => {
   if (!req.body.email || !req.body.password || !req.body.username) {
-    return res.status(406).json({ error: "Please fill out all fields" })
+    return res.status(406).json({ error: "Falta rellnar alguno de los campos obligatorios (*)" })
   }
 
   const avatar = await imageUpload(req.file, "user_avatar")
@@ -75,7 +78,7 @@ const createUser = async (req, res) => {
     res.status(200).json ({message: "Succesfully Registered", newUser: registeredUser})
   } catch (error) {
     console.log(error);
-    res.status(500).jason("Something went wrong...")
+    res.status(500).jason("Algo salió mal...")
   }
 }
 
@@ -110,17 +113,22 @@ const deleteUser = async (req, res) => {
 
     
 const loginUser = async (req,res) => {
-// console.log('req.body :>> ', req.body);
+  // console.log('req.body :>> ', req.body);
+   if (!req.body.email || !req.body.password ) {
+    return res.status(406).json({ error: "Falta rellnar alguno de los campos obligatorios (*)" })
+  }
+
+  
      try {
         const existingUser = await UserModel.findOne({ email: req.body.email }).populate("sketchs");
         if (!existingUser) {
-          res.status(404).json({error: "No user found"})
+          res.status(404).json({error: "El correo o el password no son correctos"})
           return;
         }
         if (existingUser) {
           const verified = await verifyPassword(req.body.password, existingUser.password);
           if (!verified) {
-             res.status(406).json({ error: "password doesn't match" })
+             res.status(406).json({ error: "El correo o el password no son correctos" })
           }
           if (verified) {
             const token = generateToken(existingUser);
@@ -143,7 +151,7 @@ const loginUser = async (req,res) => {
         }
   } catch (e) {
     console.log(e);
-    res.status(500).json({ error: "something went wrong.." })
+    res.status(500).json({ error: "Algo salió mal..." })
   }
 
 }
