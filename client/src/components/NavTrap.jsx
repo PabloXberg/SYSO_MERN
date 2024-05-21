@@ -143,10 +143,7 @@ function NavStrap() {
         </Navbar.Brand>
 
         <Nav className="me-auto my-2 my-lg-2" navbarScroll>
-          {/* <Nav.Link style={{fontSize: "x-large"}}  href="/">
-            Home
-          </Nav.Link> */}
-
+   
           <Nav.Link className="news" style={{ fontSize: "x-large" }} href="/" >
             Home
           </Nav.Link>
@@ -193,8 +190,8 @@ function NavStrap() {
                     style={{
                       marginLeft: "2em",
                       gap: "1rem",
-                      height: "2.5rem",
-                      width: "2.5rem",
+                      maxHeight: "2.5rem",
+                      maxWidth: "2.5rem",
                       borderRadius: "50%",
                     }}
                     src={user.avatar}
@@ -205,43 +202,8 @@ function NavStrap() {
                   <Nav.Link style={{ fontSize: "x-large" }} href="/mysketchs">
                     {user.username}
                   </Nav.Link>
-                  {/* <NavDropdown
-                     style={{ fontSize: "x-large" }}
-                          id="collapsible-nav-dropdown"
-                          title={user.username}
-                      >
-                      
-                      <NavDropdown.Item
-                        style={{ fontSize: "x-large" }}
-                        href="/mysketchs"
-                      >
-                        Mis Bocetos
-                      </NavDropdown.Item>
-                      <NavDropdown.Item
-                        style={{ fontSize: "x-large" }}
-                        href="/myfav"
-                      >
-                        Favoritos
-                      </NavDropdown.Item>
-                      <NavDropdown.Divider />
-                      <NavDropdown.Item
-                        style={{ fontSize: "x-large" }}
-                        href="/edit"
-                      >
-                        Editar Usuario
-                      </NavDropdown.Item>
-                        </NavDropdown> */}
-
-                  {/* <Form className="d-flex" style={{borderTop: '1px'}}>
-                            <Form.Control
-                            type="search"
-                            placeholder="Search"
-                            className="me-2"
-                            aria-label="Search"
-                            />
-                              <Button variant="outline-success"></Button>
-                                
-              </Form> */}
+         
+            
                   <Button variant="outline-danger" href="/" onClick={logout}>
                     Salir
                   </Button>
@@ -344,24 +306,31 @@ function NavStrap() {
                   </Modal.Header>
 
                   <div>
-                    <div className="avatar">
-                      <img
-                        alt="Imagen de perfil"
+                      <div
+                        // className="avatar"
+                        style={{
+                          padding: "0.5rem"
+                      }}
+                      >
+                        <img
+                          // className="avatarRegister"
+                          alt="Imagen de perfil"
                         style={{
                           border: "black 2px solid",
-                          padding: "3px",
+                          padding: "5px",
                           borderRadius: "50%",
                           width: "8rem",
-                          height: "auto",
+                          height: "8rem",
                           alignSelf: "center",
+                          gap: "1rem"
                         }}
                         src={avatarPreview ? avatarPreview : DefaultImage}
                       />
                       <br />
 
-                      {/* eslint-disable-next-line react/jsx-pascal-case */}
+                  
                       <input
-                        style={{ padding: "1rem" }}
+                        style={{ padding: "0.5rem" }}
                         type="file"
                         name="loading..."
                         accept="image/jpg, image/jpeg, image/png"
@@ -405,12 +374,13 @@ function NavStrap() {
                           name="info"
                           placeholder="Personal Info"
                             onChange={handleChangeRegister}
-                           onKeyDown={(e) => {
-                         if (e.key === "Enter") {
-                         handleSubmitRegister(); }}}
+                        //    onKeyDown={(e) => {
+                        //  if (e.key === "Enter") {
+                        //  handleSubmitRegister(); }}}
                         />
-                        {/* <Form.Text className="text-muted">
-                      We'll never share your email with anyone else.
+                          {/* <Form.Text className="text-muted">
+                           
+                     (*) campos obligatorios
                     </Form.Text> */}
                       </Form.Group>
                     </div>

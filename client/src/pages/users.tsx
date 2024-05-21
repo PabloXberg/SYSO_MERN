@@ -3,6 +3,7 @@ import '../index.css'
 import SubHomeNav from '../components/SubHomeNav'
 import UserCard from '../components/UserCard'
 import { serverURL } from '../serverURL'
+import SubHomeNavDown from '../components/SubHomeNavDown'
 
 
 
@@ -55,7 +56,7 @@ const UsersPage = (props: Props) => {
             return <UserCard key={user._id} props={user} />
          })}
         </div>
-                      
+             <SubHomeNavDown/>             
       </>
     </div>
   )
