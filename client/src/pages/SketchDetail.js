@@ -199,7 +199,7 @@ const SketchDetail = () => {
       <div className="detailsImage">
         <Card className="bg-light ">
           <Card.Img className="sketchDetailsImg" variant="top"
-            // style={{ width: "62.5rem", height: "50rem" }}
+   
             src={sketch?.url} alt={sketch?.name} />
 
           <span
@@ -242,7 +242,6 @@ const SketchDetail = () => {
             {/* PARA HACER LA FUNCIONALIDAD DEL LIKES/UNLIKES       */}
             {/* {sketch?.likes?.includes(user?._id) 
               
-
                 ?
                     // ME GUSTA Y NO ME  GUSTA
                 (<div style={{display: "flex", flexDirection: "row", justifyContent:"flex-start", gap:"5px"}}> <i className="material-icons Bedit" style={{ cursor: "pointer" }} onClick={() => unlikeSketch(sketch?._id)}>thumb_down</i>

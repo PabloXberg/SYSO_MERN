@@ -1,6 +1,7 @@
 import  { Key, useEffect} from 'react'
 import '../../src/index.css'
 import SubHomeNav from '../components/SubHomeNav'
+import SubHomeNavDown from '../components/SubHomeNavDown'
 
 
 //import { InstagramEmbed } from 'react-social-media-embed';
@@ -28,14 +29,14 @@ const Homepage = (props: Props) => {
   }, [])
 
   return (
-    <><SubHomeNav/>
-      <div className='homeContainer'>
+    <><SubHomeNav />
+        <div className='homeContainer'>
 
       {/* WIDget para instagram */}
       {/* <div className="elfsight-app-26d13d88-234a-4eed-b7a3-a4622ef81e45"></div> */}
 
       <div className="homeInfo">
-        <h2 >Asociacion artistica sin animo de lucro.  </h2><br />
+        <h2 className='tituloFuente'>Asociacion artistica sin animo de lucro.  </h2><br />
           <h3>Somos un colectivo en pleno desarrollo, como objetivo principal, la realizacion de eventos relacionados con la cultura Hip Hop,<br /><br />
             dando oportunidad y ofreciendo espacios a toda persona que desee expresar su arte con total libertad. <br /><br />
           Organizamos tanto quedadas de bocetos como exposiciones, exhibiciones de Graffiti, conciertos y batallas de freestyle. <br /><br />
@@ -43,10 +44,10 @@ const Homepage = (props: Props) => {
           Varios Sponsors y locales en la ciudad de Valencia nos apoyan en este movimiento y nos facilitan dichas actividades. <br /><br />
           Publicitamos los artistas invitados a traves de contenido visual en varios de los proyectos realizados</h3><br />
       </div>
-
+      
 
     </div>
-
+    <SubHomeNavDown/>
     </>
    )
 

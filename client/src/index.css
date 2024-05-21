@@ -572,18 +572,35 @@
   /* Estilos para pantallas de escritorio */
 
 
-        .sketchDetailsImg {
-          max-width: "100%";
-          min-width: "90%";
-          max-height: "100%";
-        }
-
+  .sketchDetailsImg {
+      width: 100%;
+      height: auto;
+      max-width: 100%;
+      display: block;
+      margin: 0 auto;
+      /* Opcional: para centrar la imagen */
+    }
+        .detailsImage{
+            width: 100%;
+            /* O el tamaño que desees */
+            max-width: 1200px;
+            /* Por ejemplo, para limitar el ancho máximo */
+            margin: 0 auto;
+            /* Para centrar el contenedor en la página */
+          }
   .battleText {
     background-color: transparent;
     font-family: 'MiFuente2';
     padding: 1%;
     color: #fff
   }
+
+     .tituloFuente {
+       background-color: transparent;
+       font-family: 'MiFuente';
+       padding: 1%;
+       color: #fff;
+     }
 
   .homeInfo {
     background-color: transparent;
@@ -626,7 +643,8 @@
     background-size: 60%;
     background-repeat: no-repeat;
     background-position: center;
-    height: 100vh;
+    /* height: 100vh; */
+    height: auto;
     display: flex;
     flex-direction: column;
     /* align-items: center;

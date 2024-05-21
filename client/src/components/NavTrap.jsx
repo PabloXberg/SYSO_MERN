@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-pascal-case */
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
@@ -7,7 +6,7 @@ import Navbar from "react-bootstrap/Navbar";
 //import NavDropdown from "react-bootstrap/NavDropdown";
 import Modal from "react-bootstrap/Modal";
 import DefaultImage from "../placeholder.png";
-import React, { useContext, useState } from "react";
+import  { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 //import { Link } from 'react-router-dom';
 import "../index.css";
@@ -59,12 +58,17 @@ function NavStrap() {
 
   };
   const handleSubmitLogin = (e) => {
-    e.preventDefault();
-    login(formDataLogin.email, formDataLogin.password);
+  //  e.preventDefault();
+    if ((formDataLogin.password !== undefined || null || "") && (formDataLogin.email !== undefined || null || ""))
+    { login(formDataLogin.email, formDataLogin.password); }
+    else {
+      login(formDataRegister.email, formDataRegister.password);
+    }
+      
   };
 
   const handleSubmitRegister = async (e) => {
-    e.preventDefault();
+   //e.preventDefault();
   // setLoading(true);
     const submitData = new FormData();
     submitData.append("email", formDataRegister.email);
@@ -79,11 +83,15 @@ function NavStrap() {
       const response = await fetch(`${serverURL}users/new`, requestOptions);
       const result = await response.json();
       console.log(result);
-      alert("Success! Check console.");
+     // alert("Usuario Registrado Correctamente");
+      handleCloseRegister();
+      login(formDataRegister.email, formDataRegister.password);
+
       //setLoading(false);
     } catch (error) {
       console.log(error);
-      alert("Something went wrong - check console");
+      alert("Algo salió mal, Usuario no registrado");
+      handleCloseRegister();
       //setLoading(false);
     }
   };
@@ -123,7 +131,7 @@ function NavStrap() {
     >
       <Container>
         {/* <Navbar.Toggle aria-controls="responsive-navbar-nav" /> */}
-        <Navbar.Brand style={{ cursor: "pointer" }} href="/">
+        <Navbar.Brand style={{ cursor: "pointer" }} href="/news">
           <img
             style={{ height: "5em", width: "5em" }}
             alt={"Share Your Sketch"}
@@ -138,6 +146,10 @@ function NavStrap() {
           {/* <Nav.Link style={{fontSize: "x-large"}}  href="/">
             Home
           </Nav.Link> */}
+
+          <Nav.Link className="news" style={{ fontSize: "x-large" }} href="/" >
+            Home
+          </Nav.Link>
           <Nav.Link
             style={{ fontSize: "x-large" }}
             className="battle"
@@ -146,9 +158,7 @@ function NavStrap() {
             Battle
           </Nav.Link>
 
-          <Nav.Link style={{ fontSize: "x-large" }} href="#action6" disabled>
-            Shop
-          </Nav.Link>
+          
         </Nav>
 
         <div style={{ display: "flex", alignContent: "space-between" }}>
@@ -294,7 +304,11 @@ function NavStrap() {
                         type="password"
                         name="password"
                         placeholder="Password"
-                        onChange={handleChangeLogin}
+                          onChange={handleChangeLogin}
+                          onKeyDown={(e) => {
+                          
+                         if (e.key === "Enter") {
+                        handleSubmitLogin(); }}}
                       />
 
                       <Modal.Footer>
@@ -351,7 +365,8 @@ function NavStrap() {
                         type="file"
                         name="loading..."
                         accept="image/jpg, image/jpeg, image/png"
-                        onChange={handleFile}
+                          onChange={handleFile}
+                          
                       />
                     </div>
 
@@ -389,7 +404,10 @@ function NavStrap() {
                           type="email"
                           name="info"
                           placeholder="Personal Info"
-                          onChange={handleChangeRegister}
+                            onChange={handleChangeRegister}
+                           onKeyDown={(e) => {
+                         if (e.key === "Enter") {
+                         handleSubmitRegister(); }}}
                         />
                         {/* <Form.Text className="text-muted">
                       We'll never share your email with anyone else.

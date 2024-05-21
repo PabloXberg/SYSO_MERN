@@ -7,7 +7,7 @@ import Navbar from "react-bootstrap/Navbar";
 
 import "../index.css";
 
-function SubHomeNav() {
+function SubHomeNavDown() {
   const getLastSegment = () => {
     const url = new URL(window.location.href);
     const lastSegment = url.pathname
@@ -27,20 +27,17 @@ function SubHomeNav() {
   return (
     <Navbar
       // collapseOnSelect
-      // bg="dark"
-      // variant="dark"
-      // expand="lg"
+       //bg="dark"
+        //   variant="dark"
+     // expand="lg"
       className="NavtrapBar"
     >
       <Container>
         {/* <Navbar.Toggle aria-controls="responsive-navbar-nav" /> */}
 
         <Nav navbarScroll>
-          {/* <Nav.Link style={{ fontSize: "x-large",
-              color: segmentValue === undefined ? "red" : "black"}} href="/">
-            Home
-          </Nav.Link> */}
-          <Nav.Link
+          
+          {/* <Nav.Link
             style={{
               fontSize: "x-large",
               color: segmentValue === "sketches" ? "red" : "black",
@@ -57,17 +54,17 @@ function SubHomeNav() {
             href="/users"
           >
             Usuarios
-          </Nav.Link>
-          {/* <Nav.Link style={{ fontSize: "x-large" }} href="/suppoters" disabled>
+          </Nav.Link> */}
+          <Nav.Link style={{ fontSize: "x-large" }} href="/suppoters" disabled>
             Supporters
           </Nav.Link>
           <Nav.Link style={{ fontSize: "x-large" }} href="/contacto" disabled>
             Contacto
-          </Nav.Link> */}
+          </Nav.Link>
         </Nav>
       </Container>
     </Navbar>
   );
 }
 
-export default SubHomeNav;
+export default SubHomeNavDown;

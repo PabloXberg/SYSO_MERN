@@ -30,7 +30,7 @@ const Battle = () => {
 
             <br />
             <br />
-            <h2 >Requisitos:</h2>
+            <h2 className="tituloFuente">Requisitos:</h2>
             <br />
           * Seguirnos en la pagina de Instagram. <br />
           * Realizar un Storie de tu boceto, mencionandonos y escribiendo Sketch Battle.<br />
