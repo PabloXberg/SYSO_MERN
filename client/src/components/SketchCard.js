@@ -14,9 +14,15 @@ function SketchCard(props) {
   const [showDelete, setShowDelete] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
 
-  const handleCloseDelete = () => setShowDelete(false);
+  const handleCloseDelete = () => {
+    setShowDelete(false);
+    window.location.reload();
+  }
   const handleShowDelete = () => setShowDelete(true);
-  const handleCloseEdit = () => setShowEdit(false);
+  const handleCloseEdit = () => {
+    setShowEdit(false);
+    window.location.reload();
+  }
   const handleShowEdit = () => setShowEdit(true);
 
   const sketch = props;
@@ -212,10 +218,13 @@ function SketchCard(props) {
 
   const _id = props?.props._id;
   const page = "/sketchdetail/";
+
+
   return (
     /////////////////////////////////////////////////////////////////////////COMIENZA LA CARD
     <Card className="SketchCard">
-      <Link to={page + _id} params={_id} key={_id}>
+
+      {user ? (<Link to={page + _id} params={_id} key={_id}>
         <Card.Img
           className="sketchCardImg"
           variant="top"
@@ -224,7 +233,19 @@ function SketchCard(props) {
           style={{ cursor: "pointer", width: "26rem",
             height: "26rem" }}
         />
-      </Link>
+      </Link>)
+        :
+        
+        ( <Card.Img
+          className="sketchCardImg"
+          variant="top"
+          alt="Sketch"
+          src={props.props.url}
+          style={{  width: "26rem",
+            height: "26rem" }}
+        />
+      )}
+      
 
       <Card.Body
         className="sketchCardBody"
@@ -330,9 +351,11 @@ function SketchCard(props) {
                   </Button>
                 </div>
               </Modal.Body>
-            </Modal>
+              </Modal>
+              
             {/*//////////////////////////////// EDITAR SKETCH MODAL   /////////////////////////// */}
-            <Modal
+            
+              <Modal
               className="userRegisterModal dark"
               show={showEdit}
               onHide={handleCloseEdit}
@@ -347,7 +370,14 @@ function SketchCard(props) {
               </Modal.Header>
 
               <div>
-                <div className="avatar">
+                  <div
+                    // className="avatar"
+                                              style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                        }}
+                  >
                   {/* {console.log('avatarPreview :>> ', avatarPreview)}
                      {console.log('sketch :>> ', sketch)} */}
                   <img
@@ -356,7 +386,7 @@ function SketchCard(props) {
                       border: "black 2px solid",
                       padding: "3px",
                       width: "20rem",
-                      height: "12rem",
+                      height: "15rem",
                       alignSelf: "center",
                     }}
                     src={avatarPreview ? avatarPreview : sketch?.url}
@@ -365,7 +395,7 @@ function SketchCard(props) {
 
                   {/* eslint-disable-next-line react/jsx-pascal-case */}
                   <input
-                    style={{ padding: "1rem" }}
+                    style={{ padding: "0.3rem" }}
                     type="file"
                     name="loading..."
                     accept="image/jpg, image/jpeg, image/png"
@@ -389,8 +419,9 @@ function SketchCard(props) {
                       name="name"
                       placeholder={props.props.name}
                       defaultValue={props.props.name}
-                      onChange={handleChangeEdit}
-                    />
+                        onChange={handleChangeEdit}
+                      />
+                      
                     <Form.Text className="text-muted"></Form.Text>
 
                     <Form.Label>Description:</Form.Label>
@@ -399,9 +430,17 @@ function SketchCard(props) {
                       name="comment"
                       placeholder={props.props.comment}
                       defaultValue={props.props.comment}
-                      onChange={handleChangeEdit}
+                         onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              handleSubmitEdit();
+          
+                            }
+                          }}
+                        onChange={handleChangeEdit}
+                     
+                        
                     />
-                    <Form.Text className="text-muted"></Form.Text>
+               
                   </Form.Group>
                   <br />
                 </div>
@@ -451,7 +490,70 @@ function SketchCard(props) {
           Subido el: <i>{fechaTransformada}</i>
         </Card.Footer>
 
-        <Card.Footer
+        {!user ? ( //// SI NO HAY USUARIO LOGEADO; MUESTRA ESTO
+          <Card.Footer>
+                          
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+            >
+              <span  style={{
+                  display: "flex",
+                  flexDirection: "row",
+                }}>
+                {" "}
+                <i
+                  className="material-icons Bedit"
+                  // style={{ cursor: "pointer" }}
+                //  onClick={alert("Debes iniciar sesion para usar esta función")}
+                >
+                  thumb_up
+                </i>
+                {props?.props?.likes && (
+                  <h6>
+                    {props?.props.likes?.length}{" "}
+                    {props?.props.likes?.length === 1 ? <i></i> : <i></i>}
+                  </h6>
+                )}{" "}
+              
+                   </span>    
+<Form.Label disabled><i>Iniciar sesión para estas funciones</i></Form.Label>
+                   <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-around",
+              gap: "2px",
+            }}
+          >
+                
+                
+            <i
+              style={{
+                disply: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <i
+                className="material-icons Bedit"
+                    // style={{ cursor: "pointer" }}
+                    // onClick={alert("Debes iniciar sesion para usar esta función")}
+              >
+                message
+              </i>
+            </i>
+              </div>
+        </div>
+
+          </Card.Footer>
+        )
+          :
+          ( /////SI HAY UN USUARIO LOAGEADO//////////////////////////////////
+            <Card.Footer
           style={{
             display: "Flex",
             flexDirection: "row",
@@ -459,10 +561,7 @@ function SketchCard(props) {
           }}
         >
           <div style={{ alignSelf: "flex-start" }}>
-            {/* {console.log('likesArray :>> ', likesArray)}
-              {console.log('user._id >> ', user?._id)}
-              {console.log('props :>> ', props)} */}
-            {/* {props.props.likes._id === user?._id */}
+                      
 
             {likesArray.includes(user?._id) ? (
               // ME GUSTA Y NO ME  GUSTA
@@ -475,15 +574,16 @@ function SketchCard(props) {
                 }}
               >
                 {" "}
-                <i
-                  className="material-icons Bedit"
-                  style={{ cursor: "pointer" }}
+                    <i
+                      title="ya no me gusta"
+                     className="material-icons"
+                  style={{ cursor: "pointer", color:"#0066FF"}}
                   onClick={() => unlikeSketch(_id)}
                 >
                   thumb_down
                 </i>
                 {props?.props?.likes && (
-                  <h6>
+                  <h6 style={{color:"#0066FF"}}> 
                     {props?.props.likes?.length}{" "}
                     {props?.props.likes?.length === 1 ? <i></i> : <i></i>}
                   </h6>
@@ -498,15 +598,16 @@ function SketchCard(props) {
                 }}
               >
                 {" "}
-                <i
-                  className="material-icons Bedit"
-                  style={{ cursor: "pointer" }}
+                      <i
+                        title="me gusta"
+                      className="material-icons Bedit"
+                   style={{ cursor: "pointer", color:"#0066FF"}}
                   onClick={() => likeSketch(_id)}
                 >
                   thumb_up
                 </i>
                 {props?.props?.likes && (
-                  <h6>
+                  <h6 style={{color:"#0066FF"}}>
                     {props?.props.likes?.length}{" "}
                     {props?.props.likes?.length === 1 ? <i></i> : <i></i>}
                   </h6>
@@ -528,10 +629,11 @@ function SketchCard(props) {
             }}
           >
             <h6>
-              <b>{sketch?.props?.comments?.length} </b>{" "}
+              <b style={{color:"#0066FF"}}>{sketch?.props?.comments?.length} </b>{" "}
             </h6>
-
-            <Link
+            
+                <Link
+                  title="Comentarios"
               to={page + _id}
               params={_id}
               key={_id}
@@ -551,6 +653,8 @@ function SketchCard(props) {
             </Link>
           </div>
         </Card.Footer>
+      )}
+       
       </Card.Body>
 
       <UserModal

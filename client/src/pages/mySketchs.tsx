@@ -194,8 +194,8 @@ const MySketchs = (props: Props) => {
                 keyboard={false}
                 centered
           >
-            <Modal.Header closeButton>
-              <Modal.Title>Subir un Boceto</Modal.Title>
+            <Modal.Header style={{fontSize:"small"}} closeButton>
+              <Modal.Title style={{fontSize:"medium"}} >Subir un Boceto</Modal.Title>
             </Modal.Header>
 
             <div>
@@ -208,20 +208,23 @@ const MySketchs = (props: Props) => {
                         }}
                   >
          
-                <img
-                  alt="User Avatar"
+                    <img
+                       placeholder="avatar"
+                      title="Seleccionar boceto"
+                  alt="boceto"
                   style={{
                     border: "black 2px solid",
                     padding: "5px",
-                    width: "20rem",
-                    height: "15rem",
+                    width: "19rem",
+                    height: "14rem",
                   }}
                   src={avatarPreview ? avatarPreview : DefaultImage}
                 />
                 <br />
 
                 <input
-                  placeholder="avatar"
+                      placeholder="avatar"
+                      title="Seleccionar boceto"
                   // style={{ padding: "1rem" }}
                   type="file"
                   name="loading..."
@@ -233,7 +236,8 @@ const MySketchs = (props: Props) => {
               <div className="dataform">
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                   <Form.Label>Nombre:</Form.Label>
-                  <Form.Control
+                      <Form.Control
+                    style={{ maxWidth: "20rem" }}
                     type="text"
                     name="name"
                     placeholder="name"
@@ -241,12 +245,22 @@ const MySketchs = (props: Props) => {
                   />
                   <Form.Text className="text-muted"></Form.Text>
                   <Form.Label>Comentario sobre el boceto:</Form.Label>
-                  <Form.Control
+                      <Form.Control
+                    style={{ maxWidth: "20rem" }}
                     type="text"
                     name="comment"
                     placeholder="comment"
                     onChange={handleChange}
-                  />
+                      />
+                       <Form.Label>Battle #:  </Form.Label><i style={{fontSize:"small"}}> * dejar este campo vacío en caso de no participar en ninguna batalla</i>
+                      <Form.Control
+                    style={{ maxWidth: "10rem" }}
+                    type="text"
+                    name="batlle"
+                    placeholder="-"
+                    onChange={handleChange}
+                      />
+                      {/* <Form.Label disabled></Form.Label> */}
                 </Form.Group>
               </div>
               <Modal.Footer>

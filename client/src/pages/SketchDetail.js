@@ -17,6 +17,7 @@ const SketchDetail = () => {
   const [resultado, setResultado] = useState("");
   const [refresh, setRefresh] = useState(false);
 
+
   const handleShowDelete = (commentId) => {
     setDeleteStates((prevState) => ({
       ...prevState,
@@ -230,30 +231,21 @@ const SketchDetail = () => {
               justifyContent: "space-between",
             }}
           >
-            <Card.Text className="detailsText">{sketch?.comment}</Card.Text>
+            <Card.Text className="detailsText" >{sketch?.comment}</Card.Text>
+            <br/>
 
             {sketch?.likes && (
-              <h5>
+              <span><h6 >
                 {sketch?.likes?.length}{" "}
-                {<i className="material-icons">thumb_up</i>}
-              </h5>
+                {<i className="small material-icons" style={{color:"Red"}}>favorite</i>}
+              </h6></span>
+              
             )}
 
-            {/* PARA HACER LA FUNCIONALIDAD DEL LIKES/UNLIKES       */}
-            {/* {sketch?.likes?.includes(user?._id) 
-              
-                ?
-                    // ME GUSTA Y NO ME  GUSTA
-                (<div style={{display: "flex", flexDirection: "row", justifyContent:"flex-start", gap:"5px"}}> <i className="material-icons Bedit" style={{ cursor: "pointer" }} onClick={() => unlikeSketch(sketch?._id)}>thumb_down</i>
-                   {sketch?.likes && (<h6>{sketch?.likes?.length}{" "}{sketch?.likes?.length === 1 ? <i></i> : <i></i> }</h6>)} </div>
-                 )
-                
-                :
-                (
-                  <div style={{display: "flex", flexDirection: "row", justifyContent:"flex-start"}}> <i className="material-icons Bedit" style={{ cursor: "pointer" }} onClick={() => likeSketch(sketch?._id)}>thumb_up</i>  
-                   {sketch?.likes && (<h6>{sketch?.likes?.length}{" "}{sketch?.likes?.length === 1 ? <i></i> : <i></i> }</h6>)} </div>             )
-              } */}
+          
           </div>
+
+     
           <FloatingLabel
             controlId="floatingTextarea2"
             label="agrega un comentario..."
