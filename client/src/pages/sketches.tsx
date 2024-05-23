@@ -51,7 +51,7 @@ const SkechesPage = (props: Props) => {
               );
             })}
         </div>
-        <SubHomeNavDown />
+        {/* <SubHomeNavDown /> */}
       </>
     </div>
   );
