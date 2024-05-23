@@ -81,8 +81,9 @@ function SketchCard(props) {
         const result = await response.json();
         console.log(result);
         // alert("Success!!! User Updated");
-        setLoading(false);
+       
         handleCloseEdit();
+         setLoading(false);
         window.location.reload(); //// CAMBIAR POR ALGO MEJOR
       } catch (error) {
         console.log(error);
@@ -98,7 +99,8 @@ function SketchCard(props) {
   };
 
   const handleSketchDelete = async (sketch) => {
-    console.log("sketch :>> ", sketch);
+    // e.preventDefault();
+    handleCloseDelete();
      setLoading(true);
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
@@ -125,8 +127,7 @@ function SketchCard(props) {
       const result = await response.json();
       console.log(result);
         setLoading(false);
-      setRefresh(true);
-      handleCloseDelete();
+        
         window.location.reload();///// PROVISORIO
     } catch (error) {
       console.log(error);
@@ -146,7 +147,7 @@ function SketchCard(props) {
   };
 
   useEffect(() => {
-    setLoading(false);
+    // setLoading(false);
   }, [refresh, loading]);
   ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -335,7 +336,8 @@ function SketchCard(props) {
               style={{ height: "20rem" }}
               show={showDelete}
               onHide={handleCloseDelete}
-              centered
+                    centered
+                    scrollable
             >
               <Modal.Header closeButton>
                 <Modal.Title>ATENCION</Modal.Title>
@@ -363,8 +365,8 @@ function SketchCard(props) {
                   </Button>
                     <Button
                       title="Eliminar"
-                    onClick={() => handleSketchDelete(props.props)}
-                    variant="danger"
+                       onClick={() => handleSketchDelete(props.props)}
+                       variant="danger"
                   >
                     Eliminar
                   </Button>
