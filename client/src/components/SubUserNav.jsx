@@ -22,7 +22,7 @@ function SubUserNav() {
     setSegmentValue(getLastSegment());
   }, []);
 
-  const { logout } = useContext(AuthContext);
+  // const { logout } = useContext(AuthContext);
 
   return (
 
@@ -30,7 +30,8 @@ function SubUserNav() {
       <Navbar className="NavtrapBar">
       <Container>
         <Nav navbarScroll>
-          <Nav.Link
+            <Nav.Link
+              title="Bocetos subidos por mi"
             style={{
               fontSize: "x-large",
               color: segmentValue === "mysketchs" ? "red" : "black",
@@ -39,7 +40,8 @@ function SubUserNav() {
           >
             Mis Bocetos
           </Nav.Link>
-          <Nav.Link
+            <Nav.Link
+              title="Mis bocetos favoritos.."
             style={{
               fontSize: "x-large",
               color: segmentValue === "myfav" ? "red" : "black",
@@ -48,7 +50,8 @@ function SubUserNav() {
           >
             Favoritos
           </Nav.Link>
-          <Nav.Link
+            <Nav.Link
+              itle="Editar mi perfíl"
             style={{
               fontSize: "x-large"
               // ,color: segmentValue === "edit" ? "red" : "black",

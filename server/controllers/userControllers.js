@@ -12,7 +12,7 @@ const getUsers = async(req, res) => {
     const users = await UserModel.find().populate({
       path: 'sketchs',
       populate: {
-        path: 'owner'
+        path: 'owner',
       }
     });
 

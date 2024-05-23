@@ -25,4 +25,5 @@ interface SubmitUpdateSketch {
   name: string,
   comment: string | Blob,
   url: Avatar,
+  battle: string
 }

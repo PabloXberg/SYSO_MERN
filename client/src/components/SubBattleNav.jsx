@@ -34,12 +34,17 @@ function SubBatlleNav() {
         {/* <Navbar.Toggle aria-controls="responsive-navbar-nav" /> */}
 
         <Nav className="me-auto my-2 my-lg-2" navbarScroll>
-          <Nav.Link style={{ fontSize: "x-large",
+          <Nav.Link
+            title="Bases del concurso.."
+            style={{
+              fontSize: "x-large",
               color: segmentValue === "Battle" ? "red" : "black" }} href="/battle">
             Bases
           </Nav.Link>
        
-          <Nav.Link style={{ fontSize: "x-large" }} href="/battlehistory" disabled>
+          <Nav.Link style={{ fontSize: "x-large" }}
+            title="Batallas anteriores..."
+            href="/battlehistory" disabled>
             Battle History
           </Nav.Link>
         </Nav>

@@ -112,20 +112,20 @@ const EditProfile = (props: Props) => {
 
               <Form onSubmit={handleSubmit}>
                   <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Label >Email address</Form.Label>
+                    <Form.Label >Dirección de Correo</Form.Label>
                     <Form.Control type='email' name='email' placeholder={user?.email}  onChange={handleChange}/>
                     <Form.Text className="text-muted">
-                      <i>Required</i><br /><br />
+                      <i>Requerido</i><br /><br />
                     </Form.Text>
 
                     
-                    <Form.Label >User Name:</Form.Label>
+                    <Form.Label >Nombre de usuario:</Form.Label>
                   <Form.Control type="text"  name='username' placeholder={user?.username}  onChange={handleChange}/>
                     <Form.Text className="text-muted">
-                      <i>Required</i><br /><br />
+                      <i>Requerido</i><br /><br />
                     </Form.Text>
                   
-                    <Form.Label >Personal Info:</Form.Label>
+                    <Form.Label >Información Personal:</Form.Label>
                     <Form.Control type="text"name='info' placeholder={user?.info} onChange={handleChange}/>
                     {/* <Form.Text className="text-muted">
                       We'll never share your email with anyone else.
@@ -136,11 +136,11 @@ const EditProfile = (props: Props) => {
               <Form.Check type="checkbox" label="Check me out" />
             </Form.Group> */}
             <div className="botones">
-                  <Button variant="dark" disabled onClick={handleShow}>
-                change password
+                  <Button title='Cambiar contraseña' variant="dark" disabled onClick={handleShow}>
+                Cambiar contraseña
                 </Button>
                   <Button variant="success" type="submit" >
-                  Save
+                  Guardar
               </Button>
               
               <Modal
@@ -152,23 +152,23 @@ const EditProfile = (props: Props) => {
                 
         >
           <Modal.Header closeButton>
-            <Modal.Title>Change Password</Modal.Title>
+            <Modal.Title>Cambiar la contraseña</Modal.Title>
           </Modal.Header>
                 <Modal.Body>
                   
                 <Form.Group className="mb-3" controlId="formBasicPassword">
-                    <Form.Label className="text-muted"><i>Old Password</i></Form.Label>
-                    <Form.Control type="password" placeholder="Old Password" /> <br />
-                    <Form.Label className="text-muted"><i>New Password</i></Form.Label>
-                    <Form.Control type="password" placeholder="New Password" /><br />
-                    <Form.Label className="text-muted"><i>Repeat New Password</i></Form.Label>
-                    <Form.Control type="password" placeholder="Repeat New Password" />
+                    <Form.Label className="text-muted"><i>Contraseña actual</i></Form.Label>
+                    <Form.Control type="password" placeholder="Contraseña actual" /> <br />
+                    <Form.Label className="text-muted"><i>Contrasdeña nueva</i></Form.Label>
+                    <Form.Control type="password" placeholder="Contrasdeña nueva" /><br />
+                    <Form.Label className="text-muted"><i>Repetir nueva contraseña</i></Form.Label>
+                    <Form.Control type="password" placeholder="Repetir nueva contraseña" />
                   
                   <Modal.Footer>
                     <Button variant="danger" onClick={handleClose}>
-                      Close
+                      Cerrar
                     </Button>
-                    <Button variant="success">Save</Button>
+                    <Button variant="success">Guardar</Button>
                     </Modal.Footer>
                     </Form.Group>
                   

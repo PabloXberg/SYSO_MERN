@@ -43,7 +43,8 @@ const Homepage = (props: Props) => {
           Estamos abiertos a todo tipo de propuestas de quien quiera colaborar con nosotros a nivel local o nacional. <br /><br />
           Varios Sponsors y locales en la ciudad de Valencia nos apoyan en este movimiento y nos facilitan dichas actividades. <br /><br />
           Publicitamos los artistas invitados a traves de contenido visual en varios de los proyectos realizados</h3><br />
-      </div>
+<br/><br/><br/><br/>
+        </div>
       
 
     </div>

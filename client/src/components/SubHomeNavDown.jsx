@@ -26,10 +26,10 @@ function SubHomeNavDown() {
 
   return (
     <Navbar
-      // collapseOnSelect
-       //bg="dark"
-        //   variant="dark"
-     // expand="lg"
+    //   collapseOnSelect
+    //    bg="light"
+    //       variant="light"
+    //  expand="lg"
       className="NavtrapBar"
     >
       <Container>
@@ -55,11 +55,14 @@ function SubHomeNavDown() {
           >
             Usuarios
           </Nav.Link> */}
-          <Nav.Link style={{ fontSize: "x-large" }} href="/suppoters" disabled>
+          <Nav.Link style={{ fontSize: "x-large" }} title="Colaboradores" href="/suppoters" disabled>
             Supporters
           </Nav.Link>
-          <Nav.Link style={{ fontSize: "x-large" }} href="/contacto" disabled>
+          <Nav.Link style={{ fontSize: "x-large" }} title="Vías de comunicación" href="/contacto" disabled>
             Contacto
+          </Nav.Link>
+          <Nav.Link style={{ fontSize: "x-large" }} title="tienda Online" href="/shop" disabled>
+            Shop
           </Nav.Link>
         </Nav>
       </Container>

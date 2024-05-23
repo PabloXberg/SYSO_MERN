@@ -48,6 +48,7 @@ const updateSketch = async (req, res) => {
 
   if (req.body.name !== "") infoToUpdate.name = req.body.name;
   if (req.body.comment !== "") infoToUpdate.comment = req.body.comment;
+  if (req.body.battle !== "") infoToUpdate.comment = req.body.battle;
 
   if (req.file) {
     console.log('req.file :>> ', req.file);
@@ -121,7 +122,8 @@ const createSketch = async (req, res) => {
     name: req.body.name,
     comment: req.body.comment,
     url: URL,
-    owner: req.body.owner
+    owner: req.body.owner,
+    battle: req.body.battle
   });
        
     try {

@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 const sketchSchema = new mongoose.Schema({
   name: { type: String, required: true },
   comment: { type: String, required: true },
+  battle: {type: String, required: false },
   likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "comment" }],
   owner: { type: mongoose.Schema.Types.ObjectId, ref: "user" },

@@ -4,7 +4,7 @@ import Homepage from './pages/Homepage';
 import { AuthContextProvider } from './contexts/AuthContext';
 import NavStrap from './components/NavTrap';
 import Sketches from './pages/sketches';
-import UsersSketches from './pages/userssketches';
+
 import UsersPage from './pages/users';
 import MySketchs from './pages/mySketchs';
 import MyFav from './pages/myFav';
@@ -25,7 +25,7 @@ function App() {
                     {/* <Route path='register' element={ <Register /> } /> */}
                     <Route path='sketchdetail/:id' element={<SketchDetail/>}/>
                     <Route path='sketches' element={<Sketches />} />
-                    <Route path='userssketches' element={<UsersSketches/>} />
+
                     <Route path='users' element={<UsersPage />} />
                     <Route path='mysketchs' element={<MySketchs />} />
                     <Route path='myfav' element={<MyFav/>} />

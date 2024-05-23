@@ -14,7 +14,8 @@ import Logo1 from "../images/IMG-20231228-WA0004-removebg-preview.png";
 import Logo2 from "../images/IMG-20231228-WA0005-removebg-preview.png";
 //import Typewriter from 'typewriter-effect';
 import { serverURL } from "../serverURL";
-import SpinnerShare from "./Spinner";
+// import SpinnerShare from "./Spinner";
+import SpraySpinner from "./SprySpinner";
 
 function NavStrap() {
   const { user, login, logout } = useContext(AuthContext);
@@ -85,7 +86,7 @@ function NavStrap() {
       alert("Falta rellenar alguno de los campos obligatorios (*)");
       return;
     }
-
+ setLoading(true);
     const submitData = new FormData();
     submitData.append("email", formDataRegister.email);
     submitData.append("username", formDataRegister.username);
@@ -95,7 +96,7 @@ function NavStrap() {
       method: "POST",
       body: submitData,
     };
-    setLoading(true);
+   
     try {
       const response = await fetch(`${serverURL}users/new`, requestOptions);
       const result = await response.json();
@@ -141,7 +142,8 @@ function NavStrap() {
   return (
     <div className="NavTrap">
       {loading ? (
-        <SpinnerShare />
+        // <SpinnerShare />
+      <SpraySpinner/>
       ) : (
         <Navbar
           collapseOnSelect
@@ -153,7 +155,8 @@ function NavStrap() {
           <Container>
             {/* <Navbar.Toggle aria-controls="responsive-navbar-nav" /> */}
             <Navbar.Brand style={{ cursor: "pointer" }} href="/news">
-              <img
+                <img
+                  title="Noticias del Share"
                 style={{ height: "5em", width: "5em" }}
                 alt={"Share Your Sketch"}
                 src={isHovered ? Logo2 : Logo1}
@@ -164,14 +167,16 @@ function NavStrap() {
             </Navbar.Brand>
 
             <Nav className="me-auto my-2 my-lg-2" navbarScroll>
-              <Nav.Link
+                <Nav.Link
+                  title="Home Page"
                 className="news"
                 style={{ fontSize: "x-large" }}
                 href="/"
               >
                 Home
               </Nav.Link>
-              <Nav.Link
+                <Nav.Link
+                  title="Batallas"
                 style={{ fontSize: "x-large" }}
                 className="battle"
                 href="/Battle"
@@ -221,14 +226,16 @@ function NavStrap() {
                         className="NavAtar"
                       />
 
-                      <Nav.Link
+                        <Nav.Link
+                          title="Opciones de usuario.."
                         style={{ fontSize: "x-large" }}
                         href="/mysketchs"
                       >
                         {user.username}
                       </Nav.Link>
 
-                      <Button
+                        <Button
+                          title="Cerrar Sesion"
                         variant="outline-danger"
                         href="/"
                         onClick={logout}
@@ -242,14 +249,16 @@ function NavStrap() {
                   <div style={{ display: "flex" }}>
                     {
                       <>
-                        <Navbar.Brand
+                            <Navbar.Brand
+                              title="Registrar nuevo Usuario"
                           style={{ cursor: "pointer", fontSize: "large" }}
                           className={"registrarse"}
                           onClick={handleShowRegister}
                         >
                           Registrar
                         </Navbar.Brand>
-                        <Navbar.Brand
+                            <Navbar.Brand
+                              title="Iniciar Sesion"
                           style={{ cursor: "pointer", fontSize: "large" }}
                           className={"entrar"}
                           onClick={handleShowLogin}

@@ -7,8 +7,9 @@ import Modal from "react-bootstrap/Modal";
 import DefaultImage from "../default-placeholder.png";
 import SubUserNav from "../components/SubUserNav";
 import { serverURL } from "../serverURL";
-import SpinnerShare from "../components/Spinner";
-import '../index.css'
+// import SpinnerShare from "../components/Spinner";
+import SpraySpinner from "../components/SprySpinner";
+import "../index.css";
 
 type Props = {};
 
@@ -20,6 +21,7 @@ interface Sketch {
   url: string | File;
   likes: [];
   comments: [];
+  battle: string;
 }
 
 interface User {
@@ -43,9 +45,8 @@ const MySketchs = (props: Props) => {
   const [activeUser, setActiveUser] = useState<User | null>(null);
   const [show, setShow] = useState(false);
   const handleClose = () => {
-    setShow(false)
-     window.location.reload();
-   }
+    setShow(false);
+  };
   const handleShow = () => setShow(true);
   const sketchsArray = activeUser?.sketchs;
   const [ID, setID] = useState<id>(activeUser?._id);
@@ -58,6 +59,7 @@ const MySketchs = (props: Props) => {
     comment: "",
     owner: user?._id,
     url: "",
+    battle: "",
   });
 
   // console.log('ID :>> ', ID);
@@ -87,20 +89,19 @@ const MySketchs = (props: Props) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     ID === undefined ? setID(formData.owner) : setID(formData.owner);
     console.log("formData :>> ", formData);
-    console.log("ID :>> ", ID);
+    // console.log("ID :>> ", ID);
   };
 
   //////////////////////////////////////////////////////////////////////////////////// HANDLE SUBMIT - SAVE A NEEW SKETCH
   const handleSubmit = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
+    // e.preventDefault();
 
-      if (
-      !formData.name ||
-      !formData.comment ||
-      !formData.url
-    ) {
+    if (!formData.name || !formData.comment || !formData.url) {
       alert("Falta rellenar alguno de los campos");
       return;
+    }
+    if (formData.battle === "") {
+      formData.battle = "0";
     }
     setLoading(true); /// FUTURE SPINNER
 
@@ -116,6 +117,8 @@ const MySketchs = (props: Props) => {
       submitData.append("comment", formData.comment);
       submitData.append("owner", ID);
       submitData.append("url", formData.url);
+      submitData.append("battle", formData.battle);
+
       console.log("submitData :>> ", submitData);
       //////  OPTION BODY
       const requestOptions = {
@@ -124,11 +127,8 @@ const MySketchs = (props: Props) => {
         body: submitData,
       };
 
-          /// FETCH
-      // console.log(
-      //   "process.env.REACT_APP_BASE_URL :>> ",
-      //   process.env.REACT_APP_BASE_URL
-      // );
+      /// FETCH
+
       try {
         const response = await fetch(
           `${serverURL}sketches/new`,
@@ -138,13 +138,14 @@ const MySketchs = (props: Props) => {
         console.log(result);
         // alert("Success!!! Your new Sketch is uploaded in our data base");
         setLoading(false);
-       
+        handleClose();
+        window.location.reload();
       } catch (error) {
         console.log(error);
         alert("Something went wrong - check console");
         setLoading(false);
+        handleClose();
       }
-       handleClose();
     }
   };
 
@@ -164,135 +165,160 @@ const MySketchs = (props: Props) => {
   return (
     <div className="mySketch">
       {loading ? (
-        <SpinnerShare/>
-      ) : (<> <SubUserNav />
-      <div
-      // className="user-conteiner"
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-          className="title"
-        >
-          ,
-          <Button
-            onClick={handleShow}
-            style={{ gap: "1em", fontFamily: "Mifuente2", fontSize: "large" }}
-            variant="success"
+        // <SpinnerShare/>
+        <SpraySpinner />
+      ) : (
+        <>
+          {" "}
+          <SubUserNav />
+          <div
+          // className="user-conteiner"
           >
-            <b>Subir Nuevo Boceto</b>
-          </Button>
-          <Modal
-            size="lg"
-            className="userRegisterModal"
-            show={show}
-            onHide={handleClose}
-            backdrop="static"
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              className="title"
+            >
+              ,
+                <Button
+                  title="Subir un nuevo Boceto!!"
+                onClick={handleShow}
+                style={{
+                  gap: "1em",
+                  fontFamily: "Mifuente2",
+                  fontSize: "large",
+                }}
+                variant="success"
+              >
+                <b>Subir Nuevo Boceto</b>
+              </Button>
+              <Modal
+                className="userRegisterModal"
+                show={show}
+                onHide={handleClose}
+                backdrop="static"
                 keyboard={false}
                 centered
-          >
-            <Modal.Header style={{fontSize:"small"}} closeButton>
-              <Modal.Title style={{fontSize:"medium"}} >Subir un Boceto</Modal.Title>
-            </Modal.Header>
+              >
+                <Modal.Header style={{ fontSize: "small" }} closeButton>
+                  <Modal.Title style={{ fontSize: "medium" }}>
+                    Subir un Boceto
+                  </Modal.Title>
+                </Modal.Header>
 
-            <div>
+                <div>
                   <div
                     className="Avatar"
-                           style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center",
-                        }}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
                   >
-         
                     <img
-                       placeholder="avatar"
-                      title="Seleccionar boceto"
-                  alt="boceto"
-                  style={{
-                    border: "black 2px solid",
-                    padding: "5px",
-                    width: "19rem",
-                    height: "14rem",
-                  }}
-                  src={avatarPreview ? avatarPreview : DefaultImage}
-                />
-                <br />
-
-                <input
                       placeholder="avatar"
                       title="Seleccionar boceto"
-                  // style={{ padding: "1rem" }}
-                  type="file"
-                  name="loading..."
-                  accept="image/jpg, image/jpeg, image/png"
-                  onChange={handleFile}
-                />
-              </div>
+                      alt="boceto"
+                      style={{
+                        border: "black 2px solid",
+                        padding: "5px",
+                        width: "19rem",
+                        height: "14rem",
+                      }}
+                      src={avatarPreview ? avatarPreview : DefaultImage}
+                    />
+                    <br />
 
-              <div className="dataform">
-                <Form.Group className="mb-3" controlId="formBasicEmail">
-                  <Form.Label>Nombre:</Form.Label>
+                    <input
+                      placeholder="avatar"
+                      title="Seleccionar boceto"
+                      // style={{ padding: "1rem" }}
+                      type="file"
+                      name="loading..."
+                      accept="image/jpg, image/jpeg, image/png"
+                      onChange={handleFile}
+                    />
+                  </div>
+                  <br />
+
+                  <div className="dataform">
+                    <Form.Group
+                      className="mb-3"
+                      controlId="formBasicEmail"
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "space-around",
+                      }}
+                    >
+                      {/* <Form.Label>Nombre:</Form.Label> */}
                       <Form.Control
-                    style={{ maxWidth: "20rem" }}
-                    type="text"
-                    name="name"
-                    placeholder="name"
-                    onChange={handleChange}
-                  />
-                  <Form.Text className="text-muted"></Form.Text>
-                  <Form.Label>Comentario sobre el boceto:</Form.Label>
-                      <Form.Control
-                    style={{ maxWidth: "20rem" }}
-                    type="text"
-                    name="comment"
-                    placeholder="comment"
-                    onChange={handleChange}
+                        style={{ maxWidth: "20rem" }}
+                        type="text"
+                        name="name"
+                        placeholder="nombre"
+                        onChange={handleChange}
                       />
-                       <Form.Label>Battle #:  </Form.Label><i style={{fontSize:"small"}}> * dejar este campo vacío en caso de no participar en ninguna batalla</i>
+                      <Form.Text className="text-muted"></Form.Text>
+                      {/* <Form.Label>Descripción del boceto:</Form.Label> */}
                       <Form.Control
-                    style={{ maxWidth: "10rem" }}
-                    type="text"
-                    name="batlle"
-                    placeholder="-"
-                    onChange={handleChange}
+                        style={{ maxWidth: "20rem" }}
+                        type="text"
+                        name="comment"
+                        placeholder="Descripcion"
+                        onChange={handleChange}
+                      />
+                      <Form.Label>Battle #: </Form.Label>
+                      <i style={{ fontSize: "small" }}>
+                        {" "}
+                        * dejar este campo vacío en caso de no participar en
+                        ninguna batalla
+                      </i>
+                      <Form.Control
+                        style={{ maxWidth: "10rem" }}
+                        type="text"
+                        name="battle"
+                        placeholder="-"
+                        onChange={handleChange}
                       />
                       {/* <Form.Label disabled></Form.Label> */}
-                </Form.Group>
-              </div>
-              <Modal.Footer>
-                <Button variant="danger" onClick={handleClose}>
-                  Cerrar
-                </Button>
-                <Button
-                  style={{ cursor: "pointer" }}
-                  onClick={handleSubmit}
-                  variant="success"
-                >
-                  Subir
-                </Button>
-              </Modal.Footer>
+                    </Form.Group>
+                  </div>
+                  <Modal.Footer>
+                    <Button
+                      title="cancelar"
+                      variant="danger"
+                      onClick={handleClose}
+                    >
+                      Cerrar
+                    </Button>
+                    <Button
+                      title="Subir Boceto"
+                      style={{ cursor: "pointer" }}
+                      onClick={handleSubmit}
+                      variant="success"
+                    >
+                      Subir
+                    </Button>
+                  </Modal.Footer>
+                </div>
+              </Modal>
             </div>
-          </Modal>
-        </div>
 
-        <div className="cardcontainer">
-          {sketchsArray &&
-            sketchsArray.map((sketch: Sketch) => {
-              return (
-                <SketchCard bolean={true} key={sketch._id} props={sketch} />
-              );
-            })}
-        </div>
-      </div></>)
-
-
-      }
-      
-     
+            <div className="cardcontainer">
+              {sketchsArray &&
+                sketchsArray.map((sketch: Sketch) => {
+                  return (
+                    <SketchCard bolean={true} key={sketch._id} props={sketch} />
+                  );
+                })}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

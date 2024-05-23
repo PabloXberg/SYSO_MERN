@@ -4,13 +4,9 @@ import '../../src/index.css'
 import { Card } from 'react-bootstrap'
 import cartel from '../images/shareyoursketch.jpg'
 
-
-
 //import { InstagramEmbed } from 'react-social-media-embed';
 
 type Props = {}
-
-
 
 const News = (props: Props) => {
 

@@ -234,7 +234,7 @@
 
   .UserCard {
     max-width: "25rem";
-    min-width: "23rem";
+    min-width: "25rem";
   }
 
   .UserAvatar {
@@ -739,7 +739,7 @@
 
   .UserCard {
     max-width: "20rem";
-    min-width: "18rem";
+    min-width: "20rem";
   }
 }
 

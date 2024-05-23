@@ -15,6 +15,7 @@ interface Sketch {
   url: String;
   likes: [];
   comments: [];
+  battle: String
 }
 
 type Sketches = Sketch[];

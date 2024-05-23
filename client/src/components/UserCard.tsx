@@ -9,16 +9,17 @@ function UserCard(props: any) {
 
 
   return (
-    <div className={"usercard"}>
+    <div className="usercard">
       <Card className="UserCard">
+   
         <Card.Img
           className="UserAvatar"
           variant="top"
           src={props.props.avatar}
           style={{
         
-            width: "23rem",
-            height: "23rem",
+            width: "20rem",
+            height: "20rem",
              alignSelf: "center",
                padding: "1rem",
             borderRadius:"50%"
@@ -27,6 +28,8 @@ function UserCard(props: any) {
         <Card.Body
 
           style={{
+            height: "auto",
+            minHeight:"13rem",
             width: "23rem",
             display: "flex",
             flexDirection: "column",

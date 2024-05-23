@@ -79,8 +79,8 @@ function UserModal(props) {
             </p>
           </div>
           <div className="modal-footer">
-            <Button onClick={props.onClose} className="modal-close-btn">
-              Close
+            <Button title="Cerrar"onClick={props.onClose} className="modal-close-btn">
+              Cerrar
             </Button>
           </div>
         </div>

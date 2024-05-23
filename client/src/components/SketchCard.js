@@ -5,10 +5,10 @@ import UserModal from "./UserModal";
 import { Link, useLocation } from "react-router-dom";
 import { Button, Form, Modal } from "react-bootstrap";
 import { serverURL } from "../serverURL";
+import SpraySpinner from "./SprySpinner";
 
 function SketchCard(props) {
   const { user } = useContext(AuthContext);
-
   const [show, setShow] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
@@ -16,17 +16,15 @@ function SketchCard(props) {
 
   const handleCloseDelete = () => {
     setShowDelete(false);
-    window.location.reload();
+
   }
   const handleShowDelete = () => setShowDelete(true);
   const handleCloseEdit = () => {
     setShowEdit(false);
-    window.location.reload();
+    
   }
   const handleShowEdit = () => setShowEdit(true);
-
   const sketch = props;
-  // console.log('user :>> ', user);
   const [loading, setLoading] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState(sketch?.props.url);
 
@@ -35,6 +33,7 @@ function SketchCard(props) {
     name: "",
     comment: "",
     url: "",
+    battle:""
   });
 
   const datum = props.props.createdAt;
@@ -44,18 +43,18 @@ function SketchCard(props) {
     partesFecha[2] + "-" + partesFecha[1] + "-" + partesFecha[0];
 
   const likesArray = props?.props?.likes;
-
   const location = useLocation();
-  // console.log('location :>> ', location);
+
   //////////////////////////////////////////////////////////////////////////////////// USE EFFECT PARA RECARCAR LA PAGINA::: NO FUNCIONA; SOLUCIONAR ESTO
 
   const handleSubmitEdit = async (e) => {
     e.preventDefault();
-    ///  setLoading(true);   ///// FUTURE SPINNER
+      setLoading(true);   ///// FUTURE SPINNER
 
     if (user?._id === sketch?.props.owner._id) {
       console.log("props and sketch on edit sketch page:>> ", props, sketch);
-
+      if (formData.battle === ""){formData.battle = "0"}
+      
       const myHeaders = new Headers();
       const token = localStorage.getItem("token");
       myHeaders.append("Authorization", `Bearer ${token}`);
@@ -66,7 +65,8 @@ function SketchCard(props) {
       submitData.append("name", formData.name);
       submitData.append("comment", formData.comment);
       submitData.append("url", formData.url);
-
+      submitData.append("battle", formData.battle);
+      
       const requestOptions = {
         method: "POST",
         headers: myHeaders,
@@ -80,11 +80,13 @@ function SketchCard(props) {
         );
         const result = await response.json();
         console.log(result);
-        alert("Success!!! User Updated");
+        // alert("Success!!! User Updated");
         setLoading(false);
+        handleCloseEdit();
+        window.location.reload(); //// CAMBIAR POR ALGO MEJOR
       } catch (error) {
         console.log(error);
-        alert("Something went wrong - Try again...");
+        alert("Algo salió mal, intentalo nuevamente...");
         setLoading(false);
       }
     }
@@ -97,6 +99,7 @@ function SketchCard(props) {
 
   const handleSketchDelete = async (sketch) => {
     console.log("sketch :>> ", sketch);
+     setLoading(true);
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
     myHeaders.append(
@@ -121,10 +124,10 @@ function SketchCard(props) {
       );
       const result = await response.json();
       console.log(result);
-      setLoading(true);
+        setLoading(false);
       setRefresh(true);
       handleCloseDelete();
-      ////    window.location.reload();///// PROVISORIO
+        window.location.reload();///// PROVISORIO
     } catch (error) {
       console.log(error);
       alert("Algo salió Mal - Intentalo otra vez...");
@@ -143,14 +146,13 @@ function SketchCard(props) {
   };
 
   useEffect(() => {
-    setRefresh(false);
     setLoading(false);
   }, [refresh, loading]);
   ///////////////////////////////////////////////////////////////////////////////////////////////////
 
   const likeSketch = async (props) => {
     const myHeaders = new Headers();
-
+    setLoading(true);
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
     myHeaders.append(
       "Authorization",
@@ -173,18 +175,21 @@ function SketchCard(props) {
       );
       const result = await response.json();
       console.log(result);
-      setLoading(true);
+      setLoading(false);
       setRefresh(true);
       ///fetchActiveUser(localStorage.getItem("token"));
       window.location.reload(); ///////////////////////////////////////////////////////////////////// PROVISORIO
     } catch (error) {
       console.log("error", error);
+      setLoading(false);
+       alert("algo salió mal...")
     }
   };
 
   const unlikeSketch = async (props) => {
+    
+    setLoading(true);
     const myHeaders = new Headers();
-
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
     myHeaders.append(
       "Authorization",
@@ -207,12 +212,14 @@ function SketchCard(props) {
       );
       const result = await response.json();
       console.log(result);
-      setLoading(true);
+      setLoading(false);
       setRefresh(true);
       /// fetchActiveUser(localStorage.getItem("token"));
       window.location.reload(); ///////////////////////////////////////////////////////// PROVISORIO
     } catch (error) {
       console.log("error", error);
+      setLoading(false);
+      alert("algo salió mal...")
     }
   };
 
@@ -222,10 +229,16 @@ function SketchCard(props) {
 
   return (
     /////////////////////////////////////////////////////////////////////////COMIENZA LA CARD
-    <Card className="SketchCard">
+    <div className="SketchCardPage">
+      
+      {loading ? (
+        // <SpinnerShare/>
+        <SpraySpinner />
+      ) : (<Card className="SketchCard">
 
       {user ? (<Link to={page + _id} params={_id} key={_id}>
         <Card.Img
+          title="Click para ampliar.."
           className="sketchCardImg"
           variant="top"
           alt="Sketch"
@@ -236,7 +249,8 @@ function SketchCard(props) {
       </Link>)
         :
         
-        ( <Card.Img
+        (<Card.Img
+          title="Click para ampliar.."
           className="sketchCardImg"
           variant="top"
           alt="Sketch"
@@ -288,15 +302,16 @@ function SketchCard(props) {
             {" "}
               <Card.Footer 
                 className="sketchCardFooter"
-              // style={{
-              //   display: "flex",
-              //   flexDirection: "row",
-              //   justifyContent: "space-between",
-              // }}
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
             >
               <div>Creado por mí</div>
               <div>
-                <i
+                  <i
+                  title="Editar Boceto"
                   className="material-icons Bedit"
                   onClick={handleShowEdit}
                   placeholder="edit"
@@ -305,7 +320,8 @@ function SketchCard(props) {
                   {" "}
                   edit
                 </i>
-                <i
+                  <i
+                    title="Eliminar Boceto"
                   className="material-icons Bedit"
                   style={{ cursor: "pointer" }}
                   onClick={handleShowDelete}
@@ -328,7 +344,7 @@ function SketchCard(props) {
                 {" "}
                 <Modal.Header>
                   <Modal.Title>
-                    Estas seguro de eliminar este Sketch???
+                    Estas seguro de eliminar este Boceto?
                   </Modal.Title>
                 </Modal.Header>{" "}
                 <br></br>
@@ -340,10 +356,13 @@ function SketchCard(props) {
                   }}
                 >
                   {" "}
-                  <Button variant="success" onClick={handleCloseDelete}>
+                    <Button
+                      title="Cancelar"
+                      variant="success" onClick={handleCloseDelete}>
                     Cancelar
                   </Button>
-                  <Button
+                    <Button
+                      title="Eliminar"
                     onClick={() => handleSketchDelete(props.props)}
                     variant="danger"
                   >
@@ -356,17 +375,18 @@ function SketchCard(props) {
             {/*//////////////////////////////// EDITAR SKETCH MODAL   /////////////////////////// */}
             
               <Modal
-              className="userRegisterModal dark"
+              className="userRegisterModal xl"
               show={showEdit}
               onHide={handleCloseEdit}
               backdrop="static"
               keyboard={false}
               aria-labelledby="contained-modal-title-vcenter"
               centered
-              // style={{ height: "70rem" }}
+                size="md"
+                fullscreen={'xl-down'}
             >
-              <Modal.Header closeButton>
-                <Modal.Title>Editar Sketch</Modal.Title>
+              <Modal.Header style={{fontSize:"medium"}} closeButton>
+                <Modal.Title style={{fontSize:"large"}}>Editar Boceto</Modal.Title>
               </Modal.Header>
 
               <div>
@@ -385,8 +405,8 @@ function SketchCard(props) {
                     style={{
                       border: "black 2px solid",
                       padding: "3px",
-                      width: "20rem",
-                      height: "15rem",
+                      width: "18rem",
+                      height: "14rem",
                       alignSelf: "center",
                     }}
                     src={avatarPreview ? avatarPreview : sketch?.url}
@@ -413,7 +433,7 @@ function SketchCard(props) {
                       alignContent: "space-between",
                     }}
                   >
-                    <Form.Label>Name:</Form.Label>
+                    <Form.Label>Nombre:</Form.Label>
                     <Form.Control
                       type="text"
                       name="name"
@@ -424,46 +444,54 @@ function SketchCard(props) {
                       
                     <Form.Text className="text-muted"></Form.Text>
 
-                    <Form.Label>Description:</Form.Label>
+                    <Form.Label>Descripción:</Form.Label>
                     <Form.Control
                       type="text"
                       name="comment"
                       placeholder={props.props.comment}
                       defaultValue={props.props.comment}
-                         onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                              handleSubmitEdit();
+                        //  onKeyDown={(e) => {
+                        //     if (e.key === "Enter") {
+                        //       handleSubmitEdit();
           
-                            }
-                          }}
+                        //     }
+                        //   }}
                         onChange={handleChangeEdit}
-                     
-                        
-                    />
+                                         
+                      />
+                      
+                      <Form.Label>Batalla n°:  # <i style={{fontSize:"small"}}>dejar vacío si no participa...</i></Form.Label>
+                      <Form.Control
+                        style={{maxWidth:"10rem"}}
+                      type="text"
+                      name="batlle"
+                      placeholder={props.props.battle}
+                      defaultValue={props.props.battle}
+                      onChange={handleChangeEdit}
+                      />
                
                   </Form.Group>
                   <br />
                 </div>
-
-                <Modal.Footer
-                  style={{
+                <div    style={{
                     display: "flex",
                     flexDirection: "row",
                     justifyContent: "space-between",
-                    height: "8rem",
-                  }}
-                >
-                  <Button variant="danger" onClick={handleCloseEdit}>
+           
+                  }}>
+               
+                  <Button title="Cancelar" variant="danger" onClick={handleCloseEdit}>
                     Cancelar
                   </Button>
-                  <Button
+                    <Button
+                      title="Guardar cambios"
                     style={{ cursor: "pointer" }}
                     onClick={handleSubmitEdit}
                     variant="success"
                   >
                     Guardar
                   </Button>
-                </Modal.Footer>
+               </div>
               </div>
             </Modal>
           </>
@@ -486,8 +514,10 @@ function SketchCard(props) {
           </Card.Footer>
         )}
 
-        <Card.Footer className="text-muted">
-          Subido el: <i>{fechaTransformada}</i>
+        <Card.Footer
+          style={{display:"flex", flexDirection:"row", justifyContent:"Space-around"}}
+          className="text-muted">
+         <i> Subido el: {fechaTransformada}</i>
         </Card.Footer>
 
         {!user ? ( //// SI NO HAY USUARIO LOGEADO; MUESTRA ESTO
@@ -506,6 +536,7 @@ function SketchCard(props) {
                 }}>
                 {" "}
                 <i
+                  title="Iniciar sesion para esta funcion"
                   className="material-icons Bedit"
                   // style={{ cursor: "pointer" }}
                 //  onClick={alert("Debes iniciar sesion para usar esta función")}
@@ -520,7 +551,7 @@ function SketchCard(props) {
                 )}{" "}
               
                    </span>    
-<Form.Label disabled><i>Iniciar sesión para estas funciones</i></Form.Label>
+                    <Form.Label disabled><i>Iniciar sesión para estas funciones</i></Form.Label>
                    <div
             style={{
               display: "flex",
@@ -538,7 +569,8 @@ function SketchCard(props) {
                 justifyContent: "space-between",
               }}
             >
-              <i
+                  <i
+                    title="Iniciar sesion para esta funcion"
                 className="material-icons Bedit"
                     // style={{ cursor: "pointer" }}
                     // onClick={alert("Debes iniciar sesion para usar esta función")}
@@ -663,7 +695,11 @@ function SketchCard(props) {
         show={show}
         character={props?.props}
       />
-    </Card>
+      </Card>)}
+      
+    
+    </div>
+    
   );
 }
 

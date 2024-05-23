@@ -41,6 +41,7 @@ function SubHomeNav() {
             Home
           </Nav.Link> */}
           <Nav.Link
+            title="Bocetos subidos"
             style={{
               fontSize: "x-large",
               color: segmentValue === "sketches" ? "red" : "black",
@@ -50,6 +51,7 @@ function SubHomeNav() {
             Bocetos
           </Nav.Link>
           <Nav.Link
+            title="Usuarios Registrados"
             style={{
               fontSize: "x-large",
               color: segmentValue === "users" ? "red" : "black",
