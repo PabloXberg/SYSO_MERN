@@ -5,7 +5,7 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 //import NavDropdown from "react-bootstrap/NavDropdown";
 import Modal from "react-bootstrap/Modal";
-import DefaultImage from "../placeholder.png";
+import DefaultImage from "../avatar-placeholder.gif";
 import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 //import { Link } from 'react-router-dom';
@@ -86,6 +86,7 @@ function NavStrap() {
       alert("Falta rellenar alguno de los campos obligatorios (*)");
       return;
     }
+    if (formDataRegister.avatar === "" ){formDataRegister.avatar = DefaultImage}
  setLoading(true);
     const submitData = new FormData();
     submitData.append("email", formDataRegister.email);
@@ -221,7 +222,7 @@ function NavStrap() {
                           maxWidth: "2.5rem",
                           borderRadius: "50%",
                         }}
-                        src={user.avatar}
+                        src={user?.avatar ? user?.avatar : DefaultImage }
                         alt="Avatar"
                         className="NavAtar"
                       />

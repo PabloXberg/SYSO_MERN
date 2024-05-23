@@ -1,4 +1,5 @@
 import Card from "react-bootstrap/Card";
+import DefaultImage from "../avatar-placeholder.gif";
 // import SketchModal from "./SketchModal";
 // import { useState } from "react";
 
@@ -13,9 +14,9 @@ function UserCard(props: any) {
       <Card className="UserCard">
    
         <Card.Img
-          className="UserAvatar"
+          // className="UserAvatar"
           variant="top"
-          src={props.props.avatar}
+          src={props.props.avatar !== "" ? props.props.avatar:DefaultImage}
           style={{
         
             width: "20rem",
