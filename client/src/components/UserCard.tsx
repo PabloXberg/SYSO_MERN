@@ -7,7 +7,15 @@ function UserCard(props: any) {
   const datum = props.props.createdAt;
   const shortdatum = datum.substring(0, 10);
   // const [show, setShow] = useState(false);
+  const FuckingAvatarPlaceholder = 'https://res.cloudinary.com/dhaezmblt/image/upload/v1684921855/user_avatar/user-default_rhbk4i.png'
+  let AvatarFinal = '';
 
+  if (props.props.avatar === "" || props.props.avatar === FuckingAvatarPlaceholder)
+  { AvatarFinal = DefaultImage }
+  else {
+    AvatarFinal = props.props.avatar
+  }
+  
 
   return (
     <div className="usercard">
@@ -16,7 +24,7 @@ function UserCard(props: any) {
         <Card.Img
           // className="UserAvatar"
           variant="top"
-          src={props.props.avatar !== "" ? props.props.avatar:DefaultImage}
+          src={AvatarFinal}
           style={{
         
             width: "20rem",

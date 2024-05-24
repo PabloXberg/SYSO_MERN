@@ -126,6 +126,17 @@ function NavStrap() {
     }
   };
 
+
+
+    const FuckingAvatarPlaceholder = 'https://res.cloudinary.com/dhaezmblt/image/upload/v1684921855/user_avatar/user-default_rhbk4i.png'
+  let AvatarFinal = '';
+
+  if (user?.avatar  === "" || user?.avatar  === FuckingAvatarPlaceholder)
+  { AvatarFinal = DefaultImage }
+  else {
+    AvatarFinal = user?.avatar 
+  }
+
   // function agregarEspaciosEntreLetras(nombreUsuario) {
   //   // Convierte el nombre de usuario en un array de letras
   //   if (nombreUsuario !== undefined) {
@@ -222,7 +233,7 @@ function NavStrap() {
                           maxWidth: "2.5rem",
                           borderRadius: "50%",
                         }}
-                        src={user?.avatar ? user?.avatar : DefaultImage }
+                        src={AvatarFinal}
                         alt="Avatar"
                         className="NavAtar"
                       />
