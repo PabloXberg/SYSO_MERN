@@ -6,6 +6,9 @@ import { Link, useLocation } from "react-router-dom";
 import { Button, Form, Modal } from "react-bootstrap";
 import { serverURL } from "../serverURL";
 import SpraySpinner from "./SprySpinner";
+import nogusta from '../images/LogoShare.png'
+import gusta from '../images/LOGO.png.png'
+
 
 function SketchCard(props) {
   const { user } = useContext(AuthContext);
@@ -543,7 +546,7 @@ function SketchCard(props) {
                   // style={{ cursor: "pointer" }}
                 //  onClick={alert("Debes iniciar sesion para usar esta función")}
                 >
-                  thumb_up
+                  favorite
                 </i>
                 {props?.props?.likes && (
                   <h6>
@@ -608,14 +611,16 @@ function SketchCard(props) {
                 }}
               >
                 {" "}
-                    <i
+                        <Card.Img
+                          alt="megusta"
+                          src={nogusta}
                       title="ya no me gusta"
-                     className="material-icons"
-                  style={{ cursor: "pointer", color:"#0066FF"}}
+                    //  className="material-icons"
+                  style={{ cursor: "pointer", maxWidth:"1.5rem", maxHeight:"1.5rem"}}
                   onClick={() => unlikeSketch(_id)}
-                >
-                  thumb_down
-                </i>
+                ></Card.Img>
+                  
+                
                 {props?.props?.likes && (
                   <h6 style={{color:"#0066FF"}}> 
                     {props?.props.likes?.length}{" "}
@@ -632,20 +637,20 @@ function SketchCard(props) {
                 }}
               >
                 {" "}
-                      <i
-                        title="me gusta"
-                      className="material-icons Bedit"
-                   style={{ cursor: "pointer", color:"#0066FF"}}
+                          <Card.Img
+                          alt="megusta"
+                          src={gusta}
+                      title="me gusta"
+                    //  className="material-icons"
+                  style={{ cursor: "pointer", maxWidth:"1.5rem", maxHeight:"1.5rem"}}
                   onClick={() => likeSketch(_id)}
-                >
-                  thumb_up
-                </i>
+                ></Card.Img>
                 {props?.props?.likes && (
                   <h6 style={{color:"#0066FF"}}>
                     {props?.props.likes?.length}{" "}
                     {props?.props.likes?.length === 1 ? <i></i> : <i></i>}
                   </h6>
-                )}{" "}
+                )}{"  "}
               </div>
             )}
           </div>
