@@ -42,7 +42,8 @@ const Homepage = (props: Props) => {
           Organizamos tanto quedadas de bocetos como exposiciones, exhibiciones de Graffiti, conciertos y batallas de freestyle. <br /><br />
           Estamos abiertos a todo tipo de propuestas de quien quiera colaborar con nosotros a nivel local o nacional. <br /><br />
           Varios Sponsors y locales en la ciudad de Valencia nos apoyan en este movimiento y nos facilitan dichas actividades. <br /><br />
-          Publicitamos los artistas invitados a traves de contenido visual en varios de los proyectos realizados</h3><br />
+          También publicitamos a los artistas involucrados en nuestros proyectos, a través de contenido visual en diferentes redes sociales .
+          No dudes en participar y formar parte de nuestra familia.</h3><br />
 <br/><br/><br/><br/>
         </div>
       
