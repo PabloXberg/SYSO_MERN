@@ -6,14 +6,14 @@ import { Image } from 'react-bootstrap';
 import '../index.css'
 import Modal from 'react-bootstrap/Modal';
 import { serverURL } from '../serverURL';
-
+import { useNavigate } from 'react-router-dom';
 
 type Props = {}
 
 
 const EditProfile = (props: Props) => {
 
-  
+    const navigate = useNavigate();
   const { user  } = useContext(AuthContext);
   console.log('user :>> ', user);
 
@@ -73,7 +73,8 @@ const EditProfile = (props: Props) => {
       const response = await fetch(`${serverURL}users/update/${user_ID}`, requestOptions);
       const result = await response.json();
       console.log(result);
-      alert("Success!!! User Updated");
+      // alert("Success!!! User Updated");
+ navigate('/mysketchs');
       setLoading(false);
 
       
@@ -86,17 +87,20 @@ const EditProfile = (props: Props) => {
 
   const [show, setShow] = useState(false);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
+  // const handleClose = () => setShow(false);
+  // const handleShow = () => setShow(true);
+  
+    const handleCancelar = () => navigate('/mysketchs');;
   return (
     <>
-      <div className="updateuser">
-        <div className="avatar">
+      <div className="UserCard">
+        <div className="UserAvatar">
 
           <Form>
 
-            <Image alt='User Avatar' style={{border: "black 2px solid",padding:"5px" ,borderRadius: "50%", width: "20rem", height: "auto"}} src={avatarPreview ? avatarPreview : user?.avatar} />
+            <Image alt='User Avatar' className="UserAvatar"
+              // style={{ border: "black 2px solid", padding: "5px", borderRadius: "50%", width: "20rem", height: "auto" }}
+              src={avatarPreview ? avatarPreview : user?.avatar} />
             <br />
 
           {/* eslint-disable-next-line react/jsx-pascal-case */}
@@ -136,14 +140,14 @@ const EditProfile = (props: Props) => {
               <Form.Check type="checkbox" label="Check me out" />
             </Form.Group> */}
             <div className="botones">
-                  <Button title='Cambiar contraseña' variant="dark" disabled onClick={handleShow}>
-                Cambiar contraseña
+                  <Button title='Cambiar contraseña' variant="dark"  onClick={handleCancelar}>
+                Cancelar
                 </Button>
                   <Button variant="success" type="submit" >
                   Guardar
               </Button>
               
-              <Modal
+              {/* <Modal
                     style={{height:"30rem"}}
           show={show}
           onHide={handleClose}
@@ -173,7 +177,7 @@ const EditProfile = (props: Props) => {
                     </Form.Group>
                   
                   </Modal.Body>
-                </Modal>
+                </Modal> */}
             </div> 
           
           

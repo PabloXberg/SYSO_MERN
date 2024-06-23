@@ -51,12 +51,13 @@ function SubUserNav() {
             Favoritos
           </Nav.Link>
             <Nav.Link
-              itle="Editar mi perfíl"
+              title="Editar mi perfíl"
             style={{
               fontSize: "x-large"
               // ,color: segmentValue === "edit" ? "red" : "black",
             }}
-            href="/edit" disabled>
+              href="/edit"
+            >
             Editar
           </Nav.Link>
           {/* <Nav.Link

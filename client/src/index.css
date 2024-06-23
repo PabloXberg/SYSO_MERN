@@ -235,11 +235,14 @@
   .UserCard {
     max-width: "25rem";
     min-width: "25rem";
+    border: "1rem"
   }
 
   .UserAvatar {
     max-width: "25rem";
     min-width: "23rem";
+    border-radius: 50%;
+    padding: 1rem;
   }
 
   .SketchCard {

@@ -8,7 +8,7 @@ import Sketches from './pages/sketches';
 import UsersPage from './pages/users';
 import MySketchs from './pages/mySketchs';
 import MyFav from './pages/myFav';
-import EditProfile from './pages/editProfile';
+import EditProfile from './components/editProfile';
 import SketchDetail from './pages/SketchDetail';
 import Battle from './pages/battle';
 import News from './pages/news';
