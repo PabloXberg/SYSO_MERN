@@ -115,7 +115,8 @@ const EditProfile = (props: Props) => {
         <div className="dataform">
 
               <Form onSubmit={handleSubmit}>
-                  <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Group className="mb-3" controlId="formBasicEmail">
+              <br/><br/>
                     <Form.Label >Dirección de Correo</Form.Label>
                     <Form.Control type='email' name='email' placeholder={user?.email}  onChange={handleChange}/>
                     <Form.Text className="text-muted">

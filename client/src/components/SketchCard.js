@@ -7,8 +7,7 @@ import { Button, Form, Modal } from "react-bootstrap";
 import { serverURL } from "../serverURL";
 import SpraySpinner from "./SprySpinner";
 import nogusta from '../images/LogoShare.png'
-import gusta from '../images/LOGO.png.png'
-
+import Likes from "../components/likes";
 
 function SketchCard(props) {
   const { user } = useContext(AuthContext);
@@ -598,9 +597,9 @@ function SketchCard(props) {
           }}
         >
           <div style={{ alignSelf: "flex-start" }}>
-                      
+                      <Likes  bolean={false} key={sketch._id} props={sketch}/>
 
-            {likesArray.includes(user?._id) ? (
+            {/* {likesArray.includes(user?._id) ? (
               // ME GUSTA Y NO ME  GUSTA
               <div
                 style={{
@@ -652,7 +651,7 @@ function SketchCard(props) {
                   </h6>
                 )}{"  "}
               </div>
-            )}
+            )} */}
           </div>
 
           {/* <div >
