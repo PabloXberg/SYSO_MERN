@@ -4,11 +4,14 @@ import Card from "react-bootstrap/Card";
 import nogusta from '../images/LogoShare.png'
 import gusta from '../images/LOGO.png.png'
 import { AuthContext } from "../contexts/AuthContext";
+
+
 function Likes(props, likesArray) {
-         const [refresh, setRefresh] = useState(false);
+  const [refresh, setRefresh] = useState(false);
+
   const { user } = useContext(AuthContext);
 
-     const likeSketch = async (props) => {
+    const likeSketch = async (props) => {
     const myHeaders = new Headers();
     // setLoading(true);
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
@@ -34,8 +37,8 @@ function Likes(props, likesArray) {
       const result = await response.json();
       console.log(result);
     //   setLoading(false);
-      setRefresh(true);
-      ///fetchActiveUser(localStorage.getItem("token"));
+      //setRefresh(true);
+      //fetchActiveUser(localStorage.getItem("token"));
     //   window.location.reload(); ///////////////////////////////////////////////////////////////////// PROVISORIO
     } catch (error) {
       console.log("error", error);
@@ -71,9 +74,10 @@ function Likes(props, likesArray) {
       const result = await response.json();
       console.log(result);
     //   setLoading(false);
-      setRefresh(true);
+     // setRefresh(true);
       /// fetchActiveUser(localStorage.getItem("token"));
     //   window.location.reload(); ///////////////////////////////////////////////////////// PROVISORIO
+    
     } catch (error) {
       console.log("error", error);
     //   setLoading(false);
@@ -83,12 +87,13 @@ function Likes(props, likesArray) {
     console.log('propsLIKES :>> ', props);
     
   useEffect(() => {
-    setRefresh(false);
-  }, [refresh]);
+    console.log("prueba useEffect");
+   
+    }, [refresh]);
 
 
      return (
-         <div>
+           <div >
                  {props?.props?.props?.likes?.includes(user?._id) ? (
               // ME GUSTA Y NO ME  GUSTA
               <div
@@ -106,7 +111,7 @@ function Likes(props, likesArray) {
                       title="ya no me gusta"
                     //  className="material-icons"
                   style={{ cursor: "pointer", maxWidth:"1.5rem", maxHeight:"1.5rem"}}
-                  onClick={() => unlikeSketch(props?.props?.props?._id)}
+                  onClick={() => unlikeSketch(props?.props?.props?._id) && setRefresh(!refresh)}
                 ></Card.Img>
                   
                 
@@ -132,7 +137,7 @@ function Likes(props, likesArray) {
                       title="me gusta"
                     //  className="material-icons"
                   style={{ cursor: "pointer", maxWidth:"1.5rem", maxHeight:"1.5rem"}}
-                  onClick={() => likeSketch(props?.props?.props?._id)}
+                  onClick={() => likeSketch(props?.props?.props?._id)&& setRefresh(!refresh)}
                 ></Card.Img>
                 {props?.props?.props?.likes && (
                   <h6 style={{color:"Black"}}>
@@ -148,8 +153,6 @@ function Likes(props, likesArray) {
    }
    
    export default Likes
-
-
 
 
 
