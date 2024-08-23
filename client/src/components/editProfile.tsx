@@ -98,7 +98,14 @@ const EditProfile = (props: Props) => {
 
           <Form>
 
-            <Image alt='User Avatar' className="UserAvatar"
+            <Image  style={{
+        
+            width: "20rem",
+            height: "20rem",
+             alignSelf: "center",
+               padding: "1rem",
+            borderRadius:"50%"
+          }} alt='User Avatar' className="UserAvatar"
               // style={{ border: "black 2px solid", padding: "5px", borderRadius: "50%", width: "20rem", height: "auto" }}
               src={avatarPreview ? avatarPreview : user?.avatar} />
             <br />

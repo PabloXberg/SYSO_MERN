@@ -28,7 +28,7 @@ const SkechesPage = (props: Props) => {
       const response = await fetch(`${serverURL}sketches/all`);
       const result = await response.json();
       setSketches(result);
-      console.log("all users:", result);
+     // console.log("all users:", result);
     } catch (error) {
       console.log(error);
     }

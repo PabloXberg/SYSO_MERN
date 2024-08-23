@@ -45,7 +45,12 @@ function SubBatlleNav() {
           <Nav.Link style={{ fontSize: "x-large" }}
             title="Batallas anteriores..."
             href="/battlehistory" disabled>
-            Battle History
+            Actual
+          </Nav.Link>
+            <Nav.Link style={{ fontSize: "x-large" }}
+            title="Batallas anteriores..."
+            href="/battlehistory" disabled>
+            Anteriores
           </Nav.Link>
         </Nav>
       </Container>

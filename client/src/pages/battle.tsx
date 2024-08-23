@@ -2,6 +2,7 @@ import  { useEffect } from "react";
 import "../../src/index.css";
 //import { InstagramEmbed } from "react-social-media-embed";
 import SubBatlleNav from "../components/SubBattleNav";
+import SubHomeNavDown from "../components/SubHomeNavDown";
 
 const Battle = () => {
   useEffect(() => {}, []);
@@ -42,6 +43,7 @@ const Battle = () => {
           </h4>
         </div>
       </div>
+       
     </>
   );
 };

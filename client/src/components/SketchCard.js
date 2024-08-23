@@ -7,7 +7,7 @@ import { Button, Form, Modal } from "react-bootstrap";
 import { serverURL } from "../serverURL";
 import SpraySpinner from "./SprySpinner";
 // import nogusta from "../images/LogoShare.png";
-// import Likes from "../components/likes";
+import Likes from "../components/likes";
 // import gusta from "../images/LOGO.png.png";
 
 
@@ -27,9 +27,9 @@ function SketchCard(props) {
   };
   const handleShowEdit = () => setShowEdit(true);
 
-  const sketch = props;
+  const sketch = props.props;
   const [loading, setLoading] = useState(false);
-  const [avatarPreview, setAvatarPreview] = useState(sketch?.props.url);
+  const [avatarPreview, setAvatarPreview] = useState(sketch?.url);
 
   const [formData, setFormData] = useState({
     owner: "",
@@ -166,11 +166,13 @@ function SketchCard(props) {
 
   useEffect(() => {
     // Código que obtenga los likes actualizados desde el servidor si es necesario
-    console.log("Refresh triggered. Updating likes count.");
+    // console.log("Refresh triggered. Updating likes count.");
+   console.log('likesArray in CARD :>> ', likesArray);
   }, [refresh]);
   ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-  const [likesArray, setLikesArray] = useState(sketch.props.likes || []);
+  const [likesArray, setLikesArray] = useState(sketch?.likes || []);
+ 
 
   // Función para dar "like"
   const likeSketch = async (props) => {
@@ -626,88 +628,11 @@ function SketchCard(props) {
                   justifyContent: "space-between",
                 }}
               >
-                <div style={{ alignSelf: "flex-start" }}>
-                  {/* <Likes onClick={() => setRefresh(!refresh)}  key={sketch._id} props={sketch}/> */}
+           <div style={{ alignSelf: "flex-start" }}>
+            
+                      <Likes onClick={() => setRefresh(!refresh)} key={sketch._id} props={sketch} likesArray={likesArray} />
 
-                  {likesArray.includes(user?._id) ? (
-                    // ME GUSTA Y NO ME  GUSTA
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "flex-start",
-                        gap: "5px",
-                      }}
-                    >
-                      {" "}
-                      {/* <Card.Img
-                          alt="megusta"
-                          src={nogusta}
-                      title="ya no me gusta"
-                    //  className="material-icons"
-                  style={{ cursor: "pointer", maxWidth:"1.5rem", maxHeight:"1.5rem"}}
-                  onClick={() => unlikeSketch(_id) && setRefresh(!refresh)}
-                        ></Card.Img> */}
-                      <i
-                        alt="megusta"
-                        title="ya no me gusta"
-                        className="material-icons"
-                        style={{
-                          cursor: "pointer",
-                          maxWidth: "1.5rem",
-                          maxHeight: "1.5rem",
-                        }}
-                        onClick={() =>
-                          unlikeSketch(_id) && setRefresh(!refresh)
-                        }
-                      >
-                        favorite
-                      </i>
-                      {/* {props?.props?.likes && (
-                  <h6 style={{color:"#0066FF"}}> 
-                    {props?.props.likes?.length}{" "}
-                    {props?.props.likes?.length === 1 ? <i></i> : <i></i>}
-                  </h6>
-                )}{" "} */}
-                    </div>
-                  ) : (
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "flex-start",
-                      }}
-                    >
-                      {" "}
-                      {/* <Card.Img
-                          alt="megusta"
-                          src={gusta}
-                          title="me gusta"
-                    //  className="material-icons"
-                  style={{ cursor: "pointer", maxWidth:"1.5rem", maxHeight:"1.5rem"}}
-                  onClick={() => likeSketch(_id) && setRefresh(!refresh)}
-                          ></Card.Img> */}
-                      <i
-                        alt="megusta"
-                        title="me gusta"
-                        className="material-icons"
-                        style={{
-                          cursor: "pointer",
-                          maxWidth: "1.5rem",
-                          maxHeight: "1.5rem",
-                        }}
-                        onClick={() => likeSketch(_id) && setRefresh(!refresh)}
-                      >
-                        favorite_border
-                      </i>
-                      {/* {props?.props?.likes && (
-                  <h6 style={{color:"#0066FF"}}>
-                    {props?.props.likes?.length}{" "}
-                    {props?.props.likes?.length === 1 ? <i></i> : <i></i>}
-                  </h6>
-                )}{"  "} */}
-                    </div>
-                  )}
+                  
                 </div>
 
                 {/* <div >
