@@ -4,11 +4,11 @@ import { useContext, useEffect, useState } from "react";
 //import nogusta from '../images/LogoShare.png'
 //import gusta from '../images/LOGO.png.png'
 import { AuthContext } from "../contexts/AuthContext";
-//import SpraySpinner from "./SprySpinner"
+import Spinner from "./Spinner"
 
 function Likes(props) {
   const [refresh, setRefresh] = useState(false);
-  //const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { user } = useContext(AuthContext);
   const [likesArray, setlikesArray] = useState(props?.props?.likes || []);
 
@@ -57,7 +57,7 @@ setlikeArry(props.props.likes)
 
   // Función para dar "like"
   const likeSketch = async (props) => {
-    ///setLoading(true);
+    setLoading(true);
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
     myHeaders.append(
@@ -81,18 +81,18 @@ setlikeArry(props.props.likes)
 
       // Actualizar el array de likes en el estado
       setlikesArray([...likesArray, user._id]);
-     // setLoading(false);
+      setLoading(false);
       setRefresh(!refresh);
     } catch (error) {
       console.log("error", error);
-     // setLoading(false);
+      setLoading(false);
       alert("algo salió mal...");
     }
   };
 
   // Función para quitar "like"
   const unlikeSketch = async (props) => {
-  //  setLoading(true);
+    setLoading(true);
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
     myHeaders.append("Authorization",`Bearer ${localStorage.getItem("token")}`
@@ -114,33 +114,36 @@ setlikeArry(props.props.likes)
 
       // Actualizar el array de likes en el estado
        setlikesArray(likesArray.filter((id) => id !== user._id));
-    //  setLoading(false);
+      setLoading(false);
       setRefresh(!refresh);
     } catch (error) {
       console.log("error", error);
-     // setLoading(false);
+      setLoading(false);
       alert("algo salió mal...");
     }
   };
  
      return (
        <div >
-         
-            <div style={{ alignSelf: "flex-start" }}>
-                  {/* <Likes onClick={() => setRefresh(!refresh)}  key={sketch._id} props={sketch}/> */}
+         {loading ? (
+           // <SpinnerShare/>
+           <Spinner />
+         ) : (
+           <div style={{ alignSelf: "flex-start" }}>
+             {/* <Likes onClick={() => setRefresh(!refresh)}  key={sketch._id} props={sketch}/> */}
 
-                  {likesArray.includes(user?._id) ? (
-                    // ME GUSTA Y NO ME  GUSTA
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "flex-start",
-                        gap: "5px",
-                      }}
-                    >
-                      {" "}
-                      {/* <Card.Img
+             {likesArray.includes(user?._id) ? (
+               // ME GUSTA Y NO ME  GUSTA
+               <div
+                 style={{
+                   display: "flex",
+                   flexDirection: "row",
+                   justifyContent: "flex-start",
+                   gap: "5px",
+                 }}
+               >
+                 {" "}
+                 {/* <Card.Img
                           alt="megusta"
                           src={nogusta}
                       title="ya no me gusta"
@@ -148,38 +151,38 @@ setlikeArry(props.props.likes)
                   style={{ cursor: "pointer", maxWidth:"1.5rem", maxHeight:"1.5rem"}}
                   onClick={() => unlikeSketch(_id) && setRefresh(!refresh)}
                         ></Card.Img> */}
-                      <i
-                        alt="megusta"
-                        title="ya no me gusta"
-                        className="material-icons"
-                        style={{
-                          cursor: "pointer",
-                          maxWidth: "1.5rem",
-                          maxHeight: "1.5rem",
-                        }}
-                        onClick={() =>
-                          unlikeSketch(props?.props._id)&& setRefresh(!refresh)
-                        }
-                      >
-                        favorite
-                      </i>
-                      {props?.props?.likes && (
-                  <h6 style={{color:"#0066FF"}}> 
-                    {likesArray.length}{" "}
-                    {likesArray.length === 1 ? <i></i> : <i></i>}
-                  </h6>
-                )}{" "}
-                    </div>
-                  ) : (
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "flex-start",
-                      }}
-                    >
-                      {" "}
-                      {/* <Card.Img
+                 <i
+                   alt="megusta"
+                   title="ya no me gusta"
+                   className="material-icons"
+                   style={{
+                     cursor: "pointer",
+                     maxWidth: "1.5rem",
+                     maxHeight: "1.5rem",
+                   }}
+                   onClick={() =>
+                     unlikeSketch(props?.props._id) && setRefresh(!refresh)
+                   }
+                 >
+                   favorite
+                 </i>
+                 {props?.props?.likes && (
+                   <h6 style={{ color: "#0066FF" }}>
+                     {likesArray.length}{" "}
+                     {likesArray.length === 1 ? <i></i> : <i></i>}
+                   </h6>
+                 )}{" "}
+               </div>
+             ) : (
+               <div
+                 style={{
+                   display: "flex",
+                   flexDirection: "row",
+                   justifyContent: "flex-start",
+                 }}
+               >
+                 {" "}
+                 {/* <Card.Img
                           alt="megusta"
                           src={gusta}
                           title="me gusta"
@@ -187,29 +190,29 @@ setlikeArry(props.props.likes)
                   style={{ cursor: "pointer", maxWidth:"1.5rem", maxHeight:"1.5rem"}}
                   onClick={() => likeSketch(_id) && setRefresh(!refresh)}
                           ></Card.Img> */}
-                      <i
-                        alt="megusta"
-                        title="me gusta"
-                        className="material-icons"
-                        style={{
-                          cursor: "pointer",
-                          maxWidth: "1.5rem",
-                          maxHeight: "1.5rem",
-                        }}
-                        onClick={() => likeSketch(props?.props._id)&&setRefresh(!refresh)}
-                      >
-                        favorite_border
-                      </i>
-                      {likesArray && (
-                  <h6 style={{color:"#0066FF"}}>
-                    {likesArray.length}{" "}
-                    {likesArray.length === 1 ? <i></i> : <i></i>}
-                  </h6>
-                )}{"  "}
-                    </div>
-                  )}
-                </div>
-
+                 <i
+                   alt="megusta"
+                   title="me gusta"
+                   className="material-icons"
+                   style={{
+                     cursor: "pointer",
+                     maxWidth: "1.5rem",
+                     maxHeight: "1.5rem",
+                   }}
+                   onClick={() => likeSketch(props?.props._id) && setRefresh(!refresh)}
+                 >
+                   favorite_border
+                 </i>
+                 {likesArray && (
+                   <h6 style={{ color: "#0066FF" }}>
+                     {likesArray.length}{" "}
+                     {likesArray.length === 1 ? <i></i> : <i></i>}
+                   </h6>
+                 )}{"  "}
+               </div>
+             )}
+           </div>
+         )}
        </div>
      )
    }
