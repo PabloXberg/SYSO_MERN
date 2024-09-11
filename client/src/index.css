@@ -246,23 +246,23 @@
   }
 
   .SketchCard {
-    max-width: "100%";
-    min-width: "100%";
+    max-width: "90%";
+    min-width: "90%";
   }
 
   .sketchCardImg {
-    max-width: "100%";
+    max-width: "90%";
     min-width: "90%";
   }
 
   .sketchCardBody {
-    max-width: "100%";
+    max-width: "90%";
     min-width: "90%";
   }
 
   .sketchCardFooter {
-    max-width: "100%";
-    min-width: "100%";
+    max-width: "90%";
+    min-width: "90%";
   }
 
   .userModal {

@@ -38,13 +38,15 @@ function SubBatlleNav() {
             title="Bases del concurso.."
             style={{
               fontSize: "x-large",
-              color: segmentValue === "Battle" ? "red" : "black" }} href="/battle">
+              color: segmentValue === "battle" ? "red" : "black" }} href="/battle">
             Bases
           </Nav.Link>
        
-          <Nav.Link style={{ fontSize: "x-large" }}
-            title="Batallas anteriores..."
-            href="/battlehistory" disabled>
+          <Nav.Link 
+            title="Batalla Actual"
+            style={{
+              fontSize: "x-large",
+              color: segmentValue === "actualbattle" ? "red" : "black" }}    href="/actualbattle" >
             Actual
           </Nav.Link>
             <Nav.Link style={{ fontSize: "x-large" }}

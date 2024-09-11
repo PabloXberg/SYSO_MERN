@@ -11,6 +11,8 @@ import MyFav from './pages/myFav';
 import EditProfile from './components/editProfile';
 import SketchDetail from './pages/SketchDetail';
 import Battle from './pages/battle';
+import ActualBattle from './pages/actualbattle';
+import BattleHistory from './pages/battlehistory';
 import News from './pages/news';
 
 function App() {
@@ -31,7 +33,9 @@ function App() {
                     <Route path='myfav' element={<MyFav/>} />
                     <Route path='edit' element={<EditProfile />} />
                     {/* <Route path='shop' element={<Shop/>} /> */}
-                    <Route path='battle' element={<Battle />} />
+            <Route path='battle' element={<Battle />} />
+            <Route path='battlehistory' element={<BattleHistory />} />
+            <Route path='actualbattle' element={<ActualBattle />} />
                     <Route path='news' element={<News/>}/>
                   </Routes>
               </BrowserRouter>
