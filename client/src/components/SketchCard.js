@@ -266,7 +266,7 @@ function SketchCard(props) {
                 variant="top"
                 alt="Sketch"
                 src={props.props.url}
-                style={{ cursor: "pointer", width: "26rem", height: "26rem" }}
+                style={{ cursor: "pointer", width: "26rem", height: "26rem" , objectFit: "cover"}}
               />
             </Link>
           ) : (
@@ -276,7 +276,7 @@ function SketchCard(props) {
               variant="top"
               alt="Sketch"
               src={props.props.url}
-              style={{ width: "26rem", height: "26rem" }}
+              style={{ width: "26rem", height: "26rem", objectFit: "cover"}}
             />
           )}
 
@@ -434,6 +434,7 @@ function SketchCard(props) {
                           width: "18rem",
                           height: "14rem",
                           alignSelf: "center",
+                          objectFit: "cover"
                         }}
                         src={avatarPreview ? avatarPreview : sketch?.url}
                       />

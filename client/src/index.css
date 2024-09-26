@@ -193,7 +193,8 @@
 .Avatar{
   display: "flex";
       flex-Direction: "column";
-      align-Items: "center"
+      align-Items: "center";
+      object-fit: cover;
 }
 @media (max-width: 768px) {
 
@@ -219,6 +220,7 @@
   display: "flex";
   flex-Direction: "column";
   align-Items: "center"
+  
 }
   .homepagebody {
     max-width: 100%;
@@ -248,11 +250,13 @@
   .SketchCard {
     max-width: "90%";
     min-width: "90%";
+    
   }
 
   .sketchCardImg {
     max-width: "90%";
     min-width: "90%";
+    object-fit: cover;
   }
 
   .sketchCardBody {
@@ -280,6 +284,7 @@
     max-width: "100%";
     min-width: "90%";
     max-height: "100%";
+    object-fit: cover;
   }
 
   .sketchDetailsBody {
@@ -608,6 +613,7 @@
       max-width: 100%;
       display: block;
       margin: 0 auto;
+      object-fit: cover;
       /* Opcional: para centrar la imagen */
     }
         .detailsImage{
@@ -616,6 +622,7 @@
             max-width: 1200px;
             /* Por ejemplo, para limitar el ancho máximo */
             margin: 0 auto;
+            object-fit: cover;
             /* Para centrar el contenedor en la página */
           }
   .battleText {
