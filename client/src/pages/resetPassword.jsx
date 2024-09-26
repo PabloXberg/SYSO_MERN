@@ -37,7 +37,7 @@ const ResetPassword = () => {
          <input
           type="password"
           placeholder="confirme nueva contraseña"
-          value={password}
+          value={passwordConfirmation}
           onChange={(e) => setPasswordConfirmation(e.target.value)}
           required
         />
