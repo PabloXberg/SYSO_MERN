@@ -15,9 +15,10 @@ const ResetPassword = () => {
     else {
       try {
       const res = await axios.post(`${serverURL}users/resetpassword/${token}`, { password });
-        setMessage(res.data.message);
-        Navigate('/')
-       window.location.href = '/'
+       alert(res.data.message);
+        
+      Navigate('/')
+       //window.location.href = 'https://shareyoursketch.vercel.app/'
     } catch (error) {
       setMessage(error.response.data.message);
     }}

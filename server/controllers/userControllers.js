@@ -48,7 +48,7 @@ console.log('transporter :>> ', transporter);
     const mailOptions = {
       to: email,
       from: 'Share Your Sketch Online',
-      subject: 'Password Reset',
+      subject: 'Cambio de Contraseña',
       text: `
         ¡Hola! 😎
 
@@ -66,9 +66,9 @@ El equipo de Share Your Sketch 🎨
 
     await transporter.sendMail(mailOptions);
 
-    res.status(200).json({ message: 'Reset link sent' });
+    res.status(200).json({ message: 'Hemos enviado a su casilla de correo, un link para resetear su contraseña' });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Error de servidor / no se pudo enviar el email' });
   }
 };
 
@@ -81,13 +81,13 @@ export const resetPassword = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(400).json({ message: 'Password reset token is invalid or has expired' });
+      return res.status(400).json({ message: 'Este Link es inválido o ya ha expirado' });
     }
 
     // Validar la nueva contraseña
     const { password } = req.body;
     if (password.length < 6) {
-      return res.status(400).json({ message: 'Password must be at least 6 characters long' });
+      return res.status(400).json({ message: 'la contraseña debe contener por lo menos 6 caracteres' });
     }
 
     // Hash la nueva contraseña y guardarla
@@ -97,9 +97,9 @@ export const resetPassword = async (req, res) => {
 
     await user.save();
 
-    res.status(200).json({ message: 'Password updated successfully' });
+    res.status(200).json({ message: 'La contraseña se ha actualizado con éxito' });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Error de servidor' });
   }
 };
 
@@ -152,7 +152,7 @@ const getUser = async (req, res) => {
 
 const createUser = async (req, res) => {
   if (!req.body.email || !req.body.password || !req.body.username) {
-    return res.status(406).json({ error: "Falta rellnar alguno de los campos obligatorios (*)" })
+    return res.status(406).json({ error: "Falta rellenar alguno de los campos obligatorios (*)" })
   }
 
   const avatar = await imageUpload(req.file, "user_avatar")
@@ -172,7 +172,7 @@ const createUser = async (req, res) => {
 
   try {
     const registeredUser = await newUser.save();
-    res.status(200).json ({message: "Succesfully Registered", newUser: registeredUser})
+    res.status(200).json ({message: "Registrado Exitosamente", newUser: registeredUser})
   } catch (error) {
     console.log(error);
     res.status(500).jason("Algo salió mal...")
