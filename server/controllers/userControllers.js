@@ -47,13 +47,20 @@ console.log('email :>> ', email);
 console.log('transporter :>> ', transporter);
     const mailOptions = {
       to: email,
-      from: 'pabloxberg@gmail.com',
+      from: 'Share Your Sketch Online',
       subject: 'Password Reset',
       text: `
-        You are receiving this because you (or someone else) have requested the reset of the password for your account.
-        Please click on the following link, or paste this into your browser to complete the process:
-        https://shareyoursketch.vercel.app/resetpassword/${token}
-        If you did not request this, please ignore this email and your password will remain unchanged.
+        ¡Hola! 😎
+
+Estás recibiendo este correo porque tú (o alguien más) solicitó restablecer la contraseña de tu cuenta.
+
+Solo tienes que hacer clic en el siguiente enlace, o copiarlo y pegarlo en tu navegador para completar el proceso:
+https://shareyoursketch.vercel.app/resetpassword/${token}
+
+Si no pediste esto, no te preocupes, simplemente ignora este mensaje y tu contraseña seguirá siendo la misma.
+
+¡Saludos!
+El equipo de Share Your Sketch 🎨
       `,
     };
 
