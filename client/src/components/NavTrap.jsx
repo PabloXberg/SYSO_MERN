@@ -299,7 +299,7 @@ function NavStrap() {
                       </Modal.Header>
 
                       <Form.Group
-                        className="small mb-2"
+                        className="small mb-1"
                         controlId="formBasicPassword"
                       >
                         <Form.Label>
@@ -313,7 +313,8 @@ function NavStrap() {
                         />
                         <Form.Label className="text-muted">
                           <i>Contraseña</i>
-                        </Form.Label>
+                            </Form.Label>
+                            
                         <Form.Control
                           type="password"
                           name="password"
@@ -324,7 +325,11 @@ function NavStrap() {
                               handleSubmitLogin();
                             }
                           }}
-                        />
+                            />
+                            
+                            <Form.Label className="text-muted">
+                          <a href="/forgotpassword">Ha olvidado su contraseña?</a>
+                        </Form.Label>
                       </Form.Group>
 
                       <Modal.Footer>

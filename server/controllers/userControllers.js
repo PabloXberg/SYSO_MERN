@@ -7,6 +7,96 @@ const testingRoute = (req, res) => {
   res.send('testing route....')
 }
 
+// userControllers.js
+import crypto from 'crypto';
+import nodemailer from 'nodemailer';
+import bcrypt from 'bcryptjs';
+//import User from '../models/User.js'; // Asegúrate de importar tu modelo de usuario
+
+// Controlador para "Forgot Password"
+export const forgotPassword = async (req, res) => {
+
+  
+  const { email } = req.body;
+console.log('email :>> ', email);
+  try {
+    const user = await UserModel.findOne({email});
+    console.log('user :>> ', user);
+
+    if (!user) {
+      return res.status(404).json({ message: 'No user with that email' });
+    }
+
+    // Generar un token único
+    const token = crypto.randomBytes(20).toString('hex');
+
+    // Establecer el token y su tiempo de expiración
+    user.resetPasswordToken = token;
+    user.resetPasswordExpires = Date.now() + 3600000; // 1 hora desde ahora
+
+    await user.save();
+
+    // Enviar un correo con el enlace de restablecimiento de contraseña
+    const transporter = nodemailer.createTransport({
+      service: 'Gmail',
+      auth: {
+        user: 'pabloxberg@gmail.com', // Tu correo de Gmail
+        pass: 'stcm bgww vwgp ndli', // O un App Password si usas autenticación en dos pasos
+      },
+    });
+console.log('transporter :>> ', transporter);
+    const mailOptions = {
+      to: email,
+      from: 'pabloxberg@gmail.com',
+      subject: 'Password Reset',
+      text: `
+        You are receiving this because you (or someone else) have requested the reset of the password for your account.
+        Please click on the following link, or paste this into your browser to complete the process:
+        https://shareyoursketch.vercel.app/resetpassword/${token}
+        If you did not request this, please ignore this email and your password will remain unchanged.
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    res.status(200).json({ message: 'Reset link sent' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Controlador para "Reset Password"
+export const resetPassword = async (req, res) => {
+  try {
+    const user = await UserModel.findOne({
+      resetPasswordToken: req.params.token,
+      resetPasswordExpires: { $gt: Date.now() }, // Asegurarse de que el token no ha expirado
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Password reset token is invalid or has expired' });
+    }
+
+    // Validar la nueva contraseña
+    const { password } = req.body;
+    if (password.length < 6) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters long' });
+    }
+
+    // Hash la nueva contraseña y guardarla
+    user.password = await bcrypt.hash(password, 10);
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+
+    await user.save();
+
+    res.status(200).json({ message: 'Password updated successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
 const getUsers = async(req, res) => {
   try { 
     const users = await UserModel.find().populate({
