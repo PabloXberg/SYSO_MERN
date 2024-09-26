@@ -16,6 +16,7 @@ const ResetPassword = () => {
       try {
       const res = await axios.post(`${serverURL}users/resetpassword/${token}`, { password });
         setMessage(res.data.message);
+        Navigate('/')
        window.location.href = '/'
     } catch (error) {
       setMessage(error.response.data.message);

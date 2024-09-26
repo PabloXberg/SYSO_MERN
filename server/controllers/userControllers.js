@@ -55,7 +55,7 @@ console.log('transporter :>> ', transporter);
 Estás recibiendo este correo porque tú (o alguien más) solicitó restablecer la contraseña de tu cuenta.
 
 Solo tienes que hacer clic en el siguiente enlace, o copiarlo y pegarlo en tu navegador para completar el proceso:
-https://localhost:3000/resetpassword/${token}
+https://shareyoursketch.vercel.app/resetpassword/${token}
 
 Si no pediste esto, no te preocupes, simplemente ignora este mensaje y tu contraseña seguirá siendo la misma.
 
