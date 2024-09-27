@@ -11,6 +11,7 @@
 .cardcontainer {
   display: flex;
   flex-wrap: wrap;
+  width: 90%;
 }
 .usercard{
   display: "Flex"
@@ -196,6 +197,9 @@
       align-Items: "center";
       object-fit: cover;
 }
+
+/********************************************************************************************************/
+
 @media (max-width: 768px) {
 
   /* Estilos para dispositivos móviles */
@@ -248,8 +252,8 @@
   }
 
   .SketchCard {
-    max-width: "90%";
-    min-width: "90%";
+    max-width: "80%";
+    min-width: "80%";
     
   }
 
@@ -260,13 +264,13 @@
   }
 
   .sketchCardBody {
-    max-width: "90%";
-    min-width: "90%";
+    max-width: "80%";
+    min-width: "80%";
   }
 
   .sketchCardFooter {
-    max-width: "90%";
-    min-width: "90%";
+    max-width: "80%";
+    min-width: "80%";
   }
 
   .userModal {

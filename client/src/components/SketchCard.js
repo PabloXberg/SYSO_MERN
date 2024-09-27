@@ -266,7 +266,7 @@ function SketchCard(props) {
                 variant="top"
                 alt="Sketch"
                 src={props.props.url}
-                style={{ cursor: "pointer", width: "26rem", height: "26rem" , objectFit: "cover"}}
+                style={{ cursor: "pointer", width: "24rem", height: "24rem" , objectFit: "cover"}}
               />
             </Link>
           ) : (
@@ -276,7 +276,7 @@ function SketchCard(props) {
               variant="top"
               alt="Sketch"
               src={props.props.url}
-              style={{ width: "26rem", height: "26rem", objectFit: "cover"}}
+              style={{ width: "24rem", height: "24rem", objectFit: "cover"}}
             />
           )}
 

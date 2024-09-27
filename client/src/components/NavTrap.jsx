@@ -191,7 +191,7 @@ function NavStrap() {
                   title="Batallas"
                 style={{ fontSize: "x-large" }}
                 className="battle"
-                href="/Battle"
+                href="/battle"
               >
                 Battle
               </Nav.Link>

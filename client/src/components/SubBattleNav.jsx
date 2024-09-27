@@ -19,6 +19,7 @@ function SubBatlleNav() {
 
   useEffect(() => {
     setSegmentValue(getLastSegment());
+    segmentValue === undefined ? setSegmentValue("battle") : setSegmentValue(segmentValue)
   }, []);
 
   return (

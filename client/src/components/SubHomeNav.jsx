@@ -22,6 +22,7 @@ function SubHomeNav() {
   useEffect(() => {
     setSegmentValue(getLastSegment());
     console.log(segmentValue);
+   // segmentValue === undefined ? setSegmentValue("sketches"): setSegmentValue(segmentValue)
   },[]);
 
   return (

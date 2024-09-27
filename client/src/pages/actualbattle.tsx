@@ -54,8 +54,7 @@ const ActualBattle = () => {
  </h3>
           
             Registrarse en esta pagina ademas de seguirnos en Instagram, subir
-            el boceto con la descripcion Sketch Battle #1 antes del día 30 de
-            Septiembre, <br />
+            el boceto con la descripcion Sketch Battle #1 antes del día ... <br />
             tambien subir en Stories de Instagram añadiendo el enlace de esta
             pagina con el titular ‘Sketch Battle’
                       <br />
