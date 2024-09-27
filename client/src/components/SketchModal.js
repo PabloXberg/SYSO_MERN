@@ -1,37 +1,58 @@
-import Button from 'react-bootstrap/Button';
-import SketchCard from './SketchCard';
-
+import Button from "react-bootstrap/Button";
+import SketchCard from "./SketchCard";
 
 function SketchModal(props) {
-    if (!props.show) {
-        return null
+  if (!props.show) {
+    return null;
   }
-//   console.log('props :>> ', props);
-console.log('props in sketchmodal :>> ', props);
+  //   console.log('props :>> ', props);
+  console.log("props in sketchmodal :>> ", props);
 
-//   const datum = props.character.owner.createdAt;
-//   const shortdatum = datum.substring(0, 10);
+  //   const datum = props.character.owner.createdAt;
+  //   const shortdatum = datum.substring(0, 10);
 
   return (
     <>
-      
-     <div className='modal-container background-image' onClick={props.onClose} >
-         <div className='modal-content'onClick={e => e.stopPropagation()} >
-          <div className='modal-header'>
-   
-                    <div className='cardcontainer'>
-                       {props.character.sketchs && props.character.sketchs.map((sketch) => {
-                      return <SketchCard key={sketch._id} props={sketch} />
-         })}
+      <div
+        style={{display:"flex", flexDirection:"column", alignItems:"center"}}
+        // className="modal-container background-image"
+        onClick={props.onClose}>
+        <div
+          // className="modal-content"
+          onClick={(e) => e.stopPropagation()}>
+           <div className="modal-footer">
+            <Button
+              onClick={props.onClose}
+              variant="danger"
+              className="modal-close-btn"
+              style={{justifySelf:"center", alignSelf:"center"}}
+            >
+              Close
+            </Button>
+          </div>
+          {/* <div className="modal-header"> */}
+          <div
+            // className="cardcontainer"
+            style={{display:"flex", flexDirection:"column"}}
+          >
+              {props.character.sketchs &&
+                props.character.sketchs.map((sketch) => {
+                  return (
+                    <SketchCard
+                      style={{ display: "flex", flexdirection: "column" }}
+                      key={sketch._id}
+                      props={sketch}
+                    />
+                  );
+                })}
+            </div>
+          {/* </div> */}
+          
+         
         </div>
-                  </div>
-           <div className='modal-footer'>
-             <Button onClick={props.onClose} variant= 'danger'className='modal-close-btn'>Close</Button>
-           </div>
-         </div>   
-       </div>
-      </>
-  )
+      </div>
+    </>
+  );
 }
 
-export default SketchModal
+export default SketchModal;

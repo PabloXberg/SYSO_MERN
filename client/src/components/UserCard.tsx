@@ -1,12 +1,13 @@
 import Card from "react-bootstrap/Card";
 import DefaultImage from "../avatar-placeholder.gif";
-// import SketchModal from "./SketchModal";
-// import { useState } from "react";
+import SketchModal from "./SketchModal";
+ import { useContext, useState } from "react";
+import { AuthContext } from "../contexts/AuthContext";
 
 function UserCard(props: any) {
   const datum = props.props.createdAt;
   const shortdatum = datum.substring(0, 10);
-  // const [show, setShow] = useState(false);
+ const [show, setShow] = useState(false);
   const FuckingAvatarPlaceholder = 'https://res.cloudinary.com/dhaezmblt/image/upload/v1684921855/user_avatar/user-default_rhbk4i.png'
   let AvatarFinal = '';
 
@@ -16,7 +17,7 @@ function UserCard(props: any) {
     AvatarFinal = props.props.avatar
   }
   
-
+  const { user } = useContext(AuthContext);
   return (
     <div className="usercard">
       <Card className="UserCard">
@@ -31,7 +32,8 @@ function UserCard(props: any) {
             height: "20rem",
              alignSelf: "center",
                padding: "1rem",
-            borderRadius:"50%"
+            borderRadius: "50%",
+          
           }}
         />
         <Card.Body
@@ -78,7 +80,23 @@ function UserCard(props: any) {
                 justifyContent: "space-between",
               }}
               className="text-muted"
-            > <i>{props.props.sketchs.length} Bocetos Subidos</i>
+            >
+             { 
+  props.props.sketchs.length > 0 ? (
+    user ? (
+      <Card.Link style={{ cursor: "pointer" }} onClick={() => setShow(true)}>
+        <i>{props.props.sketchs.length} Bocetos Subidos</i>
+      </Card.Link>
+    ) : (
+      <i>{props.props.sketchs.length} Bocetos Subidos</i>
+    )
+  ) : (
+    <i>{props.props.sketchs.length} Bocetos Subidos</i>
+  )
+}
+            
+                         
+              
               <i>Registrado el: {shortdatum}</i>
             </Card.Footer>
           </div>
@@ -86,12 +104,12 @@ function UserCard(props: any) {
           {/* <Button variant="primary">Details</Button> */}
         </Card.Body>
       </Card>
-      {/* <SketchModal
-        style={{ cursor: "pointer" }}
+      <SketchModal
+        // style={{ cursor: "pointer", display:"flex", flexdirection: "column"}}
         onClose={() => setShow(false)}
         show={show}
         character={props.props}
-      /> */}
+      />
     </div>
   );
 }
