@@ -256,7 +256,7 @@ function SketchCard(props) {
       {loading ? (
         // <SpinnerShare/>
         <SpraySpinner />
-      ) : (
+      ) : (<div style={{ display: "flex", flexDirection: "column-reverse" }}>
         <Card className="SketchCard">
           {user ? (
             <Link to={page + _id} params={_id} key={_id}>
@@ -552,7 +552,7 @@ function SketchCard(props) {
               style={{
                 display: "flex",
                 flexDirection: "row",
-                justifyContent: "Space-around",
+                justifyContent: "left",
               }}
               className="text-muted"
             >
@@ -684,7 +684,8 @@ function SketchCard(props) {
             show={show}
             character={props?.props}
           />
-        </Card>
+        </Card></div>
+        
       )}
     </div>
   );

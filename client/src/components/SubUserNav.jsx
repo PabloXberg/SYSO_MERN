@@ -52,10 +52,7 @@ function SubUserNav() {
           </Nav.Link>
             <Nav.Link
               title="Editar mi perfíl"
-            style={{
-              fontSize: "x-large"
-              // ,color: segmentValue === "edit" ? "red" : "black",
-            }}
+              style={{fontSize: "x-large",color: segmentValue === "edit" ? "red" : "black"}}
               href="/edit"
             >
             Editar
