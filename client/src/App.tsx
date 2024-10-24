@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 // import Register from './pages/Register';
 import Homepage from "./pages/Homepage";
 import { AuthContextProvider } from "./contexts/AuthContext";
@@ -24,7 +24,8 @@ function App() {
         <BrowserRouter>
           <NavStrap />
           <Routes>
-            <Route path="/" element={<Homepage />} />
+            <Route path="/" element={<Navigate to="/sketches" />} />
+            <Route path="/homepage" element={<Homepage />} />
             {/* <Route path='register' element={ <Register /> } /> */}
             <Route path="sketchdetail/:id" element={<SketchDetail />} />
             <Route path="sketches" element={<Sketches />} />

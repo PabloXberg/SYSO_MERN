@@ -27,7 +27,12 @@ const SkechesPage = (props: Props) => {
     try {
       const response = await fetch(`${serverURL}sketches/all`);
       const result = await response.json();
-      setSketches(result);
+
+       // Invertir el orden de los datos
+    const reversedResult = result.reverse();
+    
+    setSketches(reversedResult);
+     // setSketches(result);
      // console.log("all users:", result);
     } catch (error) {
       console.log(error);

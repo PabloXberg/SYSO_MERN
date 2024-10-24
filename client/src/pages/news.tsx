@@ -2,7 +2,7 @@ import  { useEffect} from 'react'
 import '../../src/index.css'
 // import SubHomeNav from '../components/SubHomeNav'
 import { Card } from 'react-bootstrap'
-import cartel from '../images/shareyoursketch.jpg'
+import cartel from '../images/sys nov 24.jpg.jpg'
 
 //import { InstagramEmbed } from 'react-social-media-embed';
 

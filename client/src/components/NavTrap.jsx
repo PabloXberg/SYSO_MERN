@@ -183,7 +183,7 @@ function NavStrap() {
                   title="Home Page"
                 className="news"
                 style={{ fontSize: "x-large" }}
-                href="/"
+                href="/homepage"
               >
                 Home
               </Nav.Link>

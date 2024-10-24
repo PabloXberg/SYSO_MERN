@@ -57,13 +57,7 @@ function SubUserNav() {
             >
             Editar
           </Nav.Link>
-          {/* <Nav.Link
-            style={{ fontSize: "x-large", color: "black" }}
-            href="/"
-            onClick={logout}
-          >
-            Salir
-          </Nav.Link> */}
+          
           
         </Nav>
       </Container>
