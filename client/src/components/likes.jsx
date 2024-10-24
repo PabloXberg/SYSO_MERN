@@ -1,8 +1,5 @@
 import { useContext, useEffect, useState } from "react";
    import { serverURL } from "../serverURL";
-//import Card from "react-bootstrap/Card";
-//import nogusta from '../images/LogoShare.png'
-//import gusta from '../images/LOGO.png.png'
 import { AuthContext } from "../contexts/AuthContext";
 import Spinner from "./Spinner"
 
@@ -13,42 +10,10 @@ function Likes(props) {
   const [likesArray, setlikesArray] = useState(props?.props?.likes || []);
 
 
-//    const geSketchbyID = async (ID) => {
-//     const myHeaders = new Headers();
-//     myHeaders.append(
-//       "Authorization",
-//       `Bearer ${localStorage.getItem("token")}`
-//     );
-// // eslint-disable-next-line
-//     // const urlencoded = new URLSearchParams();
-
-//     const requestOptions = {
-//       method: "GET",
-//       headers: myHeaders,
-//     };
-
-//     try {
-//       const response = await fetch(
-//         `${serverURL}sketches/id/${ID}`,
-//         requestOptions
-//       );
-//       const result = await response.json();
-//       // console.log("single Sketch:", result);
-//       setSketch(result);
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   };
-
   const [likeArry, setlikeArry] = useState(props.props.likes)
  useEffect(() => {
     // Código que obtenga los likes actualizados desde el servidor si es necesario
 
-  //  geSketchbyID(user?._id)
-  //  console.log('sketch :>> ', sketch);
-   console.log("Refresh triggered. Updating likes count.");
-   console.log('likesArray :>> ', likesArray);
-   console.log('props :>> ', props);
 setlikeArry(props.props.likes)
   }, [refresh]);
   ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -143,14 +108,6 @@ setlikeArry(props.props.likes)
                  }}
                >
                  {" "}
-                 {/* <Card.Img
-                          alt="megusta"
-                          src={nogusta}
-                      title="ya no me gusta"
-                    //  className="material-icons"
-                  style={{ cursor: "pointer", maxWidth:"1.5rem", maxHeight:"1.5rem"}}
-                  onClick={() => unlikeSketch(_id) && setRefresh(!refresh)}
-                        ></Card.Img> */}
                  <i
                    alt="megusta"
                    title="ya no me gusta"
@@ -182,14 +139,6 @@ setlikeArry(props.props.likes)
                  }}
                >
                  {" "}
-                 {/* <Card.Img
-                          alt="megusta"
-                          src={gusta}
-                          title="me gusta"
-                    //  className="material-icons"
-                  style={{ cursor: "pointer", maxWidth:"1.5rem", maxHeight:"1.5rem"}}
-                  onClick={() => likeSketch(_id) && setRefresh(!refresh)}
-                          ></Card.Img> */}
                  <i
                    alt="megusta"
                    title="me gusta"

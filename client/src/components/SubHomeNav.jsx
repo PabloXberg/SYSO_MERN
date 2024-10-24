@@ -27,10 +27,6 @@ function SubHomeNav() {
 
   return (
     <Navbar
-      // collapseOnSelect
-      // bg="dark"
-      // variant="dark"
-      // expand="lg"
       className="NavtrapBar"
     >
       <Container>
@@ -61,12 +57,7 @@ function SubHomeNav() {
           >
             Usuarios
           </Nav.Link>
-          {/* <Nav.Link style={{ fontSize: "x-large" }} href="/suppoters" disabled>
-            Supporters
-          </Nav.Link>
-          <Nav.Link style={{ fontSize: "x-large" }} href="/contacto" disabled>
-            Contacto
-          </Nav.Link> */}
+  
         </Nav>
       </Container>
     </Navbar>

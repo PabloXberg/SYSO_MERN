@@ -6,10 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Button, Form, Modal } from "react-bootstrap";
 import { serverURL } from "../serverURL";
 import SpraySpinner from "./SprySpinner";
-// import nogusta from "../images/LogoShare.png";
 import Likes from "../components/likes";
-// import gusta from "../images/LOGO.png.png";
-
 
 function SketchCard(props) {
   const { user } = useContext(AuthContext);
@@ -150,102 +147,13 @@ function SketchCard(props) {
     }
   };
 
-  //   useEffect(() => {
-  //    const fetchUpdatedSketch = async () => {
-  //       try {
-  //          const response = await fetch(`${serverURL}sketches/${sketch.props._id}`);
-  //          const updatedSketch = await response.json();
-  //          setFormData(updatedSketch); // o actualizar otro estado relevante
-  //       } catch (error) {
-  //          console.error("Error fetching updated sketch:", error);
-  //       }
-  //    };
-
-  //    fetchUpdatedSketch();
-  // }, [refresh,sketch.props._id] );
 
   useEffect(() => {
-    // Código que obtenga los likes actualizados desde el servidor si es necesario
-    // console.log("Refresh triggered. Updating likes count.");
-   console.log('likesArray in CARD :>> ', likesArray);
   }, [refresh]);
   ///////////////////////////////////////////////////////////////////////////////////////////////////
 
   const [likesArray, setLikesArray] = useState(sketch?.likes || []);
- 
 
-  // Función para dar "like"
-  const likeSketch = async (props) => {
-    setLoading(true);
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-    myHeaders.append(
-      "Authorization",
-      `Bearer ${localStorage.getItem("token")}`
-    );
-
-    const urlencoded = new URLSearchParams();
-    urlencoded.append("sketch", props);
-
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: urlencoded,
-    };
-
-    try {
-      const response = await fetch(`${serverURL}sketches/like`, requestOptions);
-      const result = await response.json();
-      console.log(result);
-
-      // Actualizar el array de likes en el estado
-      setLikesArray([...likesArray, user._id]);
-      setLoading(false);
-      setRefresh(!refresh);
-    } catch (error) {
-      console.log("error", error);
-      setLoading(false);
-      alert("algo salió mal...");
-    }
-  };
-
-  // Función para quitar "like"
-  const unlikeSketch = async (props) => {
-    setLoading(true);
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-    myHeaders.append(
-      "Authorization",
-      `Bearer ${localStorage.getItem("token")}`
-    );
-
-    const urlencoded = new URLSearchParams();
-    urlencoded.append("sketch", props);
-
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: urlencoded,
-    };
-
-    try {
-      const response = await fetch(
-        `${serverURL}sketches/unlike`,
-        requestOptions
-      );
-      const result = await response.json();
-      console.log(result);
-
-      // Actualizar el array de likes en el estado
-      setLikesArray(likesArray.filter((id) => id !== user._id));
-      setLoading(false);
-      setRefresh(!refresh);
-    } catch (error) {
-      console.log("error", error);
-      setLoading(false);
-      alert("algo salió mal...");
-    }
-  };
 
   const _id = props?.props._id;
   const page = "/sketchdetail/";
@@ -281,14 +189,7 @@ function SketchCard(props) {
           )}
 
           <Card.Body
-            className="sketchCardBody"
-            // style={{
-            //   width: "18rem",
-            //   display: "flex",
-            //   flexDirection: "column",
-            //   justifyContent: "space-between",
-            // }}
-          >
+            className="sketchCardBody">
             <Card.Title>{props?.props.name}</Card.Title>
             <Card.Text>
               {props.props.comment
@@ -308,17 +209,6 @@ function SketchCard(props) {
                     ? props?.props.owner.username
                     : user?.username}
                 </i>
-                {/* <Card.Link
-              style={{ cursor: "pointer" }}
-              onClick={() => setShow(true)}
-            >
-              <b>
-                {" "}
-                {props?.props.owner.username
-                  ? props?.props.owner.username
-                  : user?.username}
-              </b>
-            </Card.Link> */}
               </Card.Footer>
             ) : location.pathname === "/mysketchs" ? (
               <>
@@ -477,12 +367,6 @@ function SketchCard(props) {
                           name="comment"
                           placeholder={props.props.comment}
                           defaultValue={props.props.comment}
-                          //  onKeyDown={(e) => {
-                          //     if (e.key === "Enter") {
-                          //       handleSubmitEdit();
-
-                          //     }
-                          //   }}
                           onChange={handleChangeEdit}
                         />
 

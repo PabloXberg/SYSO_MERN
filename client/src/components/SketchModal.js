@@ -5,20 +5,16 @@ function SketchModal(props) {
   if (!props.show) {
     return null;
   }
-  //   console.log('props :>> ', props);
-  console.log("props in sketchmodal :>> ", props);
 
-  //   const datum = props.character.owner.createdAt;
-  //   const shortdatum = datum.substring(0, 10);
+
 
   return (
     <>
       <div
         style={{display:"flex", flexDirection:"column", alignItems:"center"}}
-        // className="modal-container background-image"
+  
         onClick={props.onClose}>
         <div
-          // className="modal-content"
           onClick={(e) => e.stopPropagation()}>
            <div className="modal-footer">
             <Button

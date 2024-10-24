@@ -28,25 +28,13 @@ function UserModal(props) {
   }
   const nombre = props.character.owner.username;
   const nombreConEspacios = agregarEspacios(nombre);
-  // console.log('longi :>> ', longi);
-  // console.log('props  lalalala :>> ', props);
+  
   return (
     <div
       className="userModal"
-      // style={{
-      //   display: "flex",
-      //   flexDirection: "row",
-      //   justifyContent: "space-around",
-      //   alignItems: "center",
-      // }}
     >
       <div
         className="modal-conta userModal"
-        // style={{
-        //   height: "50rem",
-        //   width: "40rem",
-        //   alignSelf: "center",
-        // }}
         onClick={props.onClose}
       >
         <div className="modal-content userModal" onClick={(e) => e.stopPropagation()}>

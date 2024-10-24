@@ -3,18 +3,14 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-//import NavDropdown from "react-bootstrap/NavDropdown";
 import Modal from "react-bootstrap/Modal";
 import DefaultImage from "../avatar-placeholder.gif";
 import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-//import { Link } from 'react-router-dom';
 import "../index.css";
 import Logo1 from "../images/IMG-20231228-WA0004-removebg-preview.png";
 import Logo2 from "../images/IMG-20231228-WA0005-removebg-preview.png";
-//import Typewriter from 'typewriter-effect';
 import { serverURL } from "../serverURL";
-// import SpinnerShare from "./Spinner";
 import SpraySpinner from "./SprySpinner";
 
 function NavStrap() {
@@ -137,19 +133,6 @@ function NavStrap() {
     AvatarFinal = user?.avatar 
   }
 
-  // function agregarEspaciosEntreLetras(nombreUsuario) {
-  //   // Convierte el nombre de usuario en un array de letras
-  //   if (nombreUsuario !== undefined) {
-  //     const letras = nombreUsuario.split("");
-
-  //     // Usa el método join para unir las letras con espacios entre ellas
-  //     const nombreConEspacios = letras.join(" ");
-
-  //     return nombreConEspacios;
-  //   }
-  // }
-  // eslint-disable-next-line no-unused-vars
-  //const nombreConEspacios = agregarEspaciosEntreLetras(user?.username);
 
   return (
     <div className="NavTrap">
@@ -201,30 +184,7 @@ function NavStrap() {
               <div>
                 {user ? (
                   <div>
-                    {/* <Navbar.Toggle aria-controls="navbarScroll" /> */}
-                    {/* <Navbar.Collapse id="responsive-navbar-nav"> */}
-                    {/* <Navbar.Toggle aria-controls="responsive-navbar-nav" /> */}
-                    <Nav
-                    // className="me-auto my-2 my-lg-2"
-                    >
-                      {/* <Nav.Link href="/events">Events</Nav.Link> */}
-
-                      {/* <Nav.Link href="#action6" disabled>
-                      { */}
-                      {/* <img
-                          className="NavAtar"
-                          style={{
-                         
-                            height: "2.5rem",
-                            width: "2.5rem",
-                            borderRadius: "50%",
-                          }}
-                          alt="User Avatar"
-                          src={user.avatar}
-                        /> */}
-                      {/* }
-                    </Nav.Link> */}
-
+                    <Nav>
                       <img
                         style={{
                           marginLeft: "2em",

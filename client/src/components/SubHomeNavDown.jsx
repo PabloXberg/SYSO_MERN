@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react/jsx-pascal-case */
 import { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
@@ -26,35 +24,13 @@ function SubHomeNavDown() {
 
   return (
     <Navbar
-    //   collapseOnSelect
-    //    bg="light"
-    //       variant="light"
-    //  expand="lg"
       className="NavtrapBar"
     >
       <Container>
         {/* <Navbar.Toggle aria-controls="responsive-navbar-nav" /> */}
 
         <Nav navbarScroll>
-          
-          {/* <Nav.Link
-            style={{
-              fontSize: "x-large",
-              color: segmentValue === "sketches" ? "red" : "black",
-            }}
-            href="/sketches"
-          >
-            Bocetos
-          </Nav.Link>
-          <Nav.Link
-            style={{
-              fontSize: "x-large",
-              color: segmentValue === "users" ? "red" : "black",
-            }}
-            href="/users"
-          >
-            Usuarios
-          </Nav.Link> */}
+  
           <Nav.Link style={{ fontSize: "x-large" }} title="Colaboradores" href="/suppoters" disabled>
             Supporters
           </Nav.Link>

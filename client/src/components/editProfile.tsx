@@ -4,7 +4,6 @@ import Form from 'react-bootstrap/Form';
 import { AuthContext } from '../contexts/AuthContext';
 import { Image } from 'react-bootstrap';
 import '../index.css'
-import Modal from 'react-bootstrap/Modal';
 import { serverURL } from '../serverURL';
 import { useNavigate } from 'react-router-dom';
 
@@ -18,7 +17,7 @@ const EditProfile = (props: Props) => {
   console.log('user :>> ', user);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [loading, setLoading] = useState(false);
+ // const [loading, setLoading] = useState(false);
   const[avatarPreview, setAvatarPreview] = useState(user?.avatar) 
 
 
@@ -48,7 +47,7 @@ const EditProfile = (props: Props) => {
   
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);   ///// FUTURE SPINNER
+  //  setLoading(true);   ///// FUTURE SPINNER
     const user_ID = user?._id
 
     const myHeaders = new Headers();
@@ -75,17 +74,17 @@ const EditProfile = (props: Props) => {
       console.log(result);
       // alert("Success!!! User Updated");
  navigate('/mysketchs');
-      setLoading(false);
+    //  setLoading(false);
 
       
     } catch (error) {
       console.log(error)
       alert("Something went wrong - Try again...")
-      setLoading(false);
+    //  setLoading(false);
     }
   }
 
-  const [show, setShow] = useState(false);
+  //const [show, setShow] = useState(false);
 
   // const handleClose = () => setShow(false);
   // const handleShow = () => setShow(true);
@@ -106,7 +105,6 @@ const EditProfile = (props: Props) => {
                padding: "1rem",
             borderRadius:"50%"
           }} alt='User Avatar' className="UserAvatar"
-              // style={{ border: "black 2px solid", padding: "5px", borderRadius: "50%", width: "20rem", height: "auto" }}
               src={avatarPreview ? avatarPreview : user?.avatar} />
             <br />
 

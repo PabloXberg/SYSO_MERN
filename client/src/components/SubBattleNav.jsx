@@ -25,9 +25,6 @@ function SubBatlleNav() {
   return (
     <Navbar
       collapseOnSelect
-      // bg="dark"
-      // variant="dark"
-      // expand="lg"
       className="bg-body-tertiary NavtrapBar"
       
     >
