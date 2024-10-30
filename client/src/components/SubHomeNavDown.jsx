@@ -20,7 +20,9 @@ function SubHomeNavDown() {
   useEffect(() => {
     setSegmentValue(getLastSegment());
     console.log(segmentValue);
-  },[]);
+  },
+    // eslint-disable-next-line
+    []);
 
   return (
     <Navbar

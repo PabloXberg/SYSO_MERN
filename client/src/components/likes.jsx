@@ -9,13 +9,15 @@ function Likes(props) {
   const { user } = useContext(AuthContext);
   const [likesArray, setlikesArray] = useState(props?.props?.likes || []);
 
-
+// eslint-disable-next-line
   const [likeArry, setlikeArry] = useState(props.props.likes)
  useEffect(() => {
     // Código que obtenga los likes actualizados desde el servidor si es necesario
 
 setlikeArry(props.props.likes)
-  }, [refresh]);
+ },
+   // eslint-disable-next-line
+   [refresh]);
   ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 

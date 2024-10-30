@@ -152,6 +152,7 @@ function SketchCard(props) {
   }, [refresh]);
   ///////////////////////////////////////////////////////////////////////////////////////////////////
 
+// eslint-disable-next-line
   const [likesArray, setLikesArray] = useState(sketch?.likes || []);
 
 

@@ -20,7 +20,9 @@ function SubBatlleNav() {
   useEffect(() => {
     setSegmentValue(getLastSegment());
     segmentValue === undefined ? setSegmentValue("battle") : setSegmentValue(segmentValue)
-  }, []);
+  },
+    // eslint-disable-next-line
+    []);
 
   return (
     <Navbar
