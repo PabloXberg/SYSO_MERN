@@ -47,7 +47,7 @@ const ActualBattle = () => {
 
             <h3 className="tituloFuente">Premios: </h3>
         
-            *  Lámina DinA4 Share your Sketch.
+            *  Lamina DinA4 Share your Sketch.
  <br />
             * Estuche.<br />
             * Blackbook. <br />
