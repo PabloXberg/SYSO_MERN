@@ -35,7 +35,8 @@ const Battle = () => {
             <br />
           * Seguirnos en la pagina de Instagram. <br />
           * Realizar un Storie de tu boceto, mencionandonos y escribiendo Sketch Battle.<br />
-          * Registrarse en esta Web antes de la fecha indicada. <br />
+            * Registrarse en esta Web antes de la fecha indicada. <br />
+           
             <br />
             <br />
             No dudes en participar y estar atentos a nuestras publicaciones !!

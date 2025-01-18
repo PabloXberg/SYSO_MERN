@@ -22,7 +22,8 @@ const ActualBattle = () => {
             participante es mas que bien bienvenido!
             <br />
                       Para nosotros es un verdadero placer que a partir de ahora,
-                      cualquiera de nuestros seguidores ya podra interactuar con nuestro
+            cualquiera de nuestros seguidores ya podra <br />
+            interactuar con nuestro
             colectivo participando en este evento desde cualquier parte del
             mundo y a traves de esta pagina web.
             <br /><br />
@@ -36,27 +37,32 @@ const ActualBattle = () => {
             
             <h3 className="tituloFuente">Reglas del concurso: </h3>
         
-            * Palabra clave "SHARE"
+            * Palabra clave "SHARE", o elegir batalla #1 al subir el boceto.
             <br />
-            * A realizar en superficie de cualquier tipo de papel, DinA4 y sin
+            * A realizar en  DinA4 en horizontal y a color. Firmado como Sketch Battle #1.
             importar los materiales utilizados.
             <br />
             * Registrarse en esta Web antes de la fecha indicada. <br />
-           
+            * Fecha limite: 1 de febrero. El ganador se anunciara el 6 de Febrero.<br />
+
             <h3 className="tituloFuente">Premios: </h3>
         
-            * Camiseta parte frontal y trasera <br />
-                      * logotipo del Share your Sketch, tambien un Poster y una lamina Din A4.<br />
-            * Blackbook formato, Lote de pegatinas, Pack de lapices y figura de
-            impresion 3D del logo.
+            *  Lámina DinA4 Share your Sketch.
+ <br />
+            * Estuche.<br />
+            * Blackbook. <br />
+            * Camiseta. <br />
+            * 2 unidades aerosol MTN94. <br />
+            * Pack Stickers. <br />
+            * Entrada Share your Style # 4. <br /> 
           
             <h3 className="tituloFuente">Requisitos:
  </h3>
           
             Registrarse en esta pagina ademas de seguirnos en Instagram, subir
-            el boceto con la descripcion Sketch Battle #1 antes del día ... <br />
+            el boceto con la descripcion Sketch Battle #1 antes del día 1 de Febrero <br />
             tambien subir en Stories de Instagram añadiendo el enlace de esta
-            pagina con el titular ‘Sketch Battle’
+            pagina con el titular ‘Sketch Battle #1’
                       <br />
                     <h3 className="tituloFuente">Jueces:
  </h3>  
