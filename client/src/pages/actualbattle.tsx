@@ -22,7 +22,7 @@ const ActualBattle = () => {
             
             <h3 className="tituloFuente">Reglas del concurso: </h3>
         
-            * Palabra clave: "SHARE" y mencionando el numero de la batalla
+            * Palabra clave: "SHARE"
             <br />
              *  Mencionar el numero de la batalla al subir el boceto
             <br />
