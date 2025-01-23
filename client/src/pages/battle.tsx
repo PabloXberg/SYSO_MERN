@@ -40,7 +40,6 @@ const Battle = () => {
             <br />
             <br />
             No dudes en participar y estar atentos a nuestras publicaciones !!
-            Hasta pronto Sketchers !!!
           </h4>
         </div>
       </div>
