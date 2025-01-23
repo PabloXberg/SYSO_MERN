@@ -43,7 +43,7 @@ const ActualBattle = () => {
             importar los materiales utilizados.
             <br />
             * Registrarse en esta Web antes de la fecha indicada. <br />
-            * Fecha limite: 1 de febrero. El ganador se anunciara el 6 de Febrero.<br />
+            * Fecha limite: 5 de febrero. El ganador se anunciara el 9 de Febrero.<br />
 
             <h3 className="tituloFuente">Premios: </h3>
         
@@ -56,18 +56,11 @@ const ActualBattle = () => {
             * Pack Stickers. <br />
             * Entrada Share your Style # 4. <br /> 
           
-            <h3 className="tituloFuente">Requisitos:
- </h3>
-          
-            Registrarse en esta pagina ademas de seguirnos en Instagram, subir
-            el boceto con la descripcion Sketch Battle #1 antes del día 1 de Febrero <br />
-            tambien subir en Stories de Instagram añadiendo el enlace de esta
-            pagina con el titular ‘Sketch Battle #1’
+
                       <br />
                     <h3 className="tituloFuente">Jueces:
  </h3>  
-AliciaNuro - 
-Sig. Luigi - 
+Sig. Luigi -
 SoldOne
 
           </h5>
