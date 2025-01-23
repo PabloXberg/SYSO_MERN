@@ -18,32 +18,18 @@ const ActualBattle = () => {
           <h2 className="tituloFuente">Share your Sketch Battle # 1</h2>
       
           <h5>
-            Os damos la bienvenida a esta primera batalla de bocetos, donde todo
-            participante es mas que bien bienvenido!
-            <br />
-                      Para nosotros es un verdadero placer que a partir de ahora,
-            cualquiera de nuestros seguidores ya podra <br />
-            interactuar con nuestro
-            colectivo participando en este evento desde cualquier parte del
-            mundo y a traves de esta pagina web.
-            <br /><br />
-            Las reglas, formatos, jueces y premios iran variando a lo largo de
-            dichas batallas, las cuales se realizaran cada 3 meses.
-            <br />
            
-            Tanto los jueces, como los premios, seran anunciados antes de cada
-            batalla.
-            <br />
             
             <h3 className="tituloFuente">Reglas del concurso: </h3>
         
-            * Palabra clave "SHARE", o elegir batalla #1 al subir el boceto.
+            * Palabra clave: "SHARE"
             <br />
-            * A realizar en  DinA4 en horizontal y a color. Firmado como Sketch Battle #1.
-            importar los materiales utilizados.
+            * Fecha limite: 5 de Febrero 
+
             <br />
-            * Registrarse en esta Web antes de la fecha indicada. <br />
-            * Fecha limite: 5 de febrero. El ganador se anunciara el 9 de Febrero.<br />
+            * Formato: Papel DIN A4, horizontal y a color. Firmado como Sketch Battle # 1
+ <br />
+            * Fecha Ganador: 6 Febrero.<br />
 
             <h3 className="tituloFuente">Premios: </h3>
         
@@ -57,7 +43,6 @@ const ActualBattle = () => {
             * Entrada Share your Style # 4. <br /> 
           
 
-                      <br />
                     <h3 className="tituloFuente">Jueces:
  </h3>  
 Sig. Luigi -
