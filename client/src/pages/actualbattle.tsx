@@ -22,7 +22,7 @@ const ActualBattle = () => {
             
             <h3 className="tituloFuente">Reglas del concurso: </h3>
         
-            * Palabra clave: "SHARE"
+            * Palabra clave: "SHARE" y mencionando el numero de la batalla
             <br />
             * Fecha limite: 5 de Febrero 
 
