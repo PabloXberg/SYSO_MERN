@@ -24,6 +24,8 @@ const ActualBattle = () => {
         
             * Palabra clave: "SHARE" y mencionando el numero de la batalla
             <br />
+             *  Mencionar el numero de la batalla al subir el boceto
+            <br />
             * Fecha limite: 5 de Febrero 
 
             <br />
