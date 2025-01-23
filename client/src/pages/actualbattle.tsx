@@ -31,7 +31,7 @@ const ActualBattle = () => {
             <br />
             * Formato: Papel DIN A4, horizontal y a color. Firmado como Sketch Battle # 1
  <br />
-            * Fecha Ganador: 6 Febrero.<br />
+            * Fecha Ganador: 9 de Febrero.<br />
 
             <h3 className="tituloFuente">Premios: </h3>
         
