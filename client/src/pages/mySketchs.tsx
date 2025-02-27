@@ -218,8 +218,9 @@ const MySketchs = (props: Props) => {
                       alignItems: "center",
                     }}
                   >
-                    <img
-                      placeholder="avatar"
+                      <img
+                        loading="lazy"
+                     
                       title="Seleccionar boceto"
                       alt="boceto"
                       style={{
