@@ -3,7 +3,6 @@ import '../index.css'
 import SubHomeNav from '../components/SubHomeNav'
 import UserCard from '../components/UserCard'
 import { serverURL } from '../serverURL'
-import SubHomeNavDown from '../components/SubHomeNavDown'
 
 
 

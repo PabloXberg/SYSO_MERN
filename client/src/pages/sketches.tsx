@@ -3,7 +3,7 @@ import "../index.css";
 import SketchCard from "../components/SketchCard";
 import SubHomeNav from "../components/SubHomeNav";
 import { serverURL } from "../serverURL";
-import SubHomeNavDown from "../components/SubHomeNavDown";
+
 
 type Props = {};
 

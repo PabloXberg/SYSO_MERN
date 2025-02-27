@@ -32,7 +32,9 @@ const MyFav = () => {
     };
     useEffect(() => {
       getUserById();
-    }, [user, SketchCard]);
+    },
+      // eslint-disable-next-line
+      [user, SketchCard]);
 
 
 

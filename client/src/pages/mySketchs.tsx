@@ -175,11 +175,7 @@ const MySketchs = (props: Props) => {
           // className="user-conteiner"
           >
             <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
+            
               className="title"
             >
               ,
@@ -212,23 +208,13 @@ const MySketchs = (props: Props) => {
                 <div>
                   <div
                     className="Avatar"
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                    }}
+                
                   >
                       <img
                         loading="lazy"
                      
                       title="Seleccionar boceto"
                       alt="boceto"
-                      style={{
-                        border: "black 2px solid",
-                        padding: "5px",
-                        width: "19rem",
-                        height: "14rem",
-                      }}
                       src={avatarPreview ? avatarPreview : DefaultImage}
                     />
                     <br />
@@ -273,7 +259,7 @@ const MySketchs = (props: Props) => {
                         onChange={handleChange}
                       />
                       <Form.Label>Battle #: </Form.Label>
-                      <i style={{ fontSize: "small" }}>
+                      <i >
                         {" "}
                         * dejar este campo vacío en caso de no participar en
                         ninguna batalla
