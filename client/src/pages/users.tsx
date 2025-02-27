@@ -35,13 +35,13 @@ const UsersPage = (props: Props) => {
       const result = await response.json();
 
     // Invertir el orden de los datos
-    const reversedResult = result.reverse();
+   const reversedResult = result.users.reverse();
     
-    setUsers(reversedResult);
+   setUsers(reversedResult);
 
 
-      //setUsers(result.users);
-    //  console.log("all users:", result)
+     // setUsers(result.users);
+   /// console.log("all users:", reversedResult)
     } catch (error) {
       console.log(error);
     }

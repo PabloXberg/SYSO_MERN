@@ -32,7 +32,7 @@ const SkechesPage = (props: Props) => {
     const reversedResult = result.reverse();
     
     setSketches(reversedResult);
-     // setSketches(result);
+    //  setSketches(result);
      // console.log("all users:", result);
     } catch (error) {
       console.log(error);
