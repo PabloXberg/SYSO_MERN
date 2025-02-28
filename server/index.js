@@ -64,7 +64,7 @@ import passportConfig from "./config/passport.js";
 import bodyParser from "body-parser";
 
 const app = express();
-const port = process.env.PORT || 4004;
+const port = process.env.PORT || 5001;
 
 const setMiddlewares = () => {
   
