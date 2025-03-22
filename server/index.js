@@ -68,12 +68,12 @@ const port = process.env.PORT || 3000;
 
 
 app.use(cors({
-    origin: process.env.FRONTEND_URL || "https://tkk4goss8cgcg0wwoswk0k0o.shareyoursketch.com",
+    origin: process.env.FRONTEND_URL || "https://shareyoursketch.com",
     credentials: true
 }));
 
-app.listen(5000, () => {
-    console.log("Servidor corriendo en el puerto 5000");
+app.listen(3000, () => {
+    console.log("Servidor corriendo en el puerto 3000");
 });
 
 const setMiddlewares = () => {
