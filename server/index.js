@@ -66,6 +66,16 @@ import bodyParser from "body-parser";
 const app = express();
 const port = process.env.PORT || 3000;
 
+
+app.use(cors({
+    origin: process.env.FRONTEND_URL || "https://tkk4goss8cgcg0wwoswk0k0o.shareyoursketch.com",
+    credentials: true
+}));
+
+app.listen(5000, () => {
+    console.log("Servidor corriendo en el puerto 5000");
+});
+
 const setMiddlewares = () => {
   
   // app.use(express.json());
