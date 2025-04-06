@@ -76,7 +76,7 @@ app.use(cors({
 //     console.log("Servidor corriendo en el puerto 3000");
 // });
 
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(port, '0.0.0.0', () => {
   console.log(`Servidor corriendo en el puerto ${port}`);
 });
 
