@@ -64,21 +64,7 @@ import passportConfig from "./config/passport.js";
 import bodyParser from "body-parser";
 
 const app = express();
-const port = process.env.PORT || 4000;
-
-
-app.use(cors({
-    origin: process.env.FRONTEND_URL || "https://shareyoursketch.com",
-    credentials: true
-}));
-
-// app.listen(3000, () => {
-//     console.log("Servidor corriendo en el puerto 3000");
-// });
-
-app.listen(port, '0.0.0.0', () => {
-  console.log(`Servidor corriendo en el puerto ${port}`);
-});
+const port = process.env.PORT || 5000;
 
 const setMiddlewares = () => {
   
