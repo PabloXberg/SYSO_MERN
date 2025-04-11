@@ -27,7 +27,7 @@ if (process.env.NODE_ENV === "development") {
     // Distintas opciones de servidor dentro de "development"
     switch (process.env.SERVER_MODE) {
         case "local":
-            serverURL = "http://shareyoursketch.vercel.app/api/";
+            serverURL = "shareyourserver.vercel.app/api/";
             break;
         case "production":
             serverURL = "http://hskwk44k04kwk00ow4g40oo0.91.108.113.166.sslip.io/api/";
