@@ -192,7 +192,7 @@ const MySketchs = (props: Props) => {
                 <b>Subir Nuevo Boceto</b>
               </Button>
               <Modal
-                className="userRegisterModal"
+                className="UserRegisterModal"
                 show={show}
                 onHide={handleClose}
                 backdrop="static"
@@ -211,8 +211,8 @@ const MySketchs = (props: Props) => {
                 
                   >
                       <img
-                        loading="lazy"
-                     
+                       //loading="lazy"
+                      style={{ maxWidth: "20rem", padding: "1 rem ", alignSelf: "center" }}
                       title="Seleccionar boceto"
                       alt="boceto"
                       src={avatarPreview ? avatarPreview : DefaultImage}
@@ -222,7 +222,7 @@ const MySketchs = (props: Props) => {
                     <input
                       placeholder="avatar"
                       title="Seleccionar boceto"
-                      // style={{ padding: "1rem" }}
+                       style={{ padding: "1rem" }}
                       type="file"
                       name="loading..."
                       accept="image/jpg, image/jpeg, image/png"
