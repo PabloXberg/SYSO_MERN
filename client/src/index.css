@@ -221,7 +221,7 @@
         align-self: "center";
       } */
 .Avatar {
-  display: "flex";
+  display: "flex";                     
   flex-Direction: "column";
   align-Items: "center"
   
