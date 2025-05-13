@@ -15,23 +15,23 @@ const ActualBattle = () => {
         {/* <div className="elfsight-app-26d13d88-234a-4eed-b7a3-a4622ef81e45"></div> */}
 
         <div className="battleText">
-          <h2 className="tituloFuente">Share your Sketch Battle # 1</h2>
+          <h2 className="tituloFuente">Share your Sketch Battle # 2</h2>
       
           <h5>
            
             
             <h3 className="tituloFuente">Reglas del concurso: </h3>
         
-            * Palabra clave: "SHARE"
+            * Palabra clave: "STYLE"
             <br />
              *  Subir boceto a la web, rellenando los campos nombre, <br />   descripcion ademas de escribir Sketch Battle # 1 en la ultima casilla
             <br />
-            * Fecha limite: 5 de Febrero 
+            * Fecha limite: 3 de Junio 
 
             <br />
-            * Formato: Papel DIN A4, horizontal y a color. Firmado como Sketch Battle # 1
+            * Formato: Papel DIN A4, horizontal y a color. Firmado como Sketch Battle # 2
  <br />
-            * Fecha Ganador: 9 de Febrero.<br />
+            * Fecha Ganador: 6 de Junio.<br />
 
             <h3 className="tituloFuente">Premios: </h3>
         
