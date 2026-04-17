@@ -1,20 +1,14 @@
 import bcrypt from "bcrypt";
 
-const encryptPassword = async (password) => {
-    try {
-    const saltRounds = 10;
-    const salt = await bcrypt.genSalt(saltRounds);
-    const hashPassword = await bcrypt.hash(password, salt);
-    return hashPassword
-  } catch(error) {
-        console.log("Error: ", error);
-        alert("Something went wrong" , error)
-  }
-}
+const SALT_ROUNDS = 10;
 
-const verifyPassword = async (password, hashedPassword) => {
-  const verified = bcrypt.compare(password, hashedPassword);
-  return verified;
+export const encryptPassword = async (password) => {
+  // BUG FIX: previous code used `alert()` which does not exist in Node.
+  // If bcrypt fails we should propagate the error up, not swallow it.
+  const salt = await bcrypt.genSalt(SALT_ROUNDS);
+  return bcrypt.hash(password, salt);
 };
 
-export {encryptPassword, verifyPassword }
+export const verifyPassword = async (password, hashedPassword) => {
+  return bcrypt.compare(password, hashedPassword);
+};

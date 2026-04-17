@@ -1,114 +1,99 @@
 import Card from "react-bootstrap/Card";
+import { useContext, useState } from "react";
 import DefaultImage from "../avatar-placeholder.gif";
 import SketchModal from "./SketchModal";
- import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
+import { User } from "../@types/models";
 
-function UserCard(props: any) {
-  const datum = props.props.createdAt;
-  const shortdatum = datum.substring(0, 10);
- const [show, setShow] = useState(false);
-  const FuckingAvatarPlaceholder = 'https://res.cloudinary.com/dhaezmblt/image/upload/v1684921855/user_avatar/user-default_rhbk4i.png'
-  let AvatarFinal = '';
+const PLACEHOLDER_AVATAR_URL =
+  "https://res.cloudinary.com/dhaezmblt/image/upload/v1684921855/user_avatar/user-default_rhbk4i.png";
 
-  if (props.props.avatar === "" || props.props.avatar === FuckingAvatarPlaceholder)
-  { AvatarFinal = DefaultImage }
-  else {
-    AvatarFinal = props.props.avatar
-  }
-  
+interface UserCardProps {
+  props: User;
+}
+
+function UserCard({ props: userData }: UserCardProps) {
   const { user } = useContext(AuthContext);
+  const [show, setShow] = useState(false);
+
+  // Format date: "YYYY-MM-DD..." -> "DD-MM-YYYY"
+  const rawDate = userData.createdAt?.substring(0, 10) || "";
+  const fechaTransformada = rawDate
+    ? rawDate.split("-").reverse().join("-")
+    : "Fecha desconocida";
+
+  // Pick avatar: fall back to default if empty or placeholder
+  const avatarSrc =
+    !userData.avatar || userData.avatar === PLACEHOLDER_AVATAR_URL
+      ? DefaultImage
+      : userData.avatar;
+
+  // BUG FIX: original code crashed if userData.sketchs was undefined
+  const sketchCount = userData.sketchs?.length ?? 0;
+  const canOpenModal = sketchCount > 0 && !!user;
+
   return (
     <div className="usercard">
       <Card className="UserCard">
-   
         <Card.Img
-          // className="UserAvatar"
           variant="top"
-          src={AvatarFinal}
+          src={avatarSrc}
+          alt={`${userData.username} avatar`}
           style={{
-        
-            width: "20rem",
-            height: "20rem",
-             alignSelf: "center",
-               padding: "1rem",
+            width: "100%",
+            aspectRatio: "1 / 1",
+            objectFit: "cover",
+            padding: "1rem",
             borderRadius: "50%",
-          
           }}
         />
-        <Card.Body
 
+        <Card.Body
           style={{
-            height: "auto",
-            minHeight:"13rem",
-            width: "23rem",
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
+            minHeight: "13rem",
           }}
         >
-          <Card.Title
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-around",
-            }}
-          >
-            {props.props.username ? props.props.username : "Nombre de Usuario"}
+          <Card.Title style={{ textAlign: "center" }}>
+            {userData.username || "Nombre de Usuario"}
           </Card.Title>
 
-          <Card.Text
+          <Card.Text style={{ textAlign: "center" }}>
+            {userData.info ||
+              "Aquí podríamos ver alguna información del usuario..."}
+          </Card.Text>
+
+          <Card.Footer
+            className="text-muted"
             style={{
-                 width: "22rem",
               display: "flex",
               flexDirection: "row",
-              justifyContent: "space-around",
+              justifyContent: "space-between",
+              flexWrap: "wrap",
+              gap: "0.5rem",
             }}
           >
-            
-            {props.props.info
-              ? props.props.info
-              : "Aqui podríamos ver alguna informacion del usuario..."}
-          </Card.Text>
-          <div>
-       
-            <Card.Footer
-              style={{
-                   width: "22rem",
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-              className="text-muted"
-            >
-             { 
-  props.props.sketchs.length > 0 ? (
-    user ? (
-      <Card.Link style={{ cursor: "pointer" }} onClick={() => setShow(true)}>
-        <i>{props.props.sketchs.length} Bocetos Subidos</i>
-      </Card.Link>
-    ) : (
-      <i>{props.props.sketchs.length} Bocetos Subidos</i>
-    )
-  ) : (
-    <i>{props.props.sketchs.length} Bocetos Subidos</i>
-  )
-}
-            
-                         
-              
-              <i>Registrado el: {shortdatum}</i>
-            </Card.Footer>
-          </div>
-
-          {/* <Button variant="primary">Details</Button> */}
+            {canOpenModal ? (
+              <Card.Link
+                style={{ cursor: "pointer" }}
+                onClick={() => setShow(true)}
+              >
+                <i>{sketchCount} Bocetos Subidos</i>
+              </Card.Link>
+            ) : (
+              <i>{sketchCount} Bocetos Subidos</i>
+            )}
+            <i>Registrado el: {fechaTransformada}</i>
+          </Card.Footer>
         </Card.Body>
       </Card>
+
       <SketchModal
-        // style={{ cursor: "pointer", display:"flex", flexdirection: "column"}}
         onClose={() => setShow(false)}
         show={show}
-        character={props.props}
+        character={userData}
       />
     </div>
   );

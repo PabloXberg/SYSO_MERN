@@ -2,133 +2,115 @@ import CommentModel from "../models/commentModel.js";
 import SketchModel from "../models/sketchModel.js";
 import UserModel from "../models/userModels.js";
 
+// ==============================================================
+// HELPERS — keep user.comments and sketch.comments in sync
+// ==============================================================
+const addCommentToUser = (userId, commentId) =>
+  UserModel.findByIdAndUpdate(userId, { $push: { comments: commentId } });
 
+const removeCommentFromUser = (userId, commentId) =>
+  UserModel.findByIdAndUpdate(userId, { $pull: { comments: commentId } });
 
-const addCommentToUser = async (userId, sharedPost) => {
-    try {
-        const result = await UserModel.findByIdAndUpdate(userId,
-            { $push: { comments: sharedPost._id } },
-            { new: true }
-        )
-        console.log("user making post....", result);
-        return true
-    } catch (error) {
-        console.log(error)
-        return false
-    }   
-};
-const deleteCommentToUser = async (userId, sharedPost) => {
-    try {
-        const result = await UserModel.findByIdAndUpdate(userId,
-            { $pull: { comments: sharedPost._id } },
-            { new: true }
-        )
-        console.log("user making post....", result);
-        return true
-    } catch (error) {
-        console.log(error)
-        return false
-    }   
-};
-const addCommentToSketch = async (sketchId, sharedPost) => {
-    try {
-        const result = await SketchModel.findByIdAndUpdate(sketchId,
-            { $push: { comments: sharedPost._id } },
-            { new: true }
-        )
-        console.log("user making post on this sketch...", result);
-        return true
-    } catch (error) {
-        console.log(error)
-        return false
-    }   
-};
-const deleteCommentToSketch = async (sketchId, sharedPost) => {
-    try {
-        const result = await SketchModel.findByIdAndUpdate(sketchId,
-            { $pull: { comments: sharedPost._id } },
-            { new: true }
-        )
-        console.log("user making post on this sketch...", result);
-        return true
-    } catch (error) {
-        console.log(error)
-        return false
-    }   
-};
+const addCommentToSketch = (sketchId, commentId) =>
+  SketchModel.findByIdAndUpdate(sketchId, { $push: { comments: commentId } });
 
+const removeCommentFromSketch = (sketchId, commentId) =>
+  SketchModel.findByIdAndUpdate(sketchId, { $pull: { comments: commentId } });
 
-
-/// FUNCIONAAAAAA !!!!!
-const deleteComment = async (req, res) => {
-
-    try {
-    // console.log('req.body :>> ', req.body);
-        const deletedComment = await CommentModel.findByIdAndRemove(req.body._id);
-        const updatedUser = await deleteCommentToUser(req.body.owner, deletedComment);
-        const updatedSketch = await deleteCommentToSketch(req.body.sketch, deletedComment);
-        console.log('deletedComment :>> ', deletedComment);
-        res.status(200).json({
-            message: "Mensaje borrado!! ",
-            userUpdated: updatedUser,
-            sketchUpdated:updatedSketch,
-            deletedComment: deletedComment
-        })
-  } catch (error) {
-    console.log(error);
-    res.status(500).json("No se puede borrar su mensaje...")
-  }
-}
-
-
-////FUNCIONA!!!!!!
-
-const updatecomment = async (req, res) => {
-  const infoToUpdate = {};
-
-  if (req.body.comment !== "") infoToUpdate.comment = req.body.comment;
-   
-  try {
-    const updatedComment = await CommentModel.findByIdAndUpdate(req.body._id, infoToUpdate, { new: true });
-    res.status(200).json(updatedComment); // QUITAR EL PASSWORD DE ESTE OBJETO ANTES DE MANDARLO PARA EL FRONT END
-    // Y SI QUIERO PUEDO MANDAR UN MENSAJE DE "Update Successfully!!!!"; AUNQUE CREO QUE EN EL FRONT END YA HAY UNO
-
-  } catch (error) {
-    console.log('error :>> ', error);
-    res.status(500).json(error.message)
-    
-  }
-}
-
-
+// ==============================================================
+// CREATE
+// ==============================================================
 const createComment = async (req, res) => {
-  if (!req.body.comment) {
-    return res.status(406).json({ error: "Please fill out all fields" })
+  if (!req.body.comment || !req.body.sketch) {
+    return res.status(406).json({ error: "Faltan campos obligatorios" });
   }
 
-  const newComment = new CommentModel({
-      ...req.body,
+  try {
+    const newComment = new CommentModel({
       comment: req.body.comment,
-      owner: req.body.owner, 
-      sketch:req.body.sketch
-  });
+      // SECURITY: owner comes from the authenticated user, not the body
+      owner: req.user._id,
+      sketch: req.body.sketch,
+    });
 
-    try {
-      
-        const registeredComment = await newComment.save();
-        const updatedUser = await addCommentToUser(req.body.owner, registeredComment);
-        const updatedSketch = await addCommentToSketch(req.body.sketch, registeredComment);
-        
-        res.status(200).json({
-            message: "Mensaje guardado!! ",
-            userUpdatd: updatedUser,
-            sketchUpdated:updatedSketch,
-            newComment: registeredComment
-        })
+    const savedComment = await newComment.save();
+    await addCommentToUser(req.user._id, savedComment._id);
+    await addCommentToSketch(req.body.sketch, savedComment._id);
+
+    res.status(200).json({
+      message: "Mensaje guardado!",
+      newComment: savedComment,
+    });
   } catch (error) {
-    console.log(error);
-    res.status(500).json("No se puede guardar su mensaje...")
+    console.error("createComment error:", error);
+    res.status(500).json({ error: "No se puede guardar el mensaje" });
   }
-}
+};
 
-export {createComment, updatecomment, deleteComment}
+// ==============================================================
+// UPDATE
+// ==============================================================
+const updatecomment = async (req, res) => {
+  const commentId = req.params.id || req.body._id;
+
+  try {
+    const comment = await CommentModel.findById(commentId);
+    if (!comment) return res.status(404).json({ error: "Comentario no encontrado" });
+
+    // SECURITY: only the author can edit their comment
+    if (comment.owner.toString() !== req.user._id.toString()) {
+      return res
+        .status(403)
+        .json({ error: "No tienes permiso para editar este comentario" });
+    }
+
+    if (!req.body.comment) {
+      return res.status(400).json({ error: "Texto del comentario requerido" });
+    }
+
+    const updatedComment = await CommentModel.findByIdAndUpdate(
+      commentId,
+      { comment: req.body.comment },
+      { new: true }
+    );
+
+    res.status(200).json(updatedComment);
+  } catch (error) {
+    console.error("updatecomment error:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// ==============================================================
+// DELETE
+// ==============================================================
+const deleteComment = async (req, res) => {
+  const commentId = req.params.id || req.body._id;
+
+  try {
+    const comment = await CommentModel.findById(commentId);
+    if (!comment) return res.status(404).json({ error: "Comentario no encontrado" });
+
+    // SECURITY: only the author can delete their comment
+    if (comment.owner.toString() !== req.user._id.toString()) {
+      return res
+        .status(403)
+        .json({ error: "No tienes permiso para borrar este comentario" });
+    }
+
+    // BUG FIX: `findByIdAndRemove` was deprecated in Mongoose 7+ — use `findByIdAndDelete`
+    const deletedComment = await CommentModel.findByIdAndDelete(commentId);
+    await removeCommentFromUser(comment.owner, commentId);
+    await removeCommentFromSketch(comment.sketch, commentId);
+
+    res.status(200).json({
+      message: "Mensaje borrado!",
+      deletedComment,
+    });
+  } catch (error) {
+    console.error("deleteComment error:", error);
+    res.status(500).json({ error: "No se puede borrar el mensaje" });
+  }
+};
+
+export { createComment, updatecomment, deleteComment };

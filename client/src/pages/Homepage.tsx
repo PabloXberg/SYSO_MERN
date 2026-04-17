@@ -1,5 +1,5 @@
 import  { Key, useEffect} from 'react'
-import '../../src/index.css'
+// os archivos 
 import SubHomeNav from '../components/SubHomeNav'
 import SubHomeNavDown from '../components/SubHomeNavDown'
 
@@ -23,10 +23,6 @@ interface User {
 type Users = User[]
 
 const Homepage = (props: Props) => {
-
-  useEffect(() => {
-
-  }, [])
 
   return (
     <><SubHomeNav />

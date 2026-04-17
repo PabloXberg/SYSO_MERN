@@ -1,76 +1,76 @@
 import Button from "react-bootstrap/Button";
 
-function UserModal(props) {
-  if (!props.show) {
-    return null;
-  }
-  // console.log('props :>> ', props);
+/**
+ * UserModal
+ * Shows info about the OWNER of a sketch (used from SketchCard).
+ *
+ * Props:
+ *   - show:     boolean
+ *   - onClose:  () => void
+ *   - character: a sketch object (its .owner is what we display)
+ */
+function UserModal({ show, onClose, character }) {
+  if (!show || !character?.owner) return null;
 
-  const datum = props.character.owner.createdAt;
-  const shortdatum = datum.substring(0, 10);
-  const partesFecha = shortdatum.split("-");
-  const fechaTransformada =
-    partesFecha[2] + "-" + partesFecha[1] + "-" + partesFecha[0];
+  const owner = character.owner;
 
-  let longi;
-  if (
-    props.character.owner.sketchs !== undefined ||
-    props.character.owner.sketchs !== null ||
-    props.character.owner.sketchs !== 0
-  ) {
-    longi = props.character.owner.sketchs.length;
-  } else {
-    longi = "0";
-  }
+  // Format date: "2024-05-23T..." -> "23-05-2024"
+  const rawDate = owner.createdAt?.substring(0, 10) || "";
+  const fechaTransformada = rawDate
+    ? rawDate.split("-").reverse().join("-")
+    : "Fecha desconocida";
 
-  function agregarEspacios(str) {
-    return str.split("").join(" ");
-  }
-  const nombre = props.character.owner.username;
-  const nombreConEspacios = agregarEspacios(nombre);
-  
+  // BUG FIX: previous code was `!== undefined || null || 0` which is always true,
+  // then on the else branch referenced `props.characters` (plural, doesn't exist)
+  // → guaranteed crash. Null-safe now.
+  const sketchCount = owner.sketchs?.length ?? 0;
+
   return (
-    <div
-      className="userModal"
-    >
+    <div className="modal-container" onClick={onClose}>
       <div
-        className="modal-conta userModal"
-        onClick={props.onClose}
+        className="modal-content userModal"
+        onClick={(e) => e.stopPropagation()}
       >
-        <div className="modal-content userModal" onClick={(e) => e.stopPropagation()}>
-          <div className="modal-header" style={{ color: "White" }}>
-            <h3 style={{ fontFamily: "MiFuente", fontSize: "xxx-large" }}>
-              {nombreConEspacios}
-            </h3>
-          </div>
-          <div>
-            <img
-              className="modal-picture"
-              src={props.character.owner.avatar}
-              alt="User Avatar"
-            />
-          </div>
-          <div style={{ color: "White" }}>
-            {" "}
-            <br />
-            <h5>Información Personal: </h5>
-            <p>
-              <i>{props.character.owner.info}</i>
-            </p>
-            <h5>Bocetos subidos: </h5>{" "}
-            <p>
-              <i>{longi ? longi : props.characters.owner.sketchs.length}</i>
-            </p>
-            <h5>Registrado el: </h5>{" "}
-            <p>
-              <i>{fechaTransformada}</i>
-            </p>
-          </div>
-          <div className="modal-footer">
-            <Button title="Cerrar"onClick={props.onClose} className="modal-close-btn">
-              Cerrar
-            </Button>
-          </div>
+        <div className="modal-header">
+          <h3 style={{ fontFamily: "MiFuente", fontSize: "xxx-large" }}>
+            {owner.username}
+          </h3>
+        </div>
+
+        <div>
+          <img
+            className="modal-picture"
+            src={owner.avatar}
+            alt={`${owner.username} avatar`}
+          />
+        </div>
+
+        <div>
+          <h5>Información Personal</h5>
+          <p>
+            <i>{owner.info || "Sin información"}</i>
+          </p>
+
+          <h5>Bocetos subidos</h5>
+          <p>
+            <i>{sketchCount}</i>
+          </p>
+
+          <h5>Registrado el</h5>
+          <p>
+            <i>{fechaTransformada}</i>
+          </p>
+        </div>
+
+        <div className="modal-footer">
+          <Button
+            title="Cerrar"
+            onClick={onClose}
+            variant="dark"
+            className="modal-close-btn"
+          >
+            Cerrar
+          </Button>
         </div>
       </div>
     </div>

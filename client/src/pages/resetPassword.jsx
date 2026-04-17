@@ -1,28 +1,38 @@
-import React, { useState } from 'react';
-import { useParams,  Navigate} from 'react-router-dom';
-import axios from 'axios';
-import { serverURL } from '../serverURL';
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import { serverURL } from "../serverURL";
 
 const ResetPassword = () => {
   const { token } = useParams();
-  const [password, setPassword] = useState('');
-  const [passwordConfirmation, setPasswordConfirmation] = useState('');
-  const [message, setMessage] = useState('');
+  const navigate = useNavigate();
+  const [password, setPassword] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [message, setMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password !== passwordConfirmation) { alert("la contraseña y la confirmacion no coinciden") }
-    else {
-      try {
-      const res = await axios.post(`${serverURL}users/resetpassword/${token}`, { password });
-       alert(res.data.message);
-        
-      Navigate('/')
-       //window.location.href = 'https://shareyoursketch.vercel.app/'
+
+    if (password !== passwordConfirmation) {
+      alert("La contraseña y la confirmación no coinciden");
+      return;
+    }
+
+    try {
+      const res = await axios.post(
+        `${serverURL}users/resetpassword/${token}`,
+        { password }
+      );
+      alert(res.data.message);
+      // BUG FIX: original was `Navigate('/')` — Navigate is a component, not a
+      // function. That line silently did nothing and the user was never redirected.
+      navigate("/");
     } catch (error) {
-      setMessage(error.response.data.message);
-    }}
-   
+      setMessage(
+        error.response?.data?.message ||
+          "Error al restablecer la contraseña"
+      );
+    }
   };
 
   return (
@@ -36,9 +46,9 @@ const ResetPassword = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-         <input
+        <input
           type="password"
-          placeholder="confirme nueva contraseña"
+          placeholder="Confirme nueva contraseña"
           value={passwordConfirmation}
           onChange={(e) => setPasswordConfirmation(e.target.value)}
           required

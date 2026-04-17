@@ -1,198 +1,230 @@
 import SketchModel from "../models/sketchModel.js";
-import imageUpload from "../utils/imageManagement.js";
 import UserModel from "../models/userModels.js";
+import CommentModel from "../models/commentModel.js";
+import imageUpload from "../utils/imageManagement.js";
 
-
-///////////////////////////////////////////////////////////// GET ALL SWKETCHES FROM MONGO
-
+// ==============================================================
+// READ
+// ==============================================================
 const getAllSketches = async (req, res) => {
-try {
-  const sketch = await SketchModel.find()
-    .populate({ path: "owner", select: ["email", "username", "avatar", "likes", "sketchs", "createdAt", "info"] })
- 
-    .populate("comments")
-    res.status(200).json(sketch)
-} catch (error) {
-    console.log(error);
-    res.status(500).json({error: "algo salió pal carajo..."})
-    }
-}
-
-
-
-/// FUNCIONA; PERO TENGO QUE QUITAR LOS COMENTARIOS RELACIONADOS AUN
-const deleteSketch = async (req, res) => {
-        try {
-        // console.log('req.body :>> ', req.body);
-        const deletedSketch = await SketchModel.findByIdAndDelete(req.body._id);
-        const updatedUser = await deleteSketchToUser(req.body.owner, req.body._id);   //// DEBERIA QUITAR LOS LIKES DE LOS USUARIOS; Y LOS COMENTARIOS RELACIONADOS
-        // const updatedSketch = await deleteCommentToSketch(req.body.sketch, deletedSketch);
-        
-        res.status(200).json({
-            message: "Sketch borrado!! ",
-             userUpdated: updatedUser,
-          // sketchUpdated:updatedSketch,
-            deletedSketch: deletedSketch
-        })
-  } catch (error) {
-    console.log(error);
-    res.status(500).json("No se puede borrar su mensaje...")
-  }
-}
-
-
-
-////FUNCIONAAAAAA
-const updateSketch = async (req, res) => {
-  const infoToUpdate = {};
-
-  if (req.body.name !== "") infoToUpdate.name = req.body.name;
-  if (req.body.comment !== "") infoToUpdate.comment = req.body.comment;
-  if (req.body.battle !== "") infoToUpdate.comment = req.body.battle;
-
-  if (req.file) {
-    console.log('req.file :>> ', req.file);
-    const URL = await imageUpload(req.file, "user_sketches")
-    infoToUpdate.url = URL
-  }
-  
   try {
-    const updatedSketch = await SketchModel.findByIdAndUpdate(req.body._id, infoToUpdate, { new: true });
-    res.status(200).json(updatedSketch); // QUITAR EL PASSWORD DE ESTE OBJETO ANTES DE MANDARLO PARA EL FRONT END
-    // Y SI QUIERO PUEDO MANDAR UN MENSAJE DE "Update Successfully!!!!"; AUNQUE CREO QUE EN EL FRONT END YA HAY UNO
+    const sketches = await SketchModel.find()
+      .populate({
+        path: "owner",
+        select: ["email", "username", "avatar", "likes", "sketchs", "createdAt", "info"],
+      })
+      .populate("comments");
 
+    res.status(200).json(sketches);
   } catch (error) {
-    console.log('error :>> ', error);
-    res.status(500).json(error.message)
-    
+    console.error("getAllSketches error:", error);
+    res.status(500).json({ error: "Algo salió mal..." });
   }
-}
-
-///////////////////////////////////////////////////////////////////////// GET JUST ONE SKETCH BY ID
-
-const getSketchbyID = async(req, res) => {
-
-    try {
-      const user = await SketchModel.findById(req.params.id)
-     .populate({ path: "owner", select: ["email", "username", "avatar", "likes", "sketchs", "createdAt", "info"] })
-       .populate({
-          path: "likes",
-          populate: [
-            { path: 'owner', select: ['username'] }
-                 
-          ]
-       })
-        .populate({ path: "likes", select: ["_id"] })
-     .populate({
-          path: "comments",
-          populate: [
-            { path: 'owner', select: ['username'] }
-                 
-          ]
-        })
-        res.status(200).json(user)
-    } catch (error) {
-        res.status(500).json({error:"Something went wrong..."})
-        console.log(error);
-    }
- }
-
-////////////////////////////////////////////////////////////// THIS FUNCTION SAVE THE SKETCH ID ON THE OWNER COLLECTION
-const addSketchToUser = async (userId, sharedPost) => {
-    try {
-        const result = await UserModel.findByIdAndUpdate(userId,
-            { $push: { sketchs: sharedPost._id } },
-            { new: true }
-        )
-        console.log("user making post....", result);
-        return true
-    } catch (error) {
-        console.log(error)
-        return false
-    }   
 };
 
-///////////////////////////////////////////////////////////// CREATE FUNCTION - NEW SKETCH COLLECTION
-const createSketch = async (req, res) => {
-
-  const URL = await imageUpload(req.file, "user_sketches") //// ADDING TO CLOUDINARY AND SAVING URL ADRESS
-
-  const newSketch = new SketchModel({  /////////////////// PREPARING MOGOOSE MODEL 
-    ...req.body,
-    name: req.body.name,
-    comment: req.body.comment,
-    url: URL,
-    owner: req.body.owner,
-    battle: req.body.battle
-  });
-       
-    try {
-         const sketchToSave = await newSketch.save();    
-         const updatedUser = await addSketchToUser(req.body.owner, sketchToSave);
-
-      res.status(200).json({
-          update_status: updatedUser,
-          message: "Sketch Successfully Upload, Yeahhhh!",
-          newSketch: sketchToSave
+const getSketchbyID = async (req, res) => {
+  try {
+    const sketch = await SketchModel.findById(req.params.id)
+      .populate({
+        path: "owner",
+        select: ["email", "username", "avatar", "likes", "sketchs", "createdAt", "info"],
       })
+      .populate({
+        path: "likes",
+        populate: [{ path: "owner", select: ["username"] }],
+      })
+      .populate({
+        path: "comments",
+        populate: [{ path: "owner", select: ["username"] }],
+      });
 
+    if (!sketch) return res.status(404).json({ error: "Sketch no encontrado" });
+    res.status(200).json(sketch);
   } catch (error) {
-    console.log(error);
-    res.status(500).json("Algo no quedo muy bien que digamos....")
+    console.error("getSketchbyID error:", error);
+    res.status(500).json({ error: "Something went wrong..." });
   }
-}
+};
 
+// ==============================================================
+// CREATE
+// ==============================================================
+const addSketchToUser = async (userId, sketchId) => {
+  await UserModel.findByIdAndUpdate(
+    userId,
+    { $push: { sketchs: sketchId } },
+    { new: true }
+  );
+};
+
+const createSketch = async (req, res) => {
+  if (!req.body.name || !req.body.comment) {
+    return res.status(400).json({ error: "Nombre y descripción son obligatorios" });
+  }
+
+  try {
+    const url = await imageUpload(req.file, "user_sketches");
+
+    const newSketch = new SketchModel({
+      name: req.body.name,
+      comment: req.body.comment,
+      url,
+      // SECURITY: use the authenticated user, not something from the body.
+      // Otherwise a logged-in user could create sketches "owned by" anyone.
+      owner: req.user._id,
+      battle: req.body.battle || "",
+    });
+
+    const sketchToSave = await newSketch.save();
+    await addSketchToUser(req.user._id, sketchToSave._id);
+
+    res.status(200).json({
+      message: "Sketch subido exitosamente",
+      newSketch: sketchToSave,
+    });
+  } catch (error) {
+    console.error("createSketch error:", error);
+    res.status(500).json({ error: "Algo no quedó bien..." });
+  }
+};
+
+// ==============================================================
+// UPDATE
+// ==============================================================
+const updateSketch = async (req, res) => {
+  // Accept the id from URL param or body (both in case the frontend changes)
+  const sketchId = req.params.id || req.body._id;
+
+  try {
+    const sketch = await SketchModel.findById(sketchId);
+    if (!sketch) return res.status(404).json({ error: "Sketch no encontrado" });
+
+    // SECURITY: verify the logged-in user owns this sketch.
+    // Previously ANY logged-in user could edit ANY sketch.
+    if (sketch.owner.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ error: "No tienes permiso para editar este boceto" });
+    }
+
+    const infoToUpdate = {};
+    if (req.body.name) infoToUpdate.name = req.body.name;
+    if (req.body.comment) infoToUpdate.comment = req.body.comment;
+    // BUG FIX: previous line was `infoToUpdate.comment = req.body.battle`
+    // which OVERWROTE the sketch comment with the battle number.
+    if (req.body.battle) infoToUpdate.battle = req.body.battle;
+
+    if (req.file) {
+      const url = await imageUpload(req.file, "user_sketches");
+      infoToUpdate.url = url;
+    }
+
+    const updatedSketch = await SketchModel.findByIdAndUpdate(
+      sketchId,
+      infoToUpdate,
+      { new: true }
+    );
+    res.status(200).json(updatedSketch);
+  } catch (error) {
+    console.error("updateSketch error:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// ==============================================================
+// DELETE  (with proper cleanup)
+// ==============================================================
+const deleteSketch = async (req, res) => {
+  const sketchId = req.params.id || req.body._id;
+
+  try {
+    const sketch = await SketchModel.findById(sketchId);
+    if (!sketch) return res.status(404).json({ error: "Sketch no encontrado" });
+
+    // SECURITY: ownership check
+    if (sketch.owner.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ error: "No tienes permiso para borrar este boceto" });
+    }
+
+    // 1. Delete all comments on this sketch
+    await CommentModel.deleteMany({ sketch: sketchId });
+
+    // 2. Remove this sketch from ALL users' likes arrays
+    await UserModel.updateMany(
+      { likes: sketchId },
+      { $pull: { likes: sketchId } }
+    );
+
+    // 3. Remove from owner's sketchs array
+    await UserModel.findByIdAndUpdate(
+      sketch.owner,
+      { $pull: { sketchs: sketchId } }
+    );
+
+    // 4. Finally delete the sketch
+    await SketchModel.findByIdAndDelete(sketchId);
+
+    res.status(200).json({ message: "Sketch borrado correctamente" });
+  } catch (error) {
+    console.error("deleteSketch error:", error);
+    res.status(500).json({ error: "No se puede borrar el sketch" });
+  }
+};
+
+// ==============================================================
+// LIKES
+// ==============================================================
 const addLike = async (req, res) => {
   try {
-   await SketchModel.findByIdAndUpdate(req.body.sketch,
-      { $push: { likes: req.user._id } },
-      { new: true });
-    
-    await UserModel.findByIdAndUpdate(req.user._id,
-      { $push: { likes: req.body.sketch} },
-      {new: true}
-     )
+    const sketchId = req.body.sketch;
 
-    res.status(200).json({message: "Success!!!! liked "})
-    
+    // Prevent duplicate likes by the same user
+    await SketchModel.findByIdAndUpdate(
+      sketchId,
+      { $addToSet: { likes: req.user._id } }, // $addToSet = push only if not present
+      { new: true }
+    );
+
+    await UserModel.findByIdAndUpdate(
+      req.user._id,
+      { $addToSet: { likes: sketchId } },
+      { new: true }
+    );
+
+    res.status(200).json({ message: "Success! liked" });
   } catch (error) {
-    res.status(500).json({error: "Algo Salió mal... muy mal.... " + error.message})
+    console.error("addLike error:", error);
+    res.status(500).json({ error: "Algo salió mal... " + error.message });
   }
-}
+};
 
 const deleteLike = async (req, res) => {
-
   try {
-    await SketchModel.findByIdAndUpdate(req.body.sketch,
+    const sketchId = req.body.sketch;
+
+    await SketchModel.findByIdAndUpdate(
+      sketchId,
       { $pull: { likes: req.user._id } },
-      { new: true });
-   
-    await UserModel.findByIdAndUpdate(req.user._id,
-      { $pull: { likes: req.body.sketch } },
-      {new: true}
-     )
-    
-     res.status(200).json({message: "Success!!!! unliked "})
+      { new: true }
+    );
 
-    
+    await UserModel.findByIdAndUpdate(
+      req.user._id,
+      { $pull: { likes: sketchId } },
+      { new: true }
+    );
+
+    res.status(200).json({ message: "Success! unliked" });
   } catch (error) {
-    res.status(500).json({error: "Algo Salió mal... muy mal.... " + error.message})
+    console.error("deleteLike error:", error);
+    res.status(500).json({ error: "Algo salió mal... " + error.message });
   }
-}
-
-const deleteSketchToUser = async (userId, sharedPost) => {
-
-    try {
-        const result = await UserModel.findByIdAndUpdate(userId,
-            { $pull: { sketchs: sharedPost} },
-            { new: true }
-        )
-        console.log("user making post....", result);
-        return true
-    } catch (error) {
-        console.log(error)
-        return false
-    }   
 };
- 
-export { getAllSketches, createSketch, addLike, deleteLike, getSketchbyID, deleteSketch, updateSketch}
+
+export {
+  getAllSketches,
+  createSketch,
+  addLike,
+  deleteLike,
+  getSketchbyID,
+  deleteSketch,
+  updateSketch,
+};

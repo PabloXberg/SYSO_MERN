@@ -1,5 +1,5 @@
 import Card from "react-bootstrap/Card";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import UserModal from "./UserModal";
 import { Link, useLocation } from "react-router-dom";
@@ -8,101 +8,97 @@ import { serverURL } from "../serverURL";
 import SpraySpinner from "./SprySpinner";
 import Likes from "../components/likes";
 
-function SketchCard(props) {
+/**
+ * SketchCard
+ *
+ * Props:
+ *   - props: the sketch object (legacy naming, kept to avoid breaking parents)
+ *   - onUpdate: optional callback fired after a successful edit/delete,
+ *               so the parent page can refetch its list without a full reload.
+ */
+function SketchCard({ props: sketch, onUpdate }) {
   const { user } = useContext(AuthContext);
+  const location = useLocation();
+
   const [show, setShow] = useState(false);
-  const [refresh, setRefresh] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
-
-  const handleCloseDelete = () => {
-    setShowDelete(false);
-  };
-  const handleShowDelete = () => setShowDelete(true);
-  const handleCloseEdit = () => {
-    setShowEdit(false);
-  };
-  const handleShowEdit = () => setShowEdit(true);
-
-  const sketch = props.props;
   const [loading, setLoading] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState(sketch?.url);
 
   const [formData, setFormData] = useState({
-    owner: "",
     name: "",
     comment: "",
     url: "",
     battle: "",
   });
 
-  const datum = props.props.createdAt;
-  const shortdatum = datum.substring(0, 10);
-  const partesFecha = shortdatum.split("-");
-  const fechaTransformada =
-    partesFecha[2] + "-" + partesFecha[1] + "-" + partesFecha[0];
+  const handleCloseDelete = () => setShowDelete(false);
+  const handleShowDelete = () => setShowDelete(true);
+  const handleCloseEdit = () => setShowEdit(false);
+  const handleShowEdit = () => setShowEdit(true);
 
-  const location = useLocation();
-
-  //////////////////////////////////////////////////////////////////////////////////// USE EFFECT PARA RECARCAR LA PAGINA::: NO FUNCIONA; SOLUCIONAR ESTO
-
-  const handleSubmitEdit = async (e) => {
-    e.preventDefault();
-    setLoading(true); ///// FUTURE SPINNER
-
-    if (user?._id === sketch?.props.owner._id) {
-      console.log("props and sketch on edit sketch page:>> ", props, sketch);
-      if (formData.battle === "") {
-        formData.battle = "0";
-      }
-
-      const myHeaders = new Headers();
-      const token = localStorage.getItem("token");
-      myHeaders.append("Authorization", `Bearer ${token}`);
-
-      const submitData = new FormData();
-      submitData.append("_id", sketch.props._id);
-      submitData.append("owner", sketch.props.owner._id);
-      submitData.append("name", formData.name);
-      submitData.append("comment", formData.comment);
-      submitData.append("url", formData.url);
-      submitData.append("battle", formData.battle);
-
-      const requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: submitData,
-      };
-
-      try {
-        const response = await fetch(
-          `${serverURL}sketches/update/${sketch?.props._id}`,
-          requestOptions
-        );
-        const result = await response.json();
-        console.log(result);
-        // alert("Success!!! User Updated");
-
-        handleCloseEdit();
-        setLoading(false);
-        window.location.reload(); //// CAMBIAR POR ALGO MEJOR
-      } catch (error) {
-        console.log(error);
-        alert("Algo salió mal, intentalo nuevamente...");
-        setLoading(false);
-      }
-    }
-  };
+  // Format date: "YYYY-MM-DD" -> "DD-MM-YYYY"
+  const rawDate = sketch?.createdAt?.substring(0, 10) || "";
+  const fechaTransformada = rawDate
+    ? rawDate.split("-").reverse().join("-")
+    : "Fecha desconocida";
 
   const handleChangeEdit = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    console.log("formData :>> ", formData);
   };
 
-  const handleSketchDelete = async (sketch) => {
-    // e.preventDefault();
+  const handleFile = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setAvatarPreview(URL.createObjectURL(e.target.files[0]));
+      setFormData({ ...formData, url: e.target.files[0] });
+    }
+  };
+
+  const handleSubmitEdit = async (e) => {
+    e.preventDefault();
+
+    // BUG FIX: was `sketch?.props.owner._id` — sketch has no `.props`
+    if (user?._id !== sketch?.owner?._id) {
+      alert("No tienes permiso para editar este boceto");
+      return;
+    }
+
+    setLoading(true);
+
+    const myHeaders = new Headers();
+    const token = localStorage.getItem("token");
+    myHeaders.append("Authorization", `Bearer ${token}`);
+
+    const submitData = new FormData();
+    submitData.append("_id", sketch._id);
+    submitData.append("owner", sketch.owner._id);
+    submitData.append("name", formData.name);
+    submitData.append("comment", formData.comment);
+    submitData.append("url", formData.url);
+    submitData.append("battle", formData.battle || "0");
+
+    try {
+      const response = await fetch(
+        `${serverURL}sketches/update/${sketch._id}`,
+        { method: "POST", headers: myHeaders, body: submitData }
+      );
+      await response.json();
+      handleCloseEdit();
+      // Replaces window.location.reload() — keeps SPA behavior
+      onUpdate?.();
+    } catch (error) {
+      console.error(error);
+      alert("Algo salió mal, intentalo nuevamente...");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSketchDelete = async (sketchToDelete) => {
     handleCloseDelete();
     setLoading(true);
+
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
     myHeaders.append(
@@ -111,71 +107,48 @@ function SketchCard(props) {
     );
 
     const urlencoded = new URLSearchParams();
-    urlencoded.append("_id", sketch._id);
-    urlencoded.append("owner", sketch.owner._id);
-
-    const requestOptions = {
-      method: "DELETE",
-      headers: myHeaders,
-      body: urlencoded,
-    };
+    urlencoded.append("_id", sketchToDelete._id);
+    urlencoded.append("owner", sketchToDelete.owner._id);
 
     try {
       const response = await fetch(
-        `${serverURL}sketches/delete/${sketch._id}`,
-        requestOptions
+        `${serverURL}sketches/delete/${sketchToDelete._id}`,
+        { method: "DELETE", headers: myHeaders, body: urlencoded }
       );
-      const result = await response.json();
-      console.log(result);
-      setLoading(false);
-
-      window.location.reload(); ///// PROVISORIO
+      await response.json();
+      // Replaces window.location.reload() — keeps SPA behavior
+      onUpdate?.();
     } catch (error) {
-      console.log(error);
+      console.error(error);
       alert("Algo salió Mal - Intentalo otra vez...");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleFile = (e) => {
-    // console.log('e.target :>> ', e.target.files);
-    if (e.target.files) {
-      const arrayURL = URL.createObjectURL(e.target.files[0]);
-      setAvatarPreview(arrayURL);
-      setFormData({ ...formData, url: e.target.files[0] });
-    } else {
-      setFormData({ ...formData, url: "" });
-    }
-  };
-
-
-  useEffect(() => {
-  }, [refresh]);
-  ///////////////////////////////////////////////////////////////////////////////////////////////////
-
-// eslint-disable-next-line
-  const [likesArray, setLikesArray] = useState(sketch?.likes || []);
-
-
-  const _id = props?.props._id;
+  const _id = sketch?._id;
   const page = "/sketchdetail/";
 
+  if (loading) return <SpraySpinner />;
+
   return (
-    /////////////////////////////////////////////////////////////////////////COMIENZA LA CARD
     <div className="SketchCardPage">
-      {loading ? (
-        // <SpinnerShare/>
-        <SpraySpinner />
-      ) : (<div style={{ display: "flex", flexDirection: "column-reverse" }}>
+      <div style={{ display: "flex", flexDirection: "column-reverse" }}>
         <Card className="SketchCard">
           {user ? (
-            <Link to={page + _id} params={_id} key={_id}>
+            <Link to={page + _id} key={_id}>
               <Card.Img
                 title="Click para ampliar.."
                 className="sketchCardImg"
                 variant="top"
                 alt="Sketch"
-                src={props.props.url}
-                style={{ cursor: "pointer", width: "24rem", height: "24rem" , objectFit: "cover"}}
+                src={sketch?.url}
+                style={{
+                  cursor: "pointer",
+                  width: "24rem",
+                  height: "24rem",
+                  objectFit: "cover",
+                }}
               />
             </Link>
           ) : (
@@ -184,36 +157,30 @@ function SketchCard(props) {
               className="sketchCardImg"
               variant="top"
               alt="Sketch"
-              src={props.props.url}
-              style={{ width: "24rem", height: "24rem", objectFit: "cover"}}
+              src={sketch?.url}
+              style={{
+                width: "24rem",
+                height: "24rem",
+                objectFit: "cover",
+              }}
             />
           )}
 
-          <Card.Body
-            className="sketchCardBody">
-            <Card.Title>{props?.props.name}</Card.Title>
+          <Card.Body className="sketchCardBody">
+            <Card.Title>{sketch?.name}</Card.Title>
             <Card.Text>
-              {props.props.comment
-                ? props.props.comment
-                : "(...aqui normalmente hay informacion sobre el boceto...)"}
+              {sketch?.comment ||
+                "(...aqui normalmente hay informacion sobre el boceto...)"}
             </Card.Text>
 
-            {/* LA POROXIMA CONDICIONAL/LOGICA ES PARA MOSTRAR O NO MOSTRAR; DEPENDIENDO DE LA PAGINA; EL FOOTER CON EL NOMBRE DEL CREADOR */}
-
+            {/* Footer varies depending on the page we're on */}
             {location.pathname === "/sketches" ? (
               <Card.Footer className="text-muted">
-                {" "}
                 <i>Creado por: </i>{" "}
-                <i>
-                  {" "}
-                  {props?.props.owner.username
-                    ? props?.props.owner.username
-                    : user?.username}
-                </i>
+                <i>{sketch?.owner?.username || user?.username}</i>
               </Card.Footer>
             ) : location.pathname === "/mysketchs" ? (
               <>
-                {" "}
                 <Card.Footer
                   className="sketchCardFooter"
                   style={{
@@ -228,10 +195,8 @@ function SketchCard(props) {
                       title="Editar Boceto"
                       className="material-icons Bedit"
                       onClick={handleShowEdit}
-                      placeholder="edit"
                       style={{ cursor: "pointer" }}
                     >
-                      {" "}
                       edit
                     </i>
                     <i
@@ -240,11 +205,12 @@ function SketchCard(props) {
                       style={{ cursor: "pointer" }}
                       onClick={handleShowDelete}
                     >
-                      {" "}
                       delete_forever
                     </i>
                   </div>
                 </Card.Footer>
+
+                {/* Delete confirmation modal */}
                 <Modal
                   style={{ height: "20rem" }}
                   show={showDelete}
@@ -256,13 +222,12 @@ function SketchCard(props) {
                     <Modal.Title>ATENCION</Modal.Title>
                   </Modal.Header>
                   <Modal.Body>
-                    {" "}
                     <Modal.Header>
                       <Modal.Title>
                         Estas seguro de eliminar este Boceto?
                       </Modal.Title>
-                    </Modal.Header>{" "}
-                    <br></br>
+                    </Modal.Header>
+                    <br />
                     <div
                       style={{
                         display: "flex",
@@ -270,7 +235,6 @@ function SketchCard(props) {
                         justifyContent: "space-around",
                       }}
                     >
-                      {" "}
                       <Button
                         title="Cancelar"
                         variant="success"
@@ -280,7 +244,7 @@ function SketchCard(props) {
                       </Button>
                       <Button
                         title="Eliminar"
-                        onClick={() => handleSketchDelete(props.props)}
+                        onClick={() => handleSketchDelete(sketch)}
                         variant="danger"
                       >
                         Eliminar
@@ -288,7 +252,8 @@ function SketchCard(props) {
                     </div>
                   </Modal.Body>
                 </Modal>
-                {/*//////////////////////////////// EDITAR SKETCH MODAL   /////////////////////////// */}
+
+                {/* Edit sketch modal */}
                 <Modal
                   className="userRegisterModal xl"
                   show={showEdit}
@@ -308,15 +273,12 @@ function SketchCard(props) {
 
                   <div>
                     <div
-                      // className="avatar"
                       style={{
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
                       }}
                     >
-                      {/* {console.log('avatarPreview :>> ', avatarPreview)}
-                     {console.log('sketch :>> ', sketch)} */}
                       <img
                         alt="User Sketch"
                         style={{
@@ -325,17 +287,14 @@ function SketchCard(props) {
                           width: "18rem",
                           height: "14rem",
                           alignSelf: "center",
-                          objectFit: "cover"
+                          objectFit: "cover",
                         }}
-                        src={avatarPreview ? avatarPreview : sketch?.url}
+                        src={avatarPreview || sketch?.url}
                       />
                       <br />
-
-                      {/* eslint-disable-next-line react/jsx-pascal-case */}
                       <input
                         style={{ padding: "0.3rem" }}
                         type="file"
-                        name="loading..."
                         accept="image/jpg, image/jpeg, image/png"
                         onChange={handleFile}
                       />
@@ -355,19 +314,17 @@ function SketchCard(props) {
                         <Form.Control
                           type="text"
                           name="name"
-                          placeholder={props.props.name}
-                          defaultValue={props.props.name}
+                          placeholder={sketch?.name}
+                          defaultValue={sketch?.name}
                           onChange={handleChangeEdit}
                         />
-
-                        <Form.Text className="text-muted"></Form.Text>
 
                         <Form.Label>Descripción:</Form.Label>
                         <Form.Control
                           type="text"
                           name="comment"
-                          placeholder={props.props.comment}
-                          defaultValue={props.props.comment}
+                          placeholder={sketch?.comment}
+                          defaultValue={sketch?.comment}
                           onChange={handleChangeEdit}
                         />
 
@@ -377,17 +334,19 @@ function SketchCard(props) {
                             dejar vacío si no participa...
                           </i>
                         </Form.Label>
+                        {/* BUG FIX: name was "batlle" — typo meant battle was never saved */}
                         <Form.Control
                           style={{ maxWidth: "10rem" }}
                           type="text"
-                          name="batlle"
-                          placeholder={props.props.battle}
-                          defaultValue={props.props.battle}
+                          name="battle"
+                          placeholder={sketch?.battle}
+                          defaultValue={sketch?.battle}
                           onChange={handleChangeEdit}
                         />
                       </Form.Group>
                       <br />
                     </div>
+
                     <div
                       style={{
                         display: "flex",
@@ -415,21 +374,9 @@ function SketchCard(props) {
                 </Modal>
               </>
             ) : (
-              /// AQUI ES DONDE TENDRIA QUE MOSTRARLO EN MIS SKETCHES PROPIOS
-              //AQUI DEVERIA IR EL FOOTER CON EL NOMBRE DEL CREADOR; EN LA PAGINA DE MIS FAVORITOS
-
               <Card.Footer className="text-muted">
-                {" "}
                 <i>Creado por: </i>{" "}
-                <b>
-                  {" "}
-                  {props?.props?.owner?.username
-                    ? props?.props?.owner?.username
-                    : user?.username}
-                </b>
-                {/* <Card.Link style={{ cursor: "pointer" }} onClick={() => setShow(true)}>
-               
-            </Card.Link> */}
+                <b>{sketch?.owner?.username || user?.username}</b>
               </Card.Footer>
             )}
 
@@ -444,7 +391,8 @@ function SketchCard(props) {
               <i> Subido el: {fechaTransformada}</i>
             </Card.Footer>
 
-            {!user ? ( //// SI NO HAY USUARIO LOGEADO; MUESTRA ESTO
+            {!user ? (
+              /* Logged out: show like count + hint to log in */
               <Card.Footer>
                 <div
                   style={{
@@ -453,27 +401,14 @@ function SketchCard(props) {
                     justifyContent: "space-between",
                   }}
                 >
-                  <span
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                    }}
-                  >
-                    {" "}
+                  <span style={{ display: "flex", flexDirection: "row" }}>
                     <i
                       title="Iniciar sesion para esta funcion"
                       className="material-icons Bedit"
-                      // style={{ cursor: "pointer" }}
-                      //  onClick={alert("Debes iniciar sesion para usar esta función")}
                     >
                       favorite
                     </i>
-                    {props?.props?.likes && (
-                      <h6>
-                        {props?.props.likes?.length}{" "}
-                        {props?.props.likes?.length === 1 ? <i></i> : <i></i>}
-                      </h6>
-                    )}{" "}
+                    {sketch?.likes && <h6>{sketch.likes.length}</h6>}
                   </span>
                   <Form.Label disabled>
                     <i>Iniciar sesión para estas funciones</i>
@@ -487,44 +422,27 @@ function SketchCard(props) {
                     }}
                   >
                     <i
-                      style={{
-                        disply: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                      }}
+                      title="Iniciar sesion para esta funcion"
+                      className="material-icons Bedit"
                     >
-                      <i
-                        title="Iniciar sesion para esta funcion"
-                        className="material-icons Bedit"
-                        // style={{ cursor: "pointer" }}
-                        // onClick={alert("Debes iniciar sesion para usar esta función")}
-                      >
-                        message
-                      </i>
+                      message
                     </i>
                   </div>
                 </div>
               </Card.Footer>
             ) : (
-              /////SI HAY UN USUARIO LOAGEADO//////////////////////////////////
+              /* Logged in: show like button + link to comments */
               <Card.Footer
                 style={{
-                  display: "Flex",
+                  display: "flex",
                   flexDirection: "row",
                   justifyContent: "space-between",
                 }}
               >
-           <div style={{ alignSelf: "flex-start" }}>
-            
-                      <Likes onClick={() => setRefresh(!refresh)} key={sketch._id} props={sketch} likesArray={likesArray} />
-
-                  
+                <div style={{ alignSelf: "flex-start" }}>
+                  <Likes key={sketch._id} props={sketch} />
                 </div>
 
-                {/* <div >
-              
-              {props?.props?.likes && (<h6>{props?.props.likes?.length}{" "}{props?.props.likes?.length === 1 ? <i></i> : <i></i> }</h6>)}              
-            </div> */}
                 <div
                   style={{
                     display: "flex",
@@ -534,25 +452,22 @@ function SketchCard(props) {
                   }}
                 >
                   <h6>
+                    {/* BUG FIX: was sketch?.props?.comments — double-props bug */}
                     <b style={{ color: "#0066FF" }}>
-                      {sketch?.props?.comments?.length}{" "}
-                    </b>{" "}
+                      {sketch?.comments?.length}
+                    </b>
                   </h6>
-
                   <Link
                     title="Comentarios"
                     to={page + _id}
-                    params={_id}
                     key={_id}
                     style={{
-                      disply: "flex",
+                      display: "flex",
                       flexDirection: "row",
-                      justifyContent: "space-between",
                     }}
                   >
                     <i
                       className="material-icons Bedit"
-                      to="/sketchdetail"
                       style={{ cursor: "pointer" }}
                     >
                       message
@@ -564,14 +479,12 @@ function SketchCard(props) {
           </Card.Body>
 
           <UserModal
-            style={{ cursor: "pointer" }}
             onClose={() => setShow(false)}
             show={show}
-            character={props?.props}
+            character={sketch}
           />
-        </Card></div>
-        
-      )}
+        </Card>
+      </div>
     </div>
   );
 }
