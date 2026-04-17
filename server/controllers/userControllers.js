@@ -115,14 +115,35 @@ export const resetPassword = async (req, res) => {
 // ==============================================================
 const getUsers = async (req, res) => {
   try {
-    const users = await UserModel.find()
-      .select("-password -resetPasswordToken -resetPasswordExpires")
-      .populate({
-        path: "sketchs",
-        populate: { path: "owner" },
-      });
+    // PERF: Paginated same as sketches
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(100, parseInt(req.query.limit) || 20);
+    const skip = (page - 1) * limit;
 
-    res.status(200).json({ msg: "Success!", users });
+    const [users, total] = await Promise.all([
+      UserModel.find()
+        .select("-password -resetPasswordToken -resetPasswordExpires")
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .populate({
+          path: "sketchs",
+          populate: { path: "owner" },
+        }),
+      UserModel.countDocuments(),
+    ]);
+
+    res.status(200).json({
+      msg: "Success!",
+      users,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+        hasMore: skip + users.length < total,
+      },
+    });
   } catch (error) {
     console.error("getUsers error:", error);
     res.status(500).json({ error: "Algo salió mal..." });
@@ -311,16 +332,28 @@ const loginUser = async (req, res) => {
 };
 
 const getActiveUser = async (req, res) => {
-  res.status(200).json({
-    _id: req.user._id,
-    email: req.user.email,
-    username: req.user.username,
-    info: req.user.info,
-    sketchs: req.user.sketchs,
-    likes: req.user.likes,
-    comments: req.user.comments,
-    avatar: req.user.avatar,
-  });
+  // PERF: passport no longer populates sketchs/likes/comments on every request
+  // (used to be ~5 DB queries per authenticated request). We populate here
+  // on demand since the frontend's AuthContext expects these fields.
+  try {
+    const user = await UserModel.findById(req.user._id)
+      .select("-password -resetPasswordToken -resetPasswordExpires")
+      .populate({
+        path: "sketchs",
+        populate: { path: "owner", select: "username" },
+      })
+      .populate({
+        path: "likes",
+        populate: { path: "owner", select: "username" },
+      })
+      .populate("comments");
+
+    if (!user) return res.status(404).json({ error: "Usuario no encontrado" });
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("getActiveUser error:", error);
+    res.status(500).json({ error: "Algo salió mal..." });
+  }
 };
 
 export {

@@ -1,0 +1,45 @@
+# ===== Dependencies =====
+node_modules/
+.pnp
+.pnp.js
+
+# ===== Environment variables =====
+# NEVER commit these — they contain secrets
+.env
+.env.local
+.env.development
+.env.production
+.env.*.local
+
+# Keep the example file (no secrets in it)
+!.env.example
+
+# ===== Build output =====
+build/
+dist/
+out/
+
+# ===== Testing =====
+coverage/
+.nyc_output
+
+# ===== Logs =====
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+logs/
+
+# ===== Editor / OS =====
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+Thumbs.db
+
+# ===== Misc =====
+.cache/
+.eslintcache
+.parcel-cache/
+*.tsbuildinfo

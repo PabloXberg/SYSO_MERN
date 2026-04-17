@@ -7,501 +7,382 @@ import { AuthContext } from "../contexts/AuthContext";
 import "../index.css";
 import { serverURL } from "../serverURL";
 
+// Helper: format a date string into "DD/MM/YYYY HH:MM:SS"
+const formatDate = (dateStr, wasEdited) => {
+  if (!dateStr) return "";
+  const fecha = new Date(dateStr);
+  const fechaStr = fecha.toLocaleDateString("es-ES", {
+    year: "numeric", month: "2-digit", day: "2-digit",
+  });
+  const horaStr = fecha.toLocaleTimeString("es-ES", {
+    hour: "2-digit", minute: "2-digit", second: "2-digit",
+  });
+  return `${wasEdited ? "editado el" : "dijo el"} ${fechaStr} ${horaStr}`;
+};
 
 const SketchDetail = () => {
   const { user } = useContext(AuthContext);
   const { id } = useParams();
-  const [sketch, setSketch] = useState();
-  const [commentImput, setCommentInput] = useState("");
-  const [commentEditImput, setCommentEditInput] = useState("");
-  const [resultado, setResultado] = useState("");
+
+  const [sketch, setSketch] = useState(null);
+  const [loading, setLoading] = useState(true);   // FIX: loading state
+  const [commentInput, setCommentInput] = useState("");
+  const [commentEditInput, setCommentEditInput] = useState("");
   const [refresh, setRefresh] = useState(false);
-
-
-  const handleShowDelete = (commentId) => {
-    setDeleteStates((prevState) => ({
-      ...prevState,
-      [commentId]: true,
-    }));
-  };
-
-  const handleShowEdit = (commentId) => {
-    setEditStates((prevState) => ({
-      ...prevState,
-      [commentId]: true,
-    }));
-  };
-
   const [deleteStates, setDeleteStates] = useState({});
   const [editStates, setEditStates] = useState({});
 
-  const handleChange = (e) => {
-    setCommentInput(e.target.value);
-  };
-
-  const handleChangeEdit = (e) => {
-    setCommentEditInput(e.target.value);
-  };
-
-  const geSketchbyID = async (ID) => {
-    const myHeaders = new Headers();
-    myHeaders.append(
-      "Authorization",
-      `Bearer ${localStorage.getItem("token")}`
-    );
-// eslint-disable-next-line
-    // const urlencoded = new URLSearchParams();
-
-    const requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-    };
-
+  const getSketchById = async (sketchId) => {
+    setLoading(true);
     try {
-      const response = await fetch(
-        `${serverURL}sketches/id/${ID}`,
-        requestOptions
-      );
+      const response = await fetch(`${serverURL}sketches/id/${sketchId}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       const result = await response.json();
-      // console.log("single Sketch:", result);
       setSketch(result);
     } catch (error) {
-      console.log(error);
+      console.error("getSketchById error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
+  
+  useEffect(() => {
+    getSketchById(id);
+    setRefresh(false);
+  }, [id, refresh]);
+
   const commentSubmit = async () => {
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-    myHeaders.append(
-      "Authorization",
-      `Bearer ${localStorage.getItem("token")}`
-    );
-
-    const urlencoded = new URLSearchParams();
-    urlencoded.append("comment", commentImput);
-    urlencoded.append("owner", user._id);
-    urlencoded.append("sketch", sketch._id);
-    // console.log('commentImput :>> ', commentImput);
-
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: urlencoded,
-    };
-
+    if (!commentInput.trim()) return;
     try {
-      const response = await fetch(
-        `${serverURL}comments/new`,
-        requestOptions
-      );
-      setResultado(await response.json());
-      console.log(resultado);
+      await fetch(`${serverURL}comments/new`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: new URLSearchParams({
+          comment: commentInput,
+          owner: user._id,
+          sketch: sketch._id,
+        }),
+      });
       setCommentInput("");
-      // setLoading(false);
+      setRefresh(true);
     } catch (error) {
-      console.log(error);
-      alert("Something went wrong - message did't save");
-      // setLoading(false);
+      console.error(error);
+      alert("Something went wrong — message not saved");
     }
   };
 
   const commentDelete = async (comment) => {
-    if (user._id === comment.owner._id) {
-      const myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-      myHeaders.append(
-        "Authorization",
-        `Bearer ${localStorage.getItem("token")}`
-      );
-
-      const urlencoded = new URLSearchParams();
-      urlencoded.append("_id", comment._id);
-      urlencoded.append("owner", comment.owner);
-      urlencoded.append("sketch", sketch._id);
-
-      const requestOptions = {
-        method: "DELETE",
-        headers: myHeaders,
-        body: urlencoded,
-      };
-
-      try {
-        const response = await fetch(
-          `${serverURL}comments/delete/${comment._id}`,
-          requestOptions
-        );
-         const result = await response.json();
-         console.log(result);
-        setRefresh(true);
-        setDeleteStates((prevState) => ({
-          ...prevState,
-          [comment._id]: false,
-        }));
-      } catch (error) {
-        console.log(error);
-        alert("Algo salió Mal - Intentalo otra vez...");
-      }
-    }
-  };
-
-  const handleCommentEdit = async (comment) => {
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-    myHeaders.append(
-      "Authorization",
-      `Bearer ${localStorage.getItem("token")}`
-    );
-
-    const urlencoded = new URLSearchParams();
-    urlencoded.append("comment", commentEditImput);
-    urlencoded.append("_id", comment._id);
-    urlencoded.append("owner", comment.owner);
-    urlencoded.append("sketch", sketch._id);
-
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: urlencoded,
-    };
-
+    if (user._id !== comment.owner._id) return;
     try {
-      const response = await fetch(
-        `${serverURL}comments/update/${comment._id}`,
-        requestOptions
-      );
-      const result = await response.json();
-      console.log(result);
+      await fetch(`${serverURL}comments/delete/${comment._id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: new URLSearchParams({
+          _id: comment._id,
+          owner: comment.owner,
+          sketch: sketch._id,
+        }),
+      });
+      setDeleteStates((prev) => ({ ...prev, [comment._id]: false }));
       setRefresh(true);
-      setEditStates((prevState) => ({ ...prevState, [comment._id]: false }));
     } catch (error) {
-      console.log(error);
+      console.error(error);
       alert("Algo salió Mal - Intentalo otra vez...");
     }
   };
 
-  useEffect(() => {
-    geSketchbyID(id);
-    setRefresh(false);
-  }, [resultado, refresh, id]);
+  const handleCommentEdit = async (comment) => {
+    try {
+      await fetch(`${serverURL}comments/update/${comment._id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: new URLSearchParams({
+          comment: commentEditInput,
+          _id: comment._id,
+          owner: comment.owner,
+          sketch: sketch._id,
+        }),
+      });
+      setEditStates((prev) => ({ ...prev, [comment._id]: false }));
+      setRefresh(true);
+    } catch (error) {
+      console.error(error);
+      alert("Algo salió Mal - Intentalo otra vez...");
+    }
+  };
 
-  ///////////////  FORMATEANDO LA FECHA EN DIFERENTES FORMATOS PARA QUE SEA MAS AMIGABLE ////////////
-  const datum = sketch?.createdAt;
-  const shortdatum = datum?.substring(0, 10);
+  // ── Loading state ──────────────────────────────────────────────────────────
+  // FIX: previously `sketch` started as undefined and the component tried to
+  // render sketch.url before the fetch completed → broken image + possible crash.
+  // Now we show a spinner while loading and nothing if the fetch failed.
+  if (loading) {
+    return (
+      <div className="spinner-container">
+        <div className="spinner-border custom-spinner" role="status">
+          <span className="visually-hidden">Cargando...</span>
+        </div>
+      </div>
+    );
+  }
 
-  // const partesFecha = shortdatum?.split("-");
-  // const fechaTransformada = partesFecha[2] + "-" + partesFecha[1] + "-" + partesFecha[0];
+  if (!sketch) {
+    return (
+      <div style={{ padding: "2rem", textAlign: "center" }}>
+        <h3>No se pudo cargar el boceto.</h3>
+      </div>
+    );
+  }
 
-  ///////////////////////////////////////////////////////////////////////////////////////////////////
-  // console.log('sketch :>> ', sketch);
-  // Contenido y lógica del componente
+  // ── Date formatting ────────────────────────────────────────────────────────
+  const uploadDate = sketch.createdAt?.substring(0, 10) || "";
+
   return (
     <div className="sketchDetails sketchDetailsBody">
       <div className="detailsImage">
-        <Card className="bg-light ">
-          <Card.Img className="sketchDetailsImg" variant="top"
-   
-            src={sketch?.url} alt={sketch?.name} />
+        <Card className="bg-light">
 
+          {/* ── Sketch image ──────────────────────────────────────────────── */}
+          <Card.Img
+            className="sketchDetailsImg"
+            variant="top"
+            src={sketch.url}
+            alt={sketch.name}
+          />
+
+          {/* ── Title + upload info ───────────────────────────────────────── */}
           <span
             style={{
               display: "flex",
               flexDirection: "row",
               justifyContent: "space-between",
+              alignItems: "center",
+              flexWrap: "wrap",
+              gap: "0.5rem",
+              padding: "0.5rem",
             }}
           >
-            <h1 className="DetailsTitle">{sketch?.name}</h1>
+            <h1 className="DetailsTitle">{sketch.name}</h1>
             <Card.Text className="DetailsOwner">
-              Subido el:{" "}
-              <i>
-                <b>{shortdatum}</b>
-              </i>{" "}
-              por:{" "}
-              <i>
-                <b>{sketch?.owner?.username}</b>
-              </i>
+              Subido el <i><b>{uploadDate}</b></i> por{" "}
+              <i><b>{sketch.owner?.username}</b></i>
             </Card.Text>
-            {/* <Card.Text >Subido por: <i><b>{sketch?.owner?.username}</b></i></Card.Text> */}
           </span>
 
+          {/* ── Description + likes ──────────────────────────────────────── */}
           <div
             style={{
               display: "flex",
               flexDirection: "row",
               justifyContent: "space-between",
+              padding: "0.5rem",
             }}
           >
-            <Card.Text className="detailsText" >{sketch?.comment}</Card.Text>
-            <br/>
-
-            {sketch?.likes && (
-              <span><h6 >
-                {sketch?.likes?.length}{" "}
-                {<i className="small material-icons" style={{color:"Red"}}>favorite</i>}
-              </h6></span>
-              
+            <Card.Text className="detailsText">{sketch.comment}</Card.Text>
+            {sketch.likes?.length > 0 && (
+              <span>
+                <h6>
+                  {sketch.likes.length}{" "}
+                  <i className="small material-icons" style={{ color: "red" }}>
+                    favorite
+                  </i>
+                </h6>
+              </span>
             )}
-
-          
           </div>
 
-     
-          <FloatingLabel
-            controlId="floatingTextarea2"
-            label="agrega un comentario..."
-          >
-            <Form.Control
-              className="sketchDetailsBody"
-              as="textarea"
-              // style={{ height: "100", width: "100%" }}
-              name="comment"
-              onChange={handleChange}
-              value={commentImput}
-              onSubmit={() => commentSubmit}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  commentSubmit();
-                }
-              }}
-            />
-            {/* <div style={{display:"flex", flexDirection: "row",alignItems:"flex-end", marginRight:"0px", marginLeft:"930px"}}> <Button style={{dfisplay:"flex", flexDirection: "row",alignItems:"flex-end"}} onClick={commentSubmit} variant='success'>enviar</Button></div> */}
-          </FloatingLabel>
+          {/* ── Comment input (only for logged-in users) ─────────────────── */}
+          {user && (
+            <FloatingLabel
+              controlId="floatingTextarea2"
+              label="Agrega un comentario..."
+              style={{ padding: "0.5rem" }}
+            >
+              <Form.Control
+                as="textarea"
+                name="comment"
+                value={commentInput}
+                onChange={(e) => setCommentInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    commentSubmit();
+                  }
+                }}
+              />
+            </FloatingLabel>
+          )}
         </Card>
 
+        {/* ── Comments list ─────────────────────────────────────────────── */}
         <div className="sketchDetailsBody">
-          {sketch?.comments?.length >= 0 ? (
-            <>
-              {sketch?.comments &&
-                sketch?.comments
-                  .map((comment) => {
-                    let TextDatum = "";
-                    // const reverseIndex = sketch.comments.length - index; // Obtener el índice inverso
+          {[...(sketch.comments || [])].reverse().map((comment) => {
+            const wasEdited = comment.createdAt !== comment.updatedAt;
+            const textDatum = formatDate(
+              wasEdited ? comment.updatedAt : comment.createdAt,
+              wasEdited
+            );
 
-                    // console.log('index :>> ', index);
+            return (
+              <div key={comment._id} style={{ padding: "3px" }}>
+                <div className="commentFlex">
+                  <div className="commentOwner">
+                    <p style={{ color: "black", margin: 0 }}>
+                      <b>{comment.owner?.username}</b>{" "}
+                      <i style={{ fontSize: "0.8rem" }}>{textDatum}</i>
+                    </p>
 
-                    if (comment.createdAt === comment.updatedAt) {
-                      const commentdatum = comment.createdAt;
-                      const fecha = new Date(commentdatum);
-                      const opcionesFecha = {
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit",
-                      };
-                      const opcionesHora = {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        second: "2-digit",
-                      };
-                      const fechaFormateada = fecha.toLocaleDateString(
-                        "es-ES",
-                        opcionesFecha
-                      );
-                      const horaFormateada = fecha.toLocaleTimeString(
-                        "es-ES",
-                        opcionesHora
-                      );
-                      const fechaHoraAmigable = `${fechaFormateada} ${horaFormateada}`;
-                      TextDatum = "dijo el " + fechaHoraAmigable;
-                    } else {
-                      const commentdatum = comment.updatedAt;
-                      const fecha = new Date(commentdatum);
-                      const opcionesFecha = {
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit",
-                      };
-                      const opcionesHora = {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        second: "2-digit",
-                      };
-                      const fechaFormateada = fecha.toLocaleDateString(
-                        "es-ES",
-                        opcionesFecha
-                      );
-                      const horaFormateada = fecha.toLocaleTimeString(
-                        "es-ES",
-                        opcionesHora
-                      );
-                      const fechaHoraAmigable = `${fechaFormateada} ${horaFormateada}`;
-                      TextDatum = "editado el " + fechaHoraAmigable;
-                    }
-
-                    return (
-                      <div key={comment._id} style={{ padding: "3px" }}>
-                        <div key={comment._id} className="commentFlex">
-                          <div key={comment._id}>
-                            {/* {console.log('comment :>> ', comment)} */}
-                            <div key={comment._id} className="commentOwner">
-                              {" "}
-                              <p style={{ color: "black" }}>
-                                <b>{comment?.owner?.username}</b>{" "}
-                                <i> {TextDatum}</i>
-                              </p>
-                              {comment?.owner._id === user?._id ? (
-                                <div key={comment._id} className="commentIcons">
-                                  <i
-                                    className="large material-icons Bedit"
-                                    onClick={() => handleShowEdit(comment._id)}
-                                    style={{ cursor: "pointer" }}
-                                  >
-                                    edit
-                                  </i>
-                                  <i
-                                    className="large material-icons Bedit"
-                                    onClick={() =>
-                                      handleShowDelete(comment._id)
-                                    }
-                                    style={{ cursor: "pointer" }}
-                                  >
-                                    delete_forever
-                                  </i>
-                                </div>
-                              ) : (
-                                ""
-                              )}
-                            </div>
-                          </div>
-                          <div key={comment._id}
-                            // className="commentText "
-                          >
-                            <p>
-                              <i>{comment.comment}</i>
-                            </p>
-                          </div>
-                        </div>
-
-                        <Modal
-                            className="detailsEditModal"
-                          // style={{ height: "20rem" }}
-                          show={deleteStates[comment._id]}
-                          onHide={() =>
-                            setDeleteStates((prevState) => ({
-                              ...prevState,
-                              [comment._id]: false,
+                    {comment.owner?._id === user?._id && (
+                      <div className="commentIcons">
+                        <i
+                          className="large material-icons Bedit"
+                          onClick={() =>
+                            setEditStates((prev) => ({
+                              ...prev,
+                              [comment._id]: true,
                             }))
                           }
+                          style={{ cursor: "pointer" }}
                         >
-                          <Modal.Header closeButton>
-                            <Modal.Title>ATENCION</Modal.Title>
-                          </Modal.Header>
-                          <Modal.Body>
-                            {" "}
-                            <Modal.Header>
-                              <Modal.Title>
-                                Estas seguro de borrar el comentario???
-                              </Modal.Title>
-                            </Modal.Header>{" "}
-                            <br></br>
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                justifyContent: "space-around",
-                              }}
-                            >
-                              {" "}
-                              <Button
-                                variant="success"
-                                onClick={() =>
-                                  setDeleteStates((prevState) => ({
-                                    ...prevState,
-                                    [comment._id]: false,
-                                  }))
-                                }
-                              >
-                                Cancelar
-                              </Button>
-                              <Button
-                                onClick={() => commentDelete(comment)}
-                                variant="danger"
-                              >
-                                Eliminar
-                              </Button>
-                            </div>
-                          </Modal.Body>
-                        </Modal>
-
-                        <Modal
-                        className="detailsEditModal"
-                          show={editStates[comment._id]}
-                          onHide={() =>
-                            setEditStates((prevState) => ({
-                              ...prevState,
-                              [comment._id]: false,
+                          edit
+                        </i>
+                        <i
+                          className="large material-icons Bedit"
+                          onClick={() =>
+                            setDeleteStates((prev) => ({
+                              ...prev,
+                              [comment._id]: true,
                             }))
                           }
+                          style={{ cursor: "pointer" }}
                         >
-                          <Modal.Header closeButton>
-                            <Modal.Title>Editar Comentario</Modal.Title>
-                          </Modal.Header>
-                          <Modal.Body>
-                            {" "}
-                            <Modal.Title>
-                              Si quiere, puede editar su comentario...
-                            </Modal.Title>{" "}
-                            <br />
-                            <Form.Control
-                              style={{ height: "5rem" }}
-                              type="text"
-                              name="comment"
-                              placeholder={comment?.comment}
-                              defaultValue={comment?.comment}
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter") {
-                                  handleCommentEdit(comment);
-                                }
-                              }}
-                              onChange={handleChangeEdit}
-                            />
-                            <br />
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                justifyContent: "space-around",
-                              }}
-                            >
-                              <Button
-                                variant="danger"
-                                onClick={() =>
-                                  setEditStates((prevState) => ({
-                                    ...prevState,
-                                    [comment._id]: false,
-                                  }))
-                                }
-                              >
-                                Cancelar
-                              </Button>
-                              <Button
-                                onClick={() => handleCommentEdit(comment)}
-                                variant="success"
-                              >
-                                Guardar
-                              </Button>
-                            </div>
-                          </Modal.Body>
-                        </Modal>
+                          delete_forever
+                        </i>
                       </div>
-                    );
-                  })
-                  .reverse()}
-            </>
-          ) : (
-            ""
-          )}
+                    )}
+                  </div>
+
+                  <p style={{ margin: "0.25rem 0" }}>
+                    <i>{comment.comment}</i>
+                  </p>
+                </div>
+
+                {/* Delete comment modal */}
+                <Modal
+                  className="detailsEditModal"
+                  show={deleteStates[comment._id] || false}
+                  onHide={() =>
+                    setDeleteStates((prev) => ({
+                      ...prev,
+                      [comment._id]: false,
+                    }))
+                  }
+                  centered
+                >
+                  <Modal.Header closeButton>
+                    <Modal.Title>ATENCIÓN</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <p>¿Estás seguro de borrar el comentario?</p>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-around",
+                      }}
+                    >
+                      <Button
+                        variant="success"
+                        onClick={() =>
+                          setDeleteStates((prev) => ({
+                            ...prev,
+                            [comment._id]: false,
+                          }))
+                        }
+                      >
+                        Cancelar
+                      </Button>
+                      <Button
+                        variant="danger"
+                        onClick={() => commentDelete(comment)}
+                      >
+                        Eliminar
+                      </Button>
+                    </div>
+                  </Modal.Body>
+                </Modal>
+
+                {/* Edit comment modal */}
+                <Modal
+                  className="detailsEditModal"
+                  show={editStates[comment._id] || false}
+                  onHide={() =>
+                    setEditStates((prev) => ({
+                      ...prev,
+                      [comment._id]: false,
+                    }))
+                  }
+                  centered
+                >
+                  <Modal.Header closeButton>
+                    <Modal.Title>Editar Comentario</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <Form.Control
+                      style={{ height: "5rem" }}
+                      type="text"
+                      name="comment"
+                      placeholder={comment.comment}
+                      defaultValue={comment.comment}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") handleCommentEdit(comment);
+                      }}
+                      onChange={(e) => setCommentEditInput(e.target.value)}
+                    />
+                    <br />
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-around",
+                      }}
+                    >
+                      <Button
+                        variant="danger"
+                        onClick={() =>
+                          setEditStates((prev) => ({
+                            ...prev,
+                            [comment._id]: false,
+                          }))
+                        }
+                      >
+                        Cancelar
+                      </Button>
+                      <Button
+                        variant="success"
+                        onClick={() => handleCommentEdit(comment)}
+                      >
+                        Guardar
+                      </Button>
+                    </div>
+                  </Modal.Body>
+                </Modal>
+              </div>
+            );
+          })}
         </div>
       </div>
-
-      {/* <div className="opciones">
-         <Form onSubmit={(e) => {
-          e.preventDefault();
-          console.log(e.target)
-        }}>
-          <input type="text" placehodler={"add a comment..."}></input>
-        </Form>
-
-      </div> */}
     </div>
   );
 };

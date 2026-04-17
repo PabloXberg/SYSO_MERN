@@ -1,18 +1,16 @@
-import jwt from 'jsonwebtoken';
-import * as dotenv from "dotenv";
-dotenv.config();
+import jwt from "jsonwebtoken";
 
-const generateToken = (existingUser) => {
+// Note: dotenv.config() runs once in index.js — no need to repeat here.
+
+const generateToken = (user) => {
   const payload = {
-    sub: existingUser._id,
-    username: existingUser.username,
-    msg: "Normal User"
-  }
+    sub: user._id,
+    username: user.username,
+  };
   const options = {
     expiresIn: "7d",
-  }
-  const token = jwt.sign(payload, process.env.JWT_SECRET, options);
-  return token
-}
+  };
+  return jwt.sign(payload, process.env.JWT_SECRET, options);
+};
 
-export { generateToken }
+export { generateToken };

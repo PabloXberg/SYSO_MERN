@@ -10,7 +10,7 @@ import { serverURL } from "../serverURL";
 import SpraySpinner from "../components/SprySpinner";
 import { useFetch } from "../hooks/useFetch";
 import { User } from "../@types/models";
-import "../index.css";
+// import "../index.css";
 
 interface FormDataShape {
   name: string;

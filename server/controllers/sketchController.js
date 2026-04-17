@@ -8,14 +8,35 @@ import imageUpload from "../utils/imageManagement.js";
 // ==============================================================
 const getAllSketches = async (req, res) => {
   try {
-    const sketches = await SketchModel.find()
-      .populate({
-        path: "owner",
-        select: ["email", "username", "avatar", "likes", "sketchs", "createdAt", "info"],
-      })
-      .populate("comments");
+    // PERF: Paginated to avoid loading hundreds of sketches at once.
+    // Frontend can pass ?page=1&limit=20. Defaults return the 20 most recent.
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(100, parseInt(req.query.limit) || 20);
+    const skip = (page - 1) * limit;
 
-    res.status(200).json(sketches);
+    const [sketches, total] = await Promise.all([
+      SketchModel.find()
+        .sort({ createdAt: -1 }) // newest first (replaces frontend `.reverse()`)
+        .skip(skip)
+        .limit(limit)
+        .populate({
+          path: "owner",
+          select: ["email", "username", "avatar", "likes", "sketchs", "createdAt", "info"],
+        })
+        .populate("comments"),
+      SketchModel.countDocuments(),
+    ]);
+
+    res.status(200).json({
+      sketches,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+        hasMore: skip + sketches.length < total,
+      },
+    });
   } catch (error) {
     console.error("getAllSketches error:", error);
     res.status(500).json({ error: "Algo salió mal..." });

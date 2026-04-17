@@ -1,44 +1,32 @@
-import passport from 'passport';
-import {Strategy as JwtStrategy, ExtractJwt} from 'passport-jwt';
-import * as dotenv from "dotenv";
-import UserModel from '../models/userModels.js';
-dotenv.config();
+import passport from "passport";
+import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
+import UserModel from "../models/userModels.js";
 
 const passportConfig = () => {
-  
   const opts = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: process.env.JWT_SECRET
-  }
-  const myStrategy = new JwtStrategy(opts, function(jwt_payload, done) {
-    // try {
-    //   const user = await UserModel.findById(jwt_payload.sub);
-    //   return user ? done(null, user) : done(null, false);
-    // } catch (error) {
-    //   return done(error, false);
-    // }
-    UserModel.findById(jwt_payload.sub)
-    .populate({ path: "likes",
-                populate: [
-                    { path: 'owner', select: ['username'] }
-                 
-                ]
-            })
-          .populate({ path: "sketchs",
-                populate: [
-                    { path: 'owner', select: ['username'] }
-                 
-                ]
-            })
-      .populate("comments")
-      .then((user) => {
-      return user ? done(null, user) : done(null, false)
-    }).catch((error) => {
-      return done(error, false)
-    })
-  })
+    secretOrKey: process.env.JWT_SECRET,
+  };
 
-  passport.use(myStrategy);
-}
+  // PERF: Previously this ran 3 nested .populate() calls on EVERY authenticated
+  // request (likes, sketchs, comments — each populating owner.username too).
+  // That meant ~5 DB queries per request just to verify the JWT.
+  //
+  // Now we only load the minimal fields needed to confirm the user exists and
+  // attach the user ID to `req.user`. Controllers that actually need the full
+  // populated user (like getActiveUser) can populate on demand.
+  const strategy = new JwtStrategy(opts, async (jwt_payload, done) => {
+    try {
+      const user = await UserModel.findById(jwt_payload.sub).select(
+        "_id email username avatar info"
+      );
+      return user ? done(null, user) : done(null, false);
+    } catch (error) {
+      return done(error, false);
+    }
+  });
 
-export default passportConfig
+  passport.use(strategy);
+};
+
+export default passportConfig;
