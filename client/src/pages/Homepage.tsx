@@ -1,4 +1,4 @@
-import  { Key, useEffect} from 'react'
+import  { Key } from 'react'
 // os archivos 
 import SubHomeNav from '../components/SubHomeNav'
 import SubHomeNavDown from '../components/SubHomeNavDown'
