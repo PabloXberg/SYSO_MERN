@@ -52,7 +52,7 @@ const getSketchbyID = async (req, res) => {
       })
       .populate({
         path: "likes",
-        populate: [{ path: "owner", select: ["username"] }],
+        select: "username avatar",
       })
       .populate({
         path: "comments",

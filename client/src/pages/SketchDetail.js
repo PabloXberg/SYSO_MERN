@@ -7,7 +7,6 @@ import { AuthContext } from "../contexts/AuthContext";
 import "../index.css";
 import { serverURL } from "../serverURL";
 
-// Helper: format a date string into "DD/MM/YYYY HH:MM:SS"
 const formatDate = (dateStr, wasEdited) => {
   if (!dateStr) return "";
   const fecha = new Date(dateStr);
@@ -25,7 +24,8 @@ const SketchDetail = () => {
   const { id } = useParams();
 
   const [sketch, setSketch] = useState(null);
-  const [loading, setLoading] = useState(true);   // FIX: loading state
+  const [loading, setLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState(null);
   const [commentInput, setCommentInput] = useState("");
   const [commentEditInput, setCommentEditInput] = useState("");
   const [refresh, setRefresh] = useState(false);
@@ -34,6 +34,7 @@ const SketchDetail = () => {
 
   const getSketchById = async (sketchId) => {
     setLoading(true);
+    setErrorMsg(null);
     try {
       const response = await fetch(`${serverURL}sketches/id/${sketchId}`, {
         method: "GET",
@@ -42,15 +43,39 @@ const SketchDetail = () => {
         },
       });
       const result = await response.json();
+
+      // BUG FIX: previously we blindly set `sketch = result` even if the
+      // server returned 404 or 500. The component then tried to render
+      // `{error: "..."}` as if it were a sketch, producing the empty shell
+      // shown in the screenshot ("Subido el  por " with no image).
+      if (!response.ok) {
+        console.error("getSketchById HTTP", response.status, result);
+        setErrorMsg(
+          result.error ||
+          result.message ||
+          `Error ${response.status} al cargar el boceto`
+        );
+        setSketch(null);
+        return;
+      }
+
+      if (!result?._id) {
+        console.error("getSketchById malformed response:", result);
+        setErrorMsg("La respuesta del servidor no tiene el formato esperado.");
+        setSketch(null);
+        return;
+      }
+
       setSketch(result);
     } catch (error) {
       console.error("getSketchById error:", error);
+      setErrorMsg("No se pudo conectar al servidor.");
+      setSketch(null);
     } finally {
       setLoading(false);
     }
   };
 
-  
   useEffect(() => {
     getSketchById(id);
     setRefresh(false);
@@ -125,10 +150,6 @@ const SketchDetail = () => {
     }
   };
 
-  // ── Loading state ──────────────────────────────────────────────────────────
-  // FIX: previously `sketch` started as undefined and the component tried to
-  // render sketch.url before the fetch completed → broken image + possible crash.
-  // Now we show a spinner while loading and nothing if the fetch failed.
   if (loading) {
     return (
       <div className="spinner-container">
@@ -142,12 +163,17 @@ const SketchDetail = () => {
   if (!sketch) {
     return (
       <div style={{ padding: "2rem", textAlign: "center" }}>
-        <h3>No se pudo cargar el boceto.</h3>
+        <h3>No se pudo cargar el boceto</h3>
+        {errorMsg && (
+          <p style={{ color: "#888", fontStyle: "italic" }}>{errorMsg}</p>
+        )}
+        <p>
+          <a href="/sketches">← Volver a todos los bocetos</a>
+        </p>
       </div>
     );
   }
 
-  // ── Date formatting ────────────────────────────────────────────────────────
   const uploadDate = sketch.createdAt?.substring(0, 10) || "";
 
   return (
@@ -155,15 +181,25 @@ const SketchDetail = () => {
       <div className="detailsImage">
         <Card className="bg-light">
 
-          {/* ── Sketch image ──────────────────────────────────────────────── */}
-          <Card.Img
-            className="sketchDetailsImg"
-            variant="top"
-            src={sketch.url}
-            alt={sketch.name}
-          />
+          {sketch.url ? (
+            <Card.Img
+              className="sketchDetailsImg"
+              variant="top"
+              src={sketch.url}
+              alt={sketch.name || "Sketch"}
+            />
+          ) : (
+            <div
+              style={{
+                padding: "3rem",
+                textAlign: "center",
+                background: "#f0f0f0",
+              }}
+            >
+              <p>Imagen no disponible</p>
+            </div>
+          )}
 
-          {/* ── Title + upload info ───────────────────────────────────────── */}
           <span
             style={{
               display: "flex",
@@ -175,14 +211,13 @@ const SketchDetail = () => {
               padding: "0.5rem",
             }}
           >
-            <h1 className="DetailsTitle">{sketch.name}</h1>
+            <h1 className="DetailsTitle">{sketch.name || "(sin título)"}</h1>
             <Card.Text className="DetailsOwner">
-              Subido el <i><b>{uploadDate}</b></i> por{" "}
-              <i><b>{sketch.owner?.username}</b></i>
+              Subido el <i><b>{uploadDate || "?"}</b></i> por{" "}
+              <i><b>{sketch.owner?.username || "usuario desconocido"}</b></i>
             </Card.Text>
           </span>
 
-          {/* ── Description + likes ──────────────────────────────────────── */}
           <div
             style={{
               display: "flex",
@@ -191,7 +226,9 @@ const SketchDetail = () => {
               padding: "0.5rem",
             }}
           >
-            <Card.Text className="detailsText">{sketch.comment}</Card.Text>
+            <Card.Text className="detailsText">
+              {sketch.comment || <i>(sin descripción)</i>}
+            </Card.Text>
             {sketch.likes?.length > 0 && (
               <span>
                 <h6>
@@ -204,7 +241,6 @@ const SketchDetail = () => {
             )}
           </div>
 
-          {/* ── Comment input (only for logged-in users) ─────────────────── */}
           {user && (
             <FloatingLabel
               controlId="floatingTextarea2"
@@ -227,7 +263,6 @@ const SketchDetail = () => {
           )}
         </Card>
 
-        {/* ── Comments list ─────────────────────────────────────────────── */}
         <div className="sketchDetailsBody">
           {[...(sketch.comments || [])].reverse().map((comment) => {
             const wasEdited = comment.createdAt !== comment.updatedAt;
@@ -241,7 +276,7 @@ const SketchDetail = () => {
                 <div className="commentFlex">
                   <div className="commentOwner">
                     <p style={{ color: "black", margin: 0 }}>
-                      <b>{comment.owner?.username}</b>{" "}
+                      <b>{comment.owner?.username || "?"}</b>{" "}
                       <i style={{ fontSize: "0.8rem" }}>{textDatum}</i>
                     </p>
 
@@ -280,7 +315,6 @@ const SketchDetail = () => {
                   </p>
                 </div>
 
-                {/* Delete comment modal */}
                 <Modal
                   className="detailsEditModal"
                   show={deleteStates[comment._id] || false}
@@ -297,12 +331,7 @@ const SketchDetail = () => {
                   </Modal.Header>
                   <Modal.Body>
                     <p>¿Estás seguro de borrar el comentario?</p>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-around",
-                      }}
-                    >
+                    <div style={{ display: "flex", justifyContent: "space-around" }}>
                       <Button
                         variant="success"
                         onClick={() =>
@@ -324,7 +353,6 @@ const SketchDetail = () => {
                   </Modal.Body>
                 </Modal>
 
-                {/* Edit comment modal */}
                 <Modal
                   className="detailsEditModal"
                   show={editStates[comment._id] || false}
@@ -352,12 +380,7 @@ const SketchDetail = () => {
                       onChange={(e) => setCommentEditInput(e.target.value)}
                     />
                     <br />
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-around",
-                      }}
-                    >
+                    <div style={{ display: "flex", justifyContent: "space-around" }}>
                       <Button
                         variant="danger"
                         onClick={() =>
