@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import "../index.css";
 import SubHomeNav from "../components/SubHomeNav";
 import UserCard from "../components/UserCard";
@@ -10,6 +11,7 @@ import { User } from "../@types/models";
 const PAGE_SIZE = 20;
 
 const UsersPage = () => {
+  const { t } = useTranslation();
   const [search, setSearch] = useState("");
 
   const { data, loading, loadingMore, hasMore, loadMore } =
@@ -27,9 +29,7 @@ const UsersPage = () => {
 
   const observerCallback = useCallback(
     (entries: IntersectionObserverEntry[]) => {
-      if (entries[0].isIntersecting && hasMore && !loadingMore) {
-        loadMore();
-      }
+      if (entries[0].isIntersecting && hasMore && !loadingMore) loadMore();
     },
     [hasMore, loadingMore, loadMore]
   );
@@ -49,17 +49,17 @@ const UsersPage = () => {
       <SubHomeNav />
 
       <SearchBar
-        placeholder="Buscar usuarios por nombre o información..."
+        placeholder={t("users.searchPlaceholder")}
         onSearch={setSearch}
       />
 
       {loading && data.length === 0 ? (
         <p style={{ textAlign: "center", padding: "2rem" }}>
-          {search ? "Buscando..." : "Cargando usuarios..."}
+          {search ? t("users.searching") : t("users.loading")}
         </p>
       ) : data.length === 0 && search ? (
         <p style={{ textAlign: "center", padding: "2rem", color: "#666" }}>
-          No se encontraron usuarios para "{search}"
+          {t("users.noResults", { query: search })}
         </p>
       ) : (
         <>
@@ -73,13 +73,13 @@ const UsersPage = () => {
 
           {loadingMore && (
             <p style={{ textAlign: "center", padding: "1rem", color: "#666" }}>
-              Cargando más usuarios...
+              {t("users.loadingMore")}
             </p>
           )}
 
           {!hasMore && data.length > 0 && (
             <p style={{ textAlign: "center", padding: "2rem", color: "#999" }}>
-              — Has visto todos los usuarios ({data.length}) —
+              {t("users.allLoaded", { count: data.length })}
             </p>
           )}
         </>

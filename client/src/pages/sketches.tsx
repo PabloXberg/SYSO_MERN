@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import "../index.css";
 import SketchCard from "../components/SketchCard";
 import SubHomeNav from "../components/SubHomeNav";
@@ -10,18 +11,15 @@ import { Sketch } from "../@types/models";
 const PAGE_SIZE = 20;
 
 const SketchesPage = () => {
+  const { t } = useTranslation();
   const [search, setSearch] = useState("");
 
-  // Search is passed to the hook — server filters across the WHOLE database,
-  // not just already-loaded items. The hook auto-resets when search changes.
   const { data, loading, loadingMore, hasMore, loadMore, refetch } =
     usePaginatedFetch<Sketch>(
       `${serverURL}sketches/all`,
       PAGE_SIZE,
       (raw: any) => {
-        if (Array.isArray(raw)) {
-          return { items: raw, hasMore: false };
-        }
+        if (Array.isArray(raw)) return { items: raw, hasMore: false };
         return {
           items: raw?.sketches || [],
           hasMore: raw?.pagination?.hasMore ?? false,
@@ -30,14 +28,11 @@ const SketchesPage = () => {
       search
     );
 
-  // Infinite scroll sentinel
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
   const observerCallback = useCallback(
     (entries: IntersectionObserverEntry[]) => {
-      if (entries[0].isIntersecting && hasMore && !loadingMore) {
-        loadMore();
-      }
+      if (entries[0].isIntersecting && hasMore && !loadingMore) loadMore();
     },
     [hasMore, loadingMore, loadMore]
   );
@@ -57,17 +52,17 @@ const SketchesPage = () => {
       <SubHomeNav />
 
       <SearchBar
-        placeholder="Buscar bocetos por nombre, descripción o autor..."
+        placeholder={t("sketches.searchPlaceholder")}
         onSearch={setSearch}
       />
 
       {loading && data.length === 0 ? (
         <p style={{ textAlign: "center", padding: "2rem" }}>
-          {search ? "Buscando..." : "Cargando bocetos..."}
+          {search ? t("sketches.searching") : t("sketches.loading")}
         </p>
       ) : data.length === 0 && search ? (
         <p style={{ textAlign: "center", padding: "2rem", color: "#666" }}>
-          No se encontraron bocetos para "{search}"
+          {t("sketches.noResults", { query: search })}
         </p>
       ) : (
         <>
@@ -83,13 +78,13 @@ const SketchesPage = () => {
 
           {loadingMore && (
             <p style={{ textAlign: "center", padding: "1rem", color: "#666" }}>
-              Cargando más bocetos...
+              {t("sketches.loadingMore")}
             </p>
           )}
 
           {!hasMore && data.length > 0 && (
             <p style={{ textAlign: "center", padding: "2rem", color: "#999" }}>
-              — Has visto todos los bocetos ({data.length}) —
+              {t("sketches.allLoaded", { count: data.length })}
             </p>
           )}
         </>

@@ -1,4 +1,5 @@
 import { ChangeEvent, FormEvent, useContext, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -8,7 +9,6 @@ import { serverURL } from "../serverURL";
 import SubUserNav from "./SubUserNav";
 import "../index.css";
 
-// Previously referenced as `SubmitUpdateData` but never defined — inlined here.
 interface UpdateFormData {
   email: string;
   password: string;
@@ -26,6 +26,7 @@ const initialForm: UpdateFormData = {
 };
 
 const EditProfile = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
 
@@ -69,7 +70,7 @@ const EditProfile = () => {
       navigate("/mysketchs");
     } catch (error) {
       console.error(error);
-      alert("Something went wrong - Try again...");
+      alert(t("profile.updateError"));
     }
   };
 
@@ -92,7 +93,7 @@ const EditProfile = () => {
 
         <Form className="editProfile__form" onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>Dirección de Correo</Form.Label>
+            <Form.Label>{t("profile.emailLabel")}</Form.Label>
             <Form.Control
               type="email"
               name="email"
@@ -100,12 +101,12 @@ const EditProfile = () => {
               onChange={handleChange}
             />
             <Form.Text className="text-muted">
-              <i>Requerido</i>
+              <i>{t("profile.required")}</i>
             </Form.Text>
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formBasicUsername">
-            <Form.Label>Nombre de usuario</Form.Label>
+            <Form.Label>{t("profile.usernameLabel")}</Form.Label>
             <Form.Control
               type="text"
               name="username"
@@ -113,12 +114,12 @@ const EditProfile = () => {
               onChange={handleChange}
             />
             <Form.Text className="text-muted">
-              <i>Requerido</i>
+              <i>{t("profile.required")}</i>
             </Form.Text>
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formBasicInfo">
-            <Form.Label>Información Personal</Form.Label>
+            <Form.Label>{t("profile.infoLabel")}</Form.Label>
             <Form.Control
               as="textarea"
               rows={3}
@@ -130,15 +131,14 @@ const EditProfile = () => {
 
           <div className="editProfile__actions">
             <Button
-              title="Cancelar"
               variant="dark"
               type="button"
               onClick={() => navigate("/mysketchs")}
             >
-              Cancelar
+              {t("profile.cancel")}
             </Button>
             <Button variant="success" type="submit">
-              Guardar
+              {t("profile.save")}
             </Button>
           </div>
         </Form>

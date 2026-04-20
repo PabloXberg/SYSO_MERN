@@ -1,5 +1,6 @@
 import Card from "react-bootstrap/Card";
 import { useContext, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { AuthContext } from "../contexts/AuthContext";
 import UserModal from "./UserModal";
 import { Link, useLocation } from "react-router-dom";
@@ -8,97 +9,81 @@ import { serverURL } from "../serverURL";
 import SpraySpinner from "./SprySpinner";
 import Likes from "../components/likes";
 
-/**
- * SketchCard
- *
- * Props:
- *   - props: the sketch object (legacy naming, kept to avoid breaking parents)
- *   - onUpdate: optional callback fired after a successful edit/delete,
- *               so the parent page can refetch its list without a full reload.
- */
-function SketchCard({ props: sketch, onUpdate }) {
+function SketchCard(props) {
+  const { t } = useTranslation();
   const { user } = useContext(AuthContext);
-  const location = useLocation();
-
   const [show, setShow] = useState(false);
+  const [refresh, setRefresh] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
+  const handleCloseDelete = () => setShowDelete(false);
+  const handleShowDelete = () => setShowDelete(true);
+  const handleCloseEdit = () => setShowEdit(false);
+  const handleShowEdit = () => setShowEdit(true);
+
+  const sketch = props.props;
   const [loading, setLoading] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [avatarPreview, setAvatarPreview] = useState(sketch?.url);
 
   const [formData, setFormData] = useState({
+    owner: "",
     name: "",
     comment: "",
     url: "",
     battle: "",
   });
 
-  const handleCloseDelete = () => setShowDelete(false);
-  const handleShowDelete = () => setShowDelete(true);
-  const handleCloseEdit = () => setShowEdit(false);
-  const handleShowEdit = () => setShowEdit(true);
+  const datum = props.props.createdAt?.substring(0, 10) || t("common.unknownDate");
+  const partesFecha = datum.split("-");
+  const fechaTransformada =
+    partesFecha[2] + "-" + partesFecha[1] + "-" + partesFecha[0];
 
-  // Format date: "YYYY-MM-DD" -> "DD-MM-YYYY"
-  const rawDate = sketch?.createdAt?.substring(0, 10) || "";
-  const fechaTransformada = rawDate
-    ? rawDate.split("-").reverse().join("-")
-    : "Fecha desconocida";
+  const location = useLocation();
+
+  const handleSubmitEdit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    if (user?._id === sketch?.owner._id) {
+      if (formData.battle === "") formData.battle = "0";
+
+      const myHeaders = new Headers();
+      const token = localStorage.getItem("token");
+      myHeaders.append("Authorization", `Bearer ${token}`);
+
+      const submitData = new FormData();
+      submitData.append("_id", sketch._id);
+      submitData.append("owner", sketch.owner._id);
+      submitData.append("name", formData.name);
+      submitData.append("comment", formData.comment);
+      submitData.append("url", formData.url);
+      submitData.append("battle", formData.battle);
+
+      try {
+        await fetch(`${serverURL}sketches/update/${sketch?._id}`, {
+          method: "POST",
+          headers: myHeaders,
+          body: submitData,
+        });
+        handleCloseEdit();
+        setLoading(false);
+        props.onUpdate?.();
+      } catch (error) {
+        console.error(error);
+        alert(t("sketch.updateError"));
+        setLoading(false);
+      }
+    }
+  };
 
   const handleChangeEdit = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleFile = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setAvatarPreview(URL.createObjectURL(e.target.files[0]));
-      setFormData({ ...formData, url: e.target.files[0] });
-    }
-  };
-
-  const handleSubmitEdit = async (e) => {
-    e.preventDefault();
-
-    // BUG FIX: was `sketch?.props.owner._id` — sketch has no `.props`
-    if (user?._id !== sketch?.owner?._id) {
-      alert("No tienes permiso para editar este boceto");
-      return;
-    }
-
-    setLoading(true);
-
-    const myHeaders = new Headers();
-    const token = localStorage.getItem("token");
-    myHeaders.append("Authorization", `Bearer ${token}`);
-
-    const submitData = new FormData();
-    submitData.append("_id", sketch._id);
-    submitData.append("owner", sketch.owner._id);
-    submitData.append("name", formData.name);
-    submitData.append("comment", formData.comment);
-    submitData.append("url", formData.url);
-    submitData.append("battle", formData.battle || "0");
-
-    try {
-      const response = await fetch(
-        `${serverURL}sketches/update/${sketch._id}`,
-        { method: "POST", headers: myHeaders, body: submitData }
-      );
-      await response.json();
-      handleCloseEdit();
-      // Replaces window.location.reload() — keeps SPA behavior
-      onUpdate?.();
-    } catch (error) {
-      console.error(error);
-      alert("Algo salió mal, intentalo nuevamente...");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleSketchDelete = async (sketchToDelete) => {
     handleCloseDelete();
     setLoading(true);
-
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
     myHeaders.append(
@@ -111,196 +96,181 @@ function SketchCard({ props: sketch, onUpdate }) {
     urlencoded.append("owner", sketchToDelete.owner._id);
 
     try {
-      const response = await fetch(
-        `${serverURL}sketches/delete/${sketchToDelete._id}`,
-        { method: "DELETE", headers: myHeaders, body: urlencoded }
-      );
-      await response.json();
-      // Replaces window.location.reload() — keeps SPA behavior
-      onUpdate?.();
+      await fetch(`${serverURL}sketches/delete/${sketchToDelete._id}`, {
+        method: "DELETE",
+        headers: myHeaders,
+        body: urlencoded,
+      });
+      setLoading(false);
+      props.onUpdate?.();
     } catch (error) {
       console.error(error);
-      alert("Algo salió Mal - Intentalo otra vez...");
-    } finally {
+      alert(t("sketch.updateError"));
       setLoading(false);
     }
   };
 
-  const _id = sketch?._id;
-  const page = "/sketchdetail/";
+  const handleFile = (e) => {
+    if (e.target.files) {
+      const arrayURL = URL.createObjectURL(e.target.files[0]);
+      setAvatarPreview(arrayURL);
+      setFormData({ ...formData, url: e.target.files[0] });
+    } else {
+      setFormData({ ...formData, url: "" });
+    }
+  };
 
-  if (loading) return <SpraySpinner />;
+  // eslint-disable-next-line
+  const [likesArray, setLikesArray] = useState(sketch?.likes || []);
+
+  const _id = props?.props._id;
+  const page = "/sketchdetail/";
 
   return (
     <div className="SketchCardPage">
-      <div style={{ display: "flex", flexDirection: "column-reverse" }}>
-        <Card className="SketchCard">
-          {user ? (
-            <Link to={page + _id} key={_id}>
+      {loading ? (
+        <SpraySpinner />
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column-reverse" }}>
+          <Card className="SketchCard">
+            {user ? (
+              <Link to={page + _id} params={_id} key={_id}>
+                <Card.Img
+                  title={t("sketch.clickToOpen")}
+                  className="sketchCardImg"
+                  variant="top"
+                  alt="Sketch"
+                  src={props.props.url}
+                  style={{
+                    cursor: "pointer",
+                    width: "24rem",
+                    height: "24rem",
+                    objectFit: "cover",
+                  }}
+                />
+              </Link>
+            ) : (
               <Card.Img
-                title="Click para ampliar.."
+                title={t("sketch.clickToOpen")}
                 className="sketchCardImg"
                 variant="top"
                 alt="Sketch"
-                src={sketch?.url}
-                style={{
-                  cursor: "pointer",
-                  width: "24rem",
-                  height: "24rem",
-                  objectFit: "cover",
-                }}
+                src={props.props.url}
+                style={{ width: "24rem", height: "24rem", objectFit: "cover" }}
               />
-            </Link>
-          ) : (
-            <Card.Img
-              title="Click para ampliar.."
-              className="sketchCardImg"
-              variant="top"
-              alt="Sketch"
-              src={sketch?.url}
-              style={{
-                width: "24rem",
-                height: "24rem",
-                objectFit: "cover",
-              }}
-            />
-          )}
+            )}
 
-          <Card.Body className="sketchCardBody">
-            <Card.Title>{sketch?.name}</Card.Title>
-            <Card.Text>
-              {sketch?.comment ||
-                "(...aqui normalmente hay informacion sobre el boceto...)"}
-            </Card.Text>
+            <Card.Body className="sketchCardBody">
+              <Card.Title>{props?.props.name}</Card.Title>
+              <Card.Text>
+                {props.props.comment
+                  ? props.props.comment
+                  : t("sketchDetail.noDescription")}
+              </Card.Text>
 
-            {/* Footer varies depending on the page we're on */}
-            {location.pathname === "/sketches" ? (
-              <Card.Footer className="text-muted">
-                <i>Creado por: </i>{" "}
-                <i>{sketch?.owner?.username || user?.username}</i>
-              </Card.Footer>
-            ) : location.pathname === "/mysketchs" ? (
-              <>
-                <Card.Footer
-                  className="sketchCardFooter"
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <div>Creado por mí</div>
-                  <div>
-                    <i
-                      title="Editar Boceto"
-                      className="material-icons Bedit"
-                      onClick={handleShowEdit}
-                      style={{ cursor: "pointer" }}
-                    >
-                      edit
-                    </i>
-                    <i
-                      title="Eliminar Boceto"
-                      className="material-icons Bedit"
-                      style={{ cursor: "pointer" }}
-                      onClick={handleShowDelete}
-                    >
-                      delete_forever
-                    </i>
-                  </div>
+              {location.pathname === "/sketches" ? (
+                <Card.Footer className="text-muted">
+                  <i>{t("sketch.uploadedBy")}: </i>
+                  <i>
+                    {props?.props.owner?.username
+                      ? props?.props.owner.username
+                      : user?.username}
+                  </i>
                 </Card.Footer>
+              ) : location.pathname === "/mysketchs" ? (
+                <>
+                  <Card.Footer
+                    className="sketchCardFooter"
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <div>{t("sketch.uploadedBy")}: {user?.username}</div>
+                    <div>
+                      <i
+                        title={t("sketch.editTooltip")}
+                        className="material-icons Bedit"
+                        onClick={handleShowEdit}
+                        style={{ cursor: "pointer" }}
+                      >
+                        edit
+                      </i>
+                      <i
+                        title={t("sketch.deleteTooltip")}
+                        className="material-icons Bedit"
+                        onClick={handleShowDelete}
+                        style={{ cursor: "pointer" }}
+                      >
+                        delete_forever
+                      </i>
+                    </div>
+                  </Card.Footer>
 
-                {/* Delete confirmation modal */}
-                <Modal
-                  style={{ height: "20rem" }}
-                  show={showDelete}
-                  onHide={handleCloseDelete}
-                  centered
-                  scrollable
-                >
-                  <Modal.Header closeButton>
-                    <Modal.Title>ATENCION</Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                    <Modal.Header>
-                      <Modal.Title>
-                        Estas seguro de eliminar este Boceto?
-                      </Modal.Title>
+                  {/* DELETE CONFIRMATION MODAL */}
+                  <Modal
+                    show={showDelete}
+                    onHide={handleCloseDelete}
+                    backdrop="static"
+                    keyboard={false}
+                    centered
+                  >
+                    <Modal.Header closeButton>
+                      <Modal.Title>{t("sketch.deleteConfirmTitle")}</Modal.Title>
                     </Modal.Header>
-                    <br />
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-around",
-                      }}
-                    >
-                      <Button
-                        title="Cancelar"
-                        variant="success"
-                        onClick={handleCloseDelete}
-                      >
-                        Cancelar
-                      </Button>
-                      <Button
-                        title="Eliminar"
-                        onClick={() => handleSketchDelete(sketch)}
-                        variant="danger"
-                      >
-                        Eliminar
-                      </Button>
-                    </div>
-                  </Modal.Body>
-                </Modal>
-
-                {/* Edit sketch modal */}
-                <Modal
-                  className="userRegisterModal xl"
-                  show={showEdit}
-                  onHide={handleCloseEdit}
-                  backdrop="static"
-                  keyboard={false}
-                  aria-labelledby="contained-modal-title-vcenter"
-                  centered
-                  size="md"
-                  fullscreen={"xl-down"}
-                >
-                  <Modal.Header style={{ fontSize: "medium" }} closeButton>
-                    <Modal.Title style={{ fontSize: "large" }}>
-                      Editar Boceto
-                    </Modal.Title>
-                  </Modal.Header>
-
-                  <div>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                      }}
-                    >
-                      <img
-                        alt="User Sketch"
+                    <Modal.Body>
+                      <p>{t("sketch.deleteConfirmText")}</p>
+                      <div
                         style={{
-                          border: "black 2px solid",
-                          padding: "3px",
-                          width: "18rem",
-                          height: "14rem",
-                          alignSelf: "center",
-                          objectFit: "cover",
+                          display: "flex",
+                          justifyContent: "space-around",
                         }}
-                        src={avatarPreview || sketch?.url}
-                      />
-                      <br />
-                      <input
-                        style={{ padding: "0.3rem" }}
-                        type="file"
-                        accept="image/jpg, image/jpeg, image/png"
-                        onChange={handleFile}
-                      />
-                    </div>
+                      >
+                        <Button variant="success" onClick={handleCloseDelete}>
+                          {t("mySketches.cancel")}
+                        </Button>
+                        <Button
+                          variant="danger"
+                          onClick={() => handleSketchDelete(sketch)}
+                        >
+                          {t("sketch.delete")}
+                        </Button>
+                      </div>
+                    </Modal.Body>
+                  </Modal>
 
-                    <div className="dataform">
+                  {/* EDIT SKETCH MODAL */}
+                  <Modal
+                    show={showEdit}
+                    onHide={handleCloseEdit}
+                    backdrop="static"
+                    keyboard={false}
+                    centered
+                  >
+                    <Modal.Header closeButton>
+                      <Modal.Title>{t("sketch.editTitle")}</Modal.Title>
+                    </Modal.Header>
+                    <div style={{ padding: "1rem" }}>
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                        <img
+                          alt="preview"
+                          src={avatarPreview}
+                          style={{
+                            maxWidth: "12rem",
+                            maxHeight: "12rem",
+                            objectFit: "cover",
+                          }}
+                        />
+                        <br />
+                        <Form.Control
+                          type="file"
+                          name="url"
+                          accept="image/jpg, image/jpeg, image/png"
+                          onChange={handleFile}
+                        />
+                      </div>
+                      <br />
                       <Form.Group
                         className="mb-6"
                         controlId="formBasicEmail"
@@ -310,109 +280,147 @@ function SketchCard({ props: sketch, onUpdate }) {
                           alignContent: "space-between",
                         }}
                       >
-                        <Form.Label>Nombre:</Form.Label>
+                        <Form.Label>{t("sketch.name")}:</Form.Label>
                         <Form.Control
                           type="text"
                           name="name"
-                          placeholder={sketch?.name}
-                          defaultValue={sketch?.name}
+                          placeholder={props.props.name}
+                          defaultValue={props.props.name}
                           onChange={handleChangeEdit}
                         />
 
-                        <Form.Label>Descripción:</Form.Label>
+                        <Form.Label>{t("sketch.description")}:</Form.Label>
                         <Form.Control
                           type="text"
                           name="comment"
-                          placeholder={sketch?.comment}
-                          defaultValue={sketch?.comment}
+                          placeholder={props.props.comment}
+                          defaultValue={props.props.comment}
                           onChange={handleChangeEdit}
                         />
 
                         <Form.Label>
-                          Batalla n°: #{" "}
+                          {t("sketch.battleNumber")}{" "}
                           <i style={{ fontSize: "small" }}>
-                            dejar vacío si no participa...
+                            ({t("sketch.battleHint")})
                           </i>
                         </Form.Label>
-                        {/* BUG FIX: name was "batlle" — typo meant battle was never saved */}
                         <Form.Control
                           style={{ maxWidth: "10rem" }}
                           type="text"
                           name="battle"
-                          placeholder={sketch?.battle}
-                          defaultValue={sketch?.battle}
+                          placeholder={props.props.battle}
+                          defaultValue={props.props.battle}
                           onChange={handleChangeEdit}
                         />
                       </Form.Group>
                       <br />
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Button
+                          variant="danger"
+                          onClick={handleCloseEdit}
+                        >
+                          {t("mySketches.cancel")}
+                        </Button>
+                        <Button
+                          style={{ cursor: "pointer" }}
+                          onClick={handleSubmitEdit}
+                          variant="success"
+                        >
+                          {t("sketch.saveChanges")}
+                        </Button>
+                      </div>
                     </div>
+                  </Modal>
+                </>
+              ) : (
+                <Card.Footer className="text-muted">
+                  <i>{t("sketch.uploadedBy")}: </i>
+                  <b>
+                    {props?.props?.owner?.username
+                      ? props?.props?.owner?.username
+                      : user?.username}
+                  </b>
+                </Card.Footer>
+              )}
 
+              <Card.Footer
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "left",
+                }}
+                className="text-muted"
+              >
+                <i>
+                  {t("common.uploadDate")}: {fechaTransformada}
+                </i>
+              </Card.Footer>
+
+              {!user ? (
+                <Card.Footer>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <span style={{ display: "flex", flexDirection: "row" }}>
+                      <i
+                        title={t("sketch.likeTooltip")}
+                        className="material-icons Bedit"
+                      >
+                        favorite
+                      </i>
+                      {props?.props?.likes && (
+                        <h6>{props?.props.likes?.length}</h6>
+                      )}
+                    </span>
+                    <Form.Label disabled>
+                      <i>{t("auth.login")}</i>
+                    </Form.Label>
                     <div
                       style={{
                         display: "flex",
                         flexDirection: "row",
-                        justifyContent: "space-between",
+                        justifyContent: "space-around",
+                        gap: "2px",
                       }}
                     >
-                      <Button
-                        title="Cancelar"
-                        variant="danger"
-                        onClick={handleCloseEdit}
-                      >
-                        Cancelar
-                      </Button>
-                      <Button
-                        title="Guardar cambios"
-                        style={{ cursor: "pointer" }}
-                        onClick={handleSubmitEdit}
-                        variant="success"
-                      >
-                        Guardar
-                      </Button>
+                      <i>
+                        <i
+                          title={t("sketch.likeTooltip")}
+                          className="material-icons Bedit"
+                        >
+                          message
+                        </i>
+                      </i>
                     </div>
                   </div>
-                </Modal>
-              </>
-            ) : (
-              <Card.Footer className="text-muted">
-                <i>Creado por: </i>{" "}
-                <b>{sketch?.owner?.username || user?.username}</b>
-              </Card.Footer>
-            )}
-
-            <Card.Footer
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "left",
-              }}
-              className="text-muted"
-            >
-              <i> Subido el: {fechaTransformada}</i>
-            </Card.Footer>
-
-            {!user ? (
-              /* Logged out: show like count + hint to log in */
-              <Card.Footer>
-                <div
+                </Card.Footer>
+              ) : (
+                <Card.Footer
                   style={{
-                    display: "flex",
+                    display: "Flex",
                     flexDirection: "row",
                     justifyContent: "space-between",
                   }}
                 >
-                  <span style={{ display: "flex", flexDirection: "row" }}>
-                    <i
-                      title="Iniciar sesion para esta funcion"
-                      className="material-icons Bedit"
-                    >
-                      favorite
-                    </i>
-                    {sketch?.likes && <h6>{sketch.likes.length}</h6>}
-                  </span>
-                  <Form.Label disabled>
-                    <i>Iniciar sesión para estas funciones</i>
-                  </Form.Label>
+                  <div style={{ alignSelf: "flex-start" }}>
+                    <Likes
+                      onClick={() => setRefresh(!refresh)}
+                      key={sketch._id}
+                      props={sketch}
+                      likesArray={likesArray}
+                    />
+                  </div>
+
                   <div
                     style={{
                       display: "flex",
@@ -421,70 +429,39 @@ function SketchCard({ props: sketch, onUpdate }) {
                       gap: "2px",
                     }}
                   >
-                    <i
-                      title="Iniciar sesion para esta funcion"
-                      className="material-icons Bedit"
+                    <h6>
+                      <b style={{ color: "#0066FF" }}>
+                        {sketch?.comments?.length}{" "}
+                      </b>
+                    </h6>
+
+                    <Link
+                      title={t("sketch.comments")}
+                      to={page + _id}
+                      params={_id}
+                      key={_id}
                     >
-                      message
-                    </i>
+                      <i
+                        className="material-icons Bedit"
+                        style={{ cursor: "pointer" }}
+                      >
+                        message
+                      </i>
+                    </Link>
                   </div>
-                </div>
-              </Card.Footer>
-            ) : (
-              /* Logged in: show like button + link to comments */
-              <Card.Footer
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <div style={{ alignSelf: "flex-start" }}>
-                  <Likes key={sketch._id} props={sketch} />
-                </div>
+                </Card.Footer>
+              )}
+            </Card.Body>
 
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-around",
-                    gap: "2px",
-                  }}
-                >
-                  <h6>
-                    {/* BUG FIX: was sketch?.props?.comments — double-props bug */}
-                    <b style={{ color: "#0066FF" }}>
-                      {sketch?.comments?.length}
-                    </b>
-                  </h6>
-                  <Link
-                    title="Comentarios"
-                    to={page + _id}
-                    key={_id}
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                    }}
-                  >
-                    <i
-                      className="material-icons Bedit"
-                      style={{ cursor: "pointer" }}
-                    >
-                      message
-                    </i>
-                  </Link>
-                </div>
-              </Card.Footer>
-            )}
-          </Card.Body>
-
-          <UserModal
-            onClose={() => setShow(false)}
-            show={show}
-            character={sketch}
-          />
-        </Card>
-      </div>
+            <UserModal
+              style={{ cursor: "pointer" }}
+              onClose={() => setShow(false)}
+              show={show}
+              character={props?.props}
+            />
+          </Card>
+        </div>
+      )}
     </div>
   );
 }

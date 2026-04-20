@@ -1,4 +1,5 @@
 import { useContext, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
@@ -11,12 +12,14 @@ import { AuthContext } from "../contexts/AuthContext";
 import LoginModal from "./LoginModal";
 import RegisterModal from "./RegisterModal";
 import SpraySpinner from "./SprySpinner";
+import LanguageSwitcher from "./LanguageSwitcher";
 import "../index.css";
 
 const PLACEHOLDER_AVATAR_URL =
   "https://res.cloudinary.com/dhaezmblt/image/upload/v1684921855/user_avatar/user-default_rhbk4i.png";
 
 function NavStrap() {
+  const { t } = useTranslation();
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -49,7 +52,7 @@ function NavStrap() {
         <Container>
           <Navbar.Brand as={Link} to="/news" style={{ cursor: "pointer" }}>
             <img
-              title="Noticias del Share"
+              title={t("nav.newsTitle")}
               alt="Share Your Sketch"
               src={isHovered ? Logo2 : Logo1}
               className="navTrapImg"
@@ -63,24 +66,26 @@ function NavStrap() {
             <Nav.Link
               as={Link}
               to="/homepage"
-              title="Home Page"
+              title={t("nav.home")}
               className="news"
               style={{ fontSize: "x-large" }}
             >
-              Home
+              {t("nav.home")}
             </Nav.Link>
             <Nav.Link
               as={Link}
               to="/battle"
-              title="Batallas"
+              title={t("nav.battle")}
               className="battle"
               style={{ fontSize: "x-large" }}
             >
-              Battle
+              {t("nav.battle")}
             </Nav.Link>
           </Nav>
 
-          <div style={{ display: "flex", alignContent: "space-between" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            <LanguageSwitcher />
+
             {user ? (
               <Nav>
                 <img
@@ -88,8 +93,7 @@ function NavStrap() {
                   alt="Avatar"
                   className="NavAtar"
                   style={{
-                    marginLeft: "2em",
-                    gap: "1rem",
+                    marginLeft: "1em",
                     maxHeight: "2.5rem",
                     maxWidth: "2.5rem",
                     borderRadius: "50%",
@@ -98,36 +102,36 @@ function NavStrap() {
                 <Nav.Link
                   as={Link}
                   to="/mysketchs"
-                  title="Opciones de usuario"
+                  title={t("nav.userMenu")}
                   style={{ fontSize: "x-large" }}
                 >
                   {user.username}
                 </Nav.Link>
                 <Button
-                  title="Cerrar Sesión"
+                  title={t("nav.logout")}
                   variant="outline-danger"
                   onClick={handleLogout}
                 >
-                  Salir
+                  {t("nav.logout")}
                 </Button>
               </Nav>
             ) : (
               <div style={{ display: "flex" }}>
                 <Navbar.Brand
-                  title="Registrar nuevo Usuario"
+                  title={t("nav.register")}
                   className="registrarse"
                   style={{ cursor: "pointer", fontSize: "large" }}
                   onClick={() => setShowRegister(true)}
                 >
-                  Registrar
+                  {t("nav.register")}
                 </Navbar.Brand>
                 <Navbar.Brand
-                  title="Iniciar Sesión"
+                  title={t("nav.login")}
                   className="entrar"
                   style={{ cursor: "pointer", fontSize: "large" }}
                   onClick={() => setShowLogin(true)}
                 >
-                  Entrar
+                  {t("nav.login")}
                 </Navbar.Brand>
               </div>
             )}

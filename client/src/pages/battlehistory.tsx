@@ -1,7 +1,5 @@
 import BattleInfo from "../components/BattleInfo";
 
-const BattleHistory = () => (
-  <BattleInfo farewell="Hasta pronto Sketchers!!!" />
-);
+const BattleHistory = () => <BattleInfo showFarewell />;
 
 export default BattleHistory;

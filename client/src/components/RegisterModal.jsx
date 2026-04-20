@@ -1,4 +1,5 @@
 import { useContext, useState } from "react";
+import { useTranslation } from "react-i18next";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -7,6 +8,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import { serverURL } from "../serverURL";
 
 function RegisterModal({ show, onHide, onLoadingChange }) {
+  const { t } = useTranslation();
   const { login } = useContext(AuthContext);
   const [avatarPreview, setAvatarPreview] = useState(DefaultImage);
   const [formData, setFormData] = useState({
@@ -30,7 +32,7 @@ function RegisterModal({ show, onHide, onLoadingChange }) {
 
   const handleSubmit = async () => {
     if (!formData.username || !formData.email || !formData.password) {
-      alert("Falta rellenar alguno de los campos obligatorios (*)");
+      alert(t("auth.missingFields"));
       return;
     }
 
@@ -38,7 +40,6 @@ function RegisterModal({ show, onHide, onLoadingChange }) {
     submitData.append("email", formData.email);
     submitData.append("username", formData.username);
     submitData.append("password", formData.password);
-    // Bug fixed: "info" was never included in the original submit
     submitData.append("info", formData.info);
     submitData.append("avatar", formData.avatar || DefaultImage);
 
@@ -52,7 +53,7 @@ function RegisterModal({ show, onHide, onLoadingChange }) {
       login(formData.email, formData.password);
     } catch (error) {
       console.error(error);
-      alert("Algo salió mal, Usuario no registrado");
+      alert(t("auth.registrationError"));
       onHide();
     } finally {
       onLoadingChange?.(false);
@@ -69,13 +70,13 @@ function RegisterModal({ show, onHide, onLoadingChange }) {
       centered
     >
       <Modal.Header style={{ fontSize: "small" }} closeButton>
-        <Modal.Title style={{ fontSize: "medium" }}>Registrar Usuario</Modal.Title>
+        <Modal.Title style={{ fontSize: "medium" }}>{t("auth.register")}</Modal.Title>
       </Modal.Header>
 
       <div>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
           <img
-            alt="Imagen de perfil"
+            alt="Avatar"
             src={avatarPreview || DefaultImage}
             style={{
               border: "black 2px solid",
@@ -100,39 +101,38 @@ function RegisterModal({ show, onHide, onLoadingChange }) {
             controlId="formBasicEmail"
             style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
           >
-            <Form.Label>(*) Correo Electrónico:</Form.Label>
+            <Form.Label>(*) {t("auth.email")}:</Form.Label>
             <Form.Control
               style={{ maxWidth: "20rem" }}
               type="email"
               name="email"
-              placeholder="email"
+              placeholder={t("auth.email").toLowerCase()}
               onChange={handleChange}
             />
 
-            <Form.Label>(*) Contraseña:</Form.Label>
+            <Form.Label>(*) {t("auth.password")}:</Form.Label>
             <Form.Control
               style={{ maxWidth: "20rem" }}
               type="password"
               name="password"
-              placeholder="Password"
+              placeholder={t("auth.password")}
               onChange={handleChange}
             />
 
-            <Form.Label>(*) Nombre de Usuario:</Form.Label>
+            <Form.Label>(*) {t("auth.username")}:</Form.Label>
             <Form.Control
               style={{ maxWidth: "20rem" }}
               name="username"
-              placeholder="username"
+              placeholder={t("auth.username").toLowerCase()}
               onChange={handleChange}
             />
 
-            <Form.Label>Información sobre ti (opcional...)</Form.Label>
-            {/* Bug fixed: original had type="email" which forced email validation */}
+            <Form.Label>{t("auth.info")}</Form.Label>
             <Form.Control
               style={{ maxWidth: "20rem" }}
               type="text"
               name="info"
-              placeholder="Personal Info"
+              placeholder={t("auth.personalInfo")}
               onChange={handleChange}
             />
           </Form.Group>
@@ -142,10 +142,10 @@ function RegisterModal({ show, onHide, onLoadingChange }) {
           style={{ display: "flex", flexDirection: "row", alignContent: "space-around" }}
         >
           <Button variant="danger" onClick={onHide}>
-            Cancelar
+            {t("auth.cancel")}
           </Button>
           <Button variant="success" style={{ cursor: "pointer" }} onClick={handleSubmit}>
-            Registrar
+            {t("auth.submit")}
           </Button>
         </Modal.Footer>
       </div>

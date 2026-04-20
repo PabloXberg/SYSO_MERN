@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { serverURL } from "../serverURL";
 
 const ResetPassword = () => {
+  const { t } = useTranslation();
   const { token } = useParams();
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
@@ -14,7 +16,7 @@ const ResetPassword = () => {
     e.preventDefault();
 
     if (password !== passwordConfirmation) {
-      alert("La contraseña y la confirmación no coinciden");
+      alert(t("auth.passwordMismatch"));
       return;
     }
 
@@ -24,36 +26,37 @@ const ResetPassword = () => {
         { password }
       );
       alert(res.data.message);
-      // BUG FIX: original was `Navigate('/')` — Navigate is a component, not a
-      // function. That line silently did nothing and the user was never redirected.
       navigate("/");
     } catch (error) {
       setMessage(
-        error.response?.data?.message ||
-          "Error al restablecer la contraseña"
+        error.response?.data?.message || t("auth.resetPasswordError")
       );
     }
   };
 
   return (
-    <div>
-      <h2>Nueva Contraseña</h2>
+    <div style={{ padding: "2rem", maxWidth: "500px", margin: "0 auto" }}>
+      <h2>{t("auth.resetPasswordTitle")}</h2>
       <form onSubmit={handleSubmit}>
         <input
           type="password"
-          placeholder="Ingrese nueva contraseña"
+          placeholder={t("auth.newPasswordPlaceholder")}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+          style={{ width: "100%", padding: "0.5rem", marginBottom: "0.5rem" }}
         />
         <input
           type="password"
-          placeholder="Confirme nueva contraseña"
+          placeholder={t("auth.confirmPasswordPlaceholder")}
           value={passwordConfirmation}
           onChange={(e) => setPasswordConfirmation(e.target.value)}
           required
+          style={{ width: "100%", padding: "0.5rem", marginBottom: "1rem" }}
         />
-        <button type="submit">GUARDAR</button>
+        <button type="submit" style={{ width: "100%", padding: "0.5rem" }}>
+          {t("auth.save")}
+        </button>
       </form>
       {message && <p>{message}</p>}
     </div>

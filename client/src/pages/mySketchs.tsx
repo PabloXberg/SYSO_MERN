@@ -1,4 +1,5 @@
 import { ChangeEvent, useContext, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { AuthContext } from "../contexts/AuthContext";
 import SketchCard from "../components/SketchCard";
 import { Button } from "react-bootstrap";
@@ -10,7 +11,7 @@ import { serverURL } from "../serverURL";
 import SpraySpinner from "../components/SprySpinner";
 import { useFetch } from "../hooks/useFetch";
 import { User } from "../@types/models";
-// import "../index.css";
+import "../index.css";
 
 interface FormDataShape {
   name: string;
@@ -27,6 +28,7 @@ const initialForm: FormDataShape = {
 };
 
 const MySketchs = () => {
+  const { t } = useTranslation();
   const { user } = useContext(AuthContext);
   const userId = user?._id;
 
@@ -61,7 +63,7 @@ const MySketchs = () => {
 
   const handleSubmit = async () => {
     if (!formData.name || !formData.comment || !formData.url) {
-      alert("Falta rellenar alguno de los campos");
+      alert(t("mySketches.missingFields"));
       return;
     }
     if (!userId) return;
@@ -86,11 +88,10 @@ const MySketchs = () => {
         body: submitData,
       });
       handleClose();
-      // Replaces window.location.reload() - refetch list without SPA break
       await refetch();
     } catch (error) {
       console.error(error);
-      alert("Something went wrong - check console");
+      alert(t("mySketches.uploadError"));
     } finally {
       setLoading(false);
     }
@@ -104,7 +105,7 @@ const MySketchs = () => {
       <div>
         <div className="title">
           <Button
-            title="Subir un nuevo Boceto!!"
+            title={t("mySketches.openUploadModal")}
             onClick={handleShow}
             style={{
               gap: "1em",
@@ -113,10 +114,9 @@ const MySketchs = () => {
             }}
             variant="success"
           >
-            <b>Subir Nuevo Boceto</b>
+            <b>{t("mySketches.openUploadModal")}</b>
           </Button>
 
-          {/* Upload sketch modal */}
           <Modal
             className="UserRegisterModal"
             show={show}
@@ -127,7 +127,7 @@ const MySketchs = () => {
           >
             <Modal.Header style={{ fontSize: "small" }} closeButton>
               <Modal.Title style={{ fontSize: "medium" }}>
-                Subir un Boceto
+                {t("mySketches.uploadTitle")}
               </Modal.Title>
             </Modal.Header>
 
@@ -139,13 +139,13 @@ const MySketchs = () => {
                     padding: "1rem",
                     alignSelf: "center",
                   }}
-                  title="Seleccionar boceto"
-                  alt="boceto"
+                  title={t("mySketches.selectSketch")}
+                  alt="sketch"
                   src={avatarPreview}
                 />
                 <br />
                 <input
-                  title="Seleccionar boceto"
+                  title={t("mySketches.selectSketch")}
                   style={{ padding: "1rem" }}
                   type="file"
                   accept="image/jpg, image/jpeg, image/png"
@@ -168,21 +168,18 @@ const MySketchs = () => {
                     style={{ maxWidth: "20rem" }}
                     type="text"
                     name="name"
-                    placeholder="nombre"
+                    placeholder={t("mySketches.namePlaceholder")}
                     onChange={handleChange}
                   />
                   <Form.Control
                     style={{ maxWidth: "20rem" }}
                     type="text"
                     name="comment"
-                    placeholder="Descripcion"
+                    placeholder={t("mySketches.descriptionPlaceholder")}
                     onChange={handleChange}
                   />
-                  <Form.Label>Battle #: </Form.Label>
-                  <i>
-                    * dejar este campo vacío en caso de no participar en
-                    ninguna batalla
-                  </i>
+                  <Form.Label>{t("mySketches.battlePlaceholder")}: </Form.Label>
+                  <i>* {t("mySketches.battleHint")}</i>
                   <Form.Control
                     style={{ maxWidth: "10rem" }}
                     type="text"
@@ -194,16 +191,20 @@ const MySketchs = () => {
               </div>
 
               <Modal.Footer>
-                <Button title="Cancelar" variant="danger" onClick={handleClose}>
-                  Cerrar
+                <Button
+                  title={t("mySketches.cancel")}
+                  variant="danger"
+                  onClick={handleClose}
+                >
+                  {t("mySketches.close")}
                 </Button>
                 <Button
-                  title="Subir Boceto"
+                  title={t("mySketches.uploadTooltip")}
                   style={{ cursor: "pointer" }}
                   onClick={handleSubmit}
                   variant="success"
                 >
-                  Subir
+                  {t("mySketches.upload")}
                 </Button>
               </Modal.Footer>
             </div>

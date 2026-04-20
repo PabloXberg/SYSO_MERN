@@ -1,76 +1,72 @@
 import Button from "react-bootstrap/Button";
+import { useTranslation } from "react-i18next";
 
-/**
- * UserModal
- * Shows info about the OWNER of a sketch (used from SketchCard).
- *
- * Props:
- *   - show:     boolean
- *   - onClose:  () => void
- *   - character: a sketch object (its .owner is what we display)
- */
-function UserModal({ show, onClose, character }) {
-  if (!show || !character?.owner) return null;
+function UserModal(props) {
+  const { t } = useTranslation();
 
-  const owner = character.owner;
+  if (!props.show) return null;
 
-  // Format date: "2024-05-23T..." -> "23-05-2024"
-  const rawDate = owner.createdAt?.substring(0, 10) || "";
-  const fechaTransformada = rawDate
-    ? rawDate.split("-").reverse().join("-")
-    : "Fecha desconocida";
+  // Null-safe: if owner is missing, don't render (prevents crashes)
+  const owner = props.character?.owner;
+  if (!owner) return null;
 
-  // BUG FIX: previous code was `!== undefined || null || 0` which is always true,
-  // then on the else branch referenced `props.characters` (plural, doesn't exist)
-  // → guaranteed crash. Null-safe now.
+  const datum = owner.createdAt?.substring(0, 10) || "";
+  const partesFecha = datum.split("-");
+  const fechaTransformada =
+    partesFecha.length === 3
+      ? `${partesFecha[2]}-${partesFecha[1]}-${partesFecha[0]}`
+      : t("common.unknownDate");
+
+  // Safe length calculation
   const sketchCount = owner.sketchs?.length ?? 0;
 
+  // Add spaces between letters for graffiti-style display
+  const nombre = owner.username || "";
+  const nombreConEspacios = nombre.split("").join(" ");
+
   return (
-    <div className="modal-container" onClick={onClose}>
-      <div
-        className="modal-content userModal"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="modal-header">
-          <h3 style={{ fontFamily: "MiFuente", fontSize: "xxx-large" }}>
-            {owner.username}
-          </h3>
-        </div>
-
-        <div>
-          <img
-            className="modal-picture"
-            src={owner.avatar}
-            alt={`${owner.username} avatar`}
-          />
-        </div>
-
-        <div>
-          <h5>Información Personal</h5>
-          <p>
-            <i>{owner.info || "Sin información"}</i>
-          </p>
-
-          <h5>Bocetos subidos</h5>
-          <p>
-            <i>{sketchCount}</i>
-          </p>
-
-          <h5>Registrado el</h5>
-          <p>
-            <i>{fechaTransformada}</i>
-          </p>
-        </div>
-
-        <div className="modal-footer">
-          <Button
-            title="Cerrar"
-            onClick={onClose}
-            variant="dark"
-            className="modal-close-btn"
-          >
-            Cerrar
-          </Button>
+    <div className="userModal">
+      <div className="modal-conta userModal" onClick={props.onClose}>
+        <div
+          className="modal-content userModal"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="modal-header" style={{ color: "White" }}>
+            <h3 style={{ fontFamily: "MiFuente", fontSize: "xxx-large" }}>
+              {nombreConEspacios}
+            </h3>
+          </div>
+          <div>
+            <img
+              className="modal-picture"
+              src={owner.avatar}
+              alt="User Avatar"
+            />
+          </div>
+          <div style={{ color: "White" }}>
+            <br />
+            <h5>{t("users.personalInfo")}:</h5>
+            <p>
+              <i>{owner.info || t("users.noInfo")}</i>
+            </p>
+            <h5>{t("subNav.sketches")}:</h5>
+            <p>
+              <i>{sketchCount}</i>
+            </p>
+            <h5>{t("users.registeredOn")}:</h5>
+            <p>
+              <i>{fechaTransformada}</i>
+            </p>
+          </div>
+          <div className="modal-footer">
+            <Button
+              title={t("auth.close")}
+              onClick={props.onClose}
+              className="modal-close-btn"
+            >
+              {t("auth.close")}
+            </Button>
+          </div>
         </div>
       </div>
     </div>

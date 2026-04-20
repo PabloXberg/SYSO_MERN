@@ -1,12 +1,15 @@
+import { useTranslation } from "react-i18next";
 import SubNav from "./SubNav";
 
-const links = [
-  { to: "/mysketchs", label: "Mis Bocetos", title: "Bocetos subidos por mi" },
-  { to: "/myfav", label: "Favoritos", title: "Mis bocetos favoritos" },
-  { to: "/edit", label: "Editar", title: "Editar mi perfíl" },
-];
-
 function SubUserNav() {
+  const { t } = useTranslation();
+
+  const links = [
+    { to: "/mysketchs", label: t("subNav.mySketches"), title: t("subNav.mySketchesTitle") },
+    { to: "/myfav", label: t("subNav.favorites"), title: t("subNav.favoritesTitle") },
+    { to: "/edit", label: t("subNav.edit"), title: t("subNav.editTitle") },
+  ];
+
   return <SubNav links={links} />;
 }
 

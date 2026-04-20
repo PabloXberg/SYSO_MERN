@@ -1,4 +1,5 @@
 import { useEffect, useState, useContext } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import Card from "react-bootstrap/Card";
 import { Button, Form, Modal } from "react-bootstrap";
@@ -7,19 +8,8 @@ import { AuthContext } from "../contexts/AuthContext";
 import "../index.css";
 import { serverURL } from "../serverURL";
 
-const formatDate = (dateStr, wasEdited) => {
-  if (!dateStr) return "";
-  const fecha = new Date(dateStr);
-  const fechaStr = fecha.toLocaleDateString("es-ES", {
-    year: "numeric", month: "2-digit", day: "2-digit",
-  });
-  const horaStr = fecha.toLocaleTimeString("es-ES", {
-    hour: "2-digit", minute: "2-digit", second: "2-digit",
-  });
-  return `${wasEdited ? "editado el" : "dijo el"} ${fechaStr} ${horaStr}`;
-};
-
 const SketchDetail = () => {
+  const { t, i18n } = useTranslation();
   const { user } = useContext(AuthContext);
   const { id } = useParams();
 
@@ -31,6 +21,24 @@ const SketchDetail = () => {
   const [refresh, setRefresh] = useState(false);
   const [deleteStates, setDeleteStates] = useState({});
   const [editStates, setEditStates] = useState({});
+
+  // Format a date using the current language's locale
+  const formatDate = (dateStr, wasEdited) => {
+    if (!dateStr) return "";
+    const fecha = new Date(dateStr);
+    const locale = i18n.language.startsWith("en") ? "en-US" : "es-ES";
+    const fechaStr = fecha.toLocaleDateString(locale, {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+    const horaStr = fecha.toLocaleTimeString(locale, {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+    return `${wasEdited ? t("sketchDetail.editedOn") : t("sketchDetail.saidOn")} ${fechaStr} ${horaStr}`;
+  };
 
   const getSketchById = async (sketchId) => {
     setLoading(true);
@@ -44,24 +52,18 @@ const SketchDetail = () => {
       });
       const result = await response.json();
 
-      // BUG FIX: previously we blindly set `sketch = result` even if the
-      // server returned 404 or 500. The component then tried to render
-      // `{error: "..."}` as if it were a sketch, producing the empty shell
-      // shown in the screenshot ("Subido el  por " with no image).
       if (!response.ok) {
-        console.error("getSketchById HTTP", response.status, result);
         setErrorMsg(
           result.error ||
-          result.message ||
-          `Error ${response.status} al cargar el boceto`
+            result.message ||
+            t("sketchDetail.serverError", { status: response.status })
         );
         setSketch(null);
         return;
       }
 
       if (!result?._id) {
-        console.error("getSketchById malformed response:", result);
-        setErrorMsg("La respuesta del servidor no tiene el formato esperado.");
+        setErrorMsg(t("sketchDetail.malformedResponse"));
         setSketch(null);
         return;
       }
@@ -69,7 +71,7 @@ const SketchDetail = () => {
       setSketch(result);
     } catch (error) {
       console.error("getSketchById error:", error);
-      setErrorMsg("No se pudo conectar al servidor.");
+      setErrorMsg(t("sketchDetail.connectionError"));
       setSketch(null);
     } finally {
       setLoading(false);
@@ -79,6 +81,7 @@ const SketchDetail = () => {
   useEffect(() => {
     getSketchById(id);
     setRefresh(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, refresh]);
 
   const commentSubmit = async () => {
@@ -100,7 +103,7 @@ const SketchDetail = () => {
       setRefresh(true);
     } catch (error) {
       console.error(error);
-      alert("Something went wrong — message not saved");
+      alert(t("sketchDetail.commentError"));
     }
   };
 
@@ -123,7 +126,7 @@ const SketchDetail = () => {
       setRefresh(true);
     } catch (error) {
       console.error(error);
-      alert("Algo salió Mal - Intentalo otra vez...");
+      alert(t("sketch.updateError"));
     }
   };
 
@@ -146,7 +149,7 @@ const SketchDetail = () => {
       setRefresh(true);
     } catch (error) {
       console.error(error);
-      alert("Algo salió Mal - Intentalo otra vez...");
+      alert(t("sketch.updateError"));
     }
   };
 
@@ -154,7 +157,7 @@ const SketchDetail = () => {
     return (
       <div className="spinner-container">
         <div className="spinner-border custom-spinner" role="status">
-          <span className="visually-hidden">Cargando...</span>
+          <span className="visually-hidden">{t("common.loading")}</span>
         </div>
       </div>
     );
@@ -163,12 +166,12 @@ const SketchDetail = () => {
   if (!sketch) {
     return (
       <div style={{ padding: "2rem", textAlign: "center" }}>
-        <h3>No se pudo cargar el boceto</h3>
+        <h3>{t("sketchDetail.unableToLoad")}</h3>
         {errorMsg && (
           <p style={{ color: "#888", fontStyle: "italic" }}>{errorMsg}</p>
         )}
         <p>
-          <a href="/sketches">← Volver a todos los bocetos</a>
+          <a href="/sketches">{t("sketchDetail.backToSketches")}</a>
         </p>
       </div>
     );
@@ -180,7 +183,6 @@ const SketchDetail = () => {
     <div className="sketchDetails sketchDetailsBody">
       <div className="detailsImage">
         <Card className="bg-light">
-
           {sketch.url ? (
             <Card.Img
               className="sketchDetailsImg"
@@ -196,7 +198,7 @@ const SketchDetail = () => {
                 background: "#f0f0f0",
               }}
             >
-              <p>Imagen no disponible</p>
+              <p>{t("sketchDetail.imageUnavailable")}</p>
             </div>
           )}
 
@@ -211,10 +213,20 @@ const SketchDetail = () => {
               padding: "0.5rem",
             }}
           >
-            <h1 className="DetailsTitle">{sketch.name || "(sin título)"}</h1>
+            <h1 className="DetailsTitle">
+              {sketch.name || t("sketchDetail.noTitle")}
+            </h1>
             <Card.Text className="DetailsOwner">
-              Subido el <i><b>{uploadDate || "?"}</b></i> por{" "}
-              <i><b>{sketch.owner?.username || "usuario desconocido"}</b></i>
+              {t("common.uploadDate")}{" "}
+              <i>
+                <b>{uploadDate || "?"}</b>
+              </i>{" "}
+              {t("common.by")}{" "}
+              <i>
+                <b>
+                  {sketch.owner?.username || t("sketchDetail.unknownUser")}
+                </b>
+              </i>
             </Card.Text>
           </span>
 
@@ -227,7 +239,7 @@ const SketchDetail = () => {
             }}
           >
             <Card.Text className="detailsText">
-              {sketch.comment || <i>(sin descripción)</i>}
+              {sketch.comment || <i>{t("sketchDetail.noDescription")}</i>}
             </Card.Text>
             {sketch.likes?.length > 0 && (
               <span>
@@ -244,7 +256,7 @@ const SketchDetail = () => {
           {user && (
             <FloatingLabel
               controlId="floatingTextarea2"
-              label="Agrega un comentario..."
+              label={t("sketchDetail.addComment")}
               style={{ padding: "0.5rem" }}
             >
               <Form.Control
@@ -315,6 +327,7 @@ const SketchDetail = () => {
                   </p>
                 </div>
 
+                {/* Delete comment modal */}
                 <Modal
                   className="detailsEditModal"
                   show={deleteStates[comment._id] || false}
@@ -327,11 +340,18 @@ const SketchDetail = () => {
                   centered
                 >
                   <Modal.Header closeButton>
-                    <Modal.Title>ATENCIÓN</Modal.Title>
+                    <Modal.Title>
+                      {t("sketchDetail.deleteCommentConfirmTitle")}
+                    </Modal.Title>
                   </Modal.Header>
                   <Modal.Body>
-                    <p>¿Estás seguro de borrar el comentario?</p>
-                    <div style={{ display: "flex", justifyContent: "space-around" }}>
+                    <p>{t("sketchDetail.deleteCommentConfirm")}</p>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-around",
+                      }}
+                    >
                       <Button
                         variant="success"
                         onClick={() =>
@@ -341,18 +361,19 @@ const SketchDetail = () => {
                           }))
                         }
                       >
-                        Cancelar
+                        {t("mySketches.cancel")}
                       </Button>
                       <Button
                         variant="danger"
                         onClick={() => commentDelete(comment)}
                       >
-                        Eliminar
+                        {t("sketch.delete")}
                       </Button>
                     </div>
                   </Modal.Body>
                 </Modal>
 
+                {/* Edit comment modal */}
                 <Modal
                   className="detailsEditModal"
                   show={editStates[comment._id] || false}
@@ -365,7 +386,9 @@ const SketchDetail = () => {
                   centered
                 >
                   <Modal.Header closeButton>
-                    <Modal.Title>Editar Comentario</Modal.Title>
+                    <Modal.Title>
+                      {t("sketchDetail.editCommentTitle")}
+                    </Modal.Title>
                   </Modal.Header>
                   <Modal.Body>
                     <Form.Control
@@ -380,7 +403,12 @@ const SketchDetail = () => {
                       onChange={(e) => setCommentEditInput(e.target.value)}
                     />
                     <br />
-                    <div style={{ display: "flex", justifyContent: "space-around" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-around",
+                      }}
+                    >
                       <Button
                         variant="danger"
                         onClick={() =>
@@ -390,13 +418,13 @@ const SketchDetail = () => {
                           }))
                         }
                       >
-                        Cancelar
+                        {t("mySketches.cancel")}
                       </Button>
                       <Button
                         variant="success"
                         onClick={() => handleCommentEdit(comment)}
                       >
-                        Guardar
+                        {t("sketch.saveChanges")}
                       </Button>
                     </div>
                   </Modal.Body>

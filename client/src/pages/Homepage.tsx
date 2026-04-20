@@ -1,56 +1,32 @@
-import  { Key } from 'react'
-// os archivos 
-import SubHomeNav from '../components/SubHomeNav'
-import SubHomeNavDown from '../components/SubHomeNavDown'
+import { useTranslation } from "react-i18next";
+import SubHomeNav from "../components/SubHomeNav";
+import SubHomeNavDown from "../components/SubHomeNavDown";
 
-
-//import { InstagramEmbed } from 'react-social-media-embed';
-
-type Props = {}
-
-interface User {
-  _id: Key | null | undefined
-  email: String,
-  username: String,
-  password: String,
-  info: String,
-  sketchs: [],
-  likes: [],
-  comments:[]
-
-}
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-type Users = User[]
-
-const Homepage = (props: Props) => {
+const Homepage = () => {
+  const { t } = useTranslation();
 
   return (
-    <><SubHomeNav />
-        <div className='homeContainer'>
-
-      {/* WIDget para instagram */}
-      {/* <div className="elfsight-app-26d13d88-234a-4eed-b7a3-a4622ef81e45"></div> */}
-
-      <div className="homeInfo">
-        <h2 className='tituloFuente'>Asociacion artistica sin animo de lucro.  </h2><br />
-          <h3>Somos un colectivo en pleno desarrollo, como objetivo principal, la realizacion de eventos relacionados con la cultura Hip Hop,<br /><br />
-            dando oportunidad y ofreciendo espacios a toda persona que desee expresar su arte con total libertad. <br /><br />
-          Organizamos tanto quedadas de bocetos como exposiciones, exhibiciones de Graffiti, conciertos y batallas de freestyle. <br /><br />
-          Estamos abiertos a todo tipo de propuestas de quien quiera colaborar con nosotros a nivel local o nacional. <br /><br />
-          Varios Sponsors y locales en la ciudad de Valencia nos apoyan en este movimiento y nos facilitan dichas actividades. <br /><br />
-          También publicitamos a los artistas involucrados en nuestros proyectos, a través de contenido visual en diferentes redes sociales .
-          No dudes en participar y formar parte de nuestra familia.</h3><br />
-<br/><br/><br/><br/>
+    <>
+      <SubHomeNav />
+      <div className="homeContainer">
+        <div className="homeInfo">
+          <h2 className="tituloFuente">{t("home.title")}</h2>
+          <br />
+          <h3>
+            {t("home.paragraph1")}<br /><br />
+            {t("home.paragraph2")}<br /><br />
+            {t("home.paragraph3")}<br /><br />
+            {t("home.paragraph4")}<br /><br />
+            {t("home.paragraph5")}<br /><br />
+            {t("home.paragraph6")}<br />
+            {t("home.paragraph7")}
+          </h3>
+          <br /><br /><br /><br />
         </div>
-      
-
-    </div>
-    <SubHomeNavDown/>
+      </div>
+      <SubHomeNavDown />
     </>
-   )
+  );
+};
 
- 
-
-}
-
-export default Homepage
+export default Homepage;

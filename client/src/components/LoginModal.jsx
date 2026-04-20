@@ -1,4 +1,5 @@
 import { useContext, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
@@ -6,6 +7,7 @@ import Form from "react-bootstrap/Form";
 import { AuthContext } from "../contexts/AuthContext";
 
 function LoginModal({ show, onHide }) {
+  const { t } = useTranslation();
   const { login } = useContext(AuthContext);
   const [formData, setFormData] = useState({ email: "", password: "" });
 
@@ -14,13 +16,11 @@ function LoginModal({ show, onHide }) {
   };
 
   const handleSubmit = () => {
-    // Bug fixed: original used `!== undefined || null || ""` which is always true.
-    // We actually want: both fields must be present.
     if (formData.email && formData.password) {
       login(formData.email, formData.password);
       onHide();
     } else {
-      alert("Falta rellenar alguno de los campos");
+      alert(t("auth.missingLoginFields"));
     }
   };
 
@@ -36,45 +36,44 @@ function LoginModal({ show, onHide }) {
       style={{ maxHeight: "28rem", padding: "3rem" }}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Iniciar Sesión</Modal.Title>
+        <Modal.Title>{t("auth.login")}</Modal.Title>
       </Modal.Header>
 
       <Form.Group className="small mb-1" controlId="formBasicPassword">
         <Form.Label>
-          <i>Correo Electrónico</i>
+          <i>{t("auth.email")}</i>
         </Form.Label>
         <Form.Control
           type="email"
           name="email"
-          placeholder="email"
+          placeholder={t("auth.email").toLowerCase()}
           onChange={handleChange}
         />
         <Form.Label className="text-muted">
-          <i>Contraseña</i>
+          <i>{t("auth.password")}</i>
         </Form.Label>
         <Form.Control
           type="password"
           name="password"
-          placeholder="Password"
+          placeholder={t("auth.password")}
           onChange={handleChange}
           onKeyDown={(e) => {
             if (e.key === "Enter") handleSubmit();
           }}
         />
         <Form.Label className="text-muted">
-          {/* Route matches App.tsx: "/forgotPassword" */}
           <Link to="/forgotPassword" onClick={onHide}>
-            Ha olvidado su contraseña?
+            {t("auth.forgotPassword")}
           </Link>
         </Form.Label>
       </Form.Group>
 
       <Modal.Footer>
         <Button variant="danger" onClick={onHide}>
-          Cerrar
+          {t("auth.close")}
         </Button>
         <Button variant="success" style={{ cursor: "pointer" }} onClick={handleSubmit}>
-          Aceptar
+          {t("auth.accept")}
         </Button>
       </Modal.Footer>
     </Modal>

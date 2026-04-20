@@ -1,58 +1,48 @@
+import { useTranslation } from "react-i18next";
 import SubBattleNav from "./SubBattleNav";
 
 interface BattleInfoProps {
-  /** Text shown at the very bottom; slightly different between Battle and BattleHistory */
-  farewell?: string;
+  /** If provided, shows a farewell line at the bottom (used by BattleHistory) */
+  showFarewell?: boolean;
 }
 
-/**
- * Shared content for the /battle and /battlehistory pages.
- * Before: battle.tsx and battlehistory.tsx were 99% identical.
- * Now: both pages render <BattleInfo /> with an optional farewell prop.
- */
-const BattleInfo = ({ farewell }: BattleInfoProps) => {
+const BattleInfo = ({ showFarewell = false }: BattleInfoProps) => {
+  const { t } = useTranslation();
+
   return (
     <>
       <SubBattleNav />
       <div className="Battle-container">
         <div className="battleText">
-          <h2 className="tituloFuente">Bases del concurso:</h2>
+          <h2 className="tituloFuente">{t("battle.rules")}</h2>
           <br />
           <h4>
-            A lo largo del año realizaremos varios "Sketchs Battles", donde
-            cualquiera de nuestros seguidores desde cualquier parte del mundo
-            podrá participar enviándonos su mejor boceto. <br />
-            Los jueces elegidos para dicha batalla valorarán los bocetos
-            recibidos y el ganador recibirá un maravilloso lote de premios.{" "}
+            {t("battle.rulesDescription1")}
             <br />
-            Las reglas de las batallas variarán según las modalidades elegidas
-            por los jueces.
+            {t("battle.rulesDescription2")}
             <br />
-            <br />
-            Tanto los jueces, como los premios, serán anunciados antes de cada
-            batalla.
+            {t("battle.rulesDescription3")}
+            <br /><br />
+            {t("battle.rulesDescription4")}
           </h4>
 
           <br />
 
-          <h2 className="tituloFuente">Requisitos:</h2>
+          <h2 className="tituloFuente">{t("battle.requirements")}</h2>
           <br />
           <h4>
-            * Seguirnos en la página de Instagram. <br />
-            * Realizar un Story de tu boceto, mencionándonos y escribiendo
-            Sketch Battle.
-            <br />
-            * Registrarse en esta Web antes de la fecha indicada.
+            * {t("battle.requirement1")}<br />
+            * {t("battle.requirement2")}<br />
+            * {t("battle.requirement3")}
           </h4>
 
-          <br />
-          <br />
+          <br /><br />
           <h4>
-            No dudes en participar y estar atentos a nuestras publicaciones!
-            {farewell && (
+            {t("battle.farewell")}
+            {showFarewell && (
               <>
                 <br />
-                {farewell}
+                {t("battle.seeYouSoon")}
               </>
             )}
           </h4>
