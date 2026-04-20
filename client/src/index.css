@@ -579,3 +579,21 @@ img {
     column-count: 4;
   }
 }
+
+
+
+/* ============================================================================
+   NAVBAR Z-INDEX FIX
+   Ensure the navbar (and its dropdown menus) sit above page content, so
+   dropdown items are always clickable — even when they open over the content
+   below the navbar.
+   ============================================================================ */
+.NavtrapBar {
+  position: relative;
+  z-index: 1050;
+}
+
+/* The Bootstrap dropdown menu portal needs to be higher than anything below */
+.dropdown-menu.show {
+  z-index: 1060 !important;
+}

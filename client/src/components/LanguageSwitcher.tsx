@@ -2,9 +2,11 @@ import { useTranslation } from "react-i18next";
 import Dropdown from "react-bootstrap/Dropdown";
 
 /**
- * Compact language switcher that works in both desktop and mobile navbars.
- * - On mobile: shows only the globe icon + current language code (very narrow).
- * - Dropdown opens below, right-aligned, so it doesn't get cut off by screen edges.
+ * Language switcher dropdown.
+ *
+ * IMPORTANT: uses `renderMenuOnMount` + inline portal styling so the dropdown
+ * menu escapes the navbar container. Without this, the menu gets clipped /
+ * unclickable outside the dark navbar area on some browsers.
  */
 const LanguageSwitcher = () => {
   const { i18n, t } = useTranslation();
@@ -31,12 +33,17 @@ const LanguageSwitcher = () => {
       >
         🌐 {display}
       </Dropdown.Toggle>
+
+      {/*
+        popperConfig.strategy="fixed" makes the menu render in the viewport,
+        not clipped by the navbar's bounding box or z-index stack.
+      */}
       <Dropdown.Menu
+        renderOnMount
+        popperConfig={{ strategy: "fixed" }}
         style={{
           minWidth: "10rem",
-          // Ensure menu stays on screen on small phones
-          right: 0,
-          left: "auto",
+          zIndex: 2000,
         }}
       >
         <Dropdown.Item
