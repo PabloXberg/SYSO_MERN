@@ -27,6 +27,7 @@ function NavStrap() {
   const [showRegister, setShowRegister] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   const userAvatar =
     !user?.avatar || user.avatar === PLACEHOLDER_AVATAR_URL
@@ -34,9 +35,13 @@ function NavStrap() {
       : user.avatar;
 
   const handleLogout = () => {
+    setExpanded(false);
     logout();
     navigate("/");
   };
+
+  // Auto-close the mobile menu when a link is clicked
+  const closeMenu = () => setExpanded(false);
 
   if (loading) return <SpraySpinner />;
 
@@ -44,98 +49,137 @@ function NavStrap() {
     <div className="NavTrap">
       <Navbar
         collapseOnSelect
+        expand="lg"
         bg="dark"
         variant="dark"
-        expand="lg"
         className="bg-body-tertiary NavtrapBar"
+        expanded={expanded}
+        onToggle={(isExp) => setExpanded(isExp)}
       >
-        <Container>
-          <Navbar.Brand as={Link} to="/news" style={{ cursor: "pointer" }}>
+        <Container fluid>
+          {/* Brand logo — always visible */}
+          <Navbar.Brand
+            as={Link}
+            to="/news"
+            onClick={closeMenu}
+            style={{ cursor: "pointer" }}
+          >
             <img
               title={t("nav.newsTitle")}
               alt="Share Your Sketch"
               src={isHovered ? Logo2 : Logo1}
               className="navTrapImg"
-              style={{ height: "5em", width: "5em" }}
+              style={{ height: "3.5em", width: "3.5em" }}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
             />
           </Navbar.Brand>
 
-          <Nav className="me-auto my-2 my-lg-2" navbarScroll>
-            <Nav.Link
-              as={Link}
-              to="/homepage"
-              title={t("nav.home")}
-              className="news"
-              style={{ fontSize: "x-large" }}
-            >
-              {t("nav.home")}
-            </Nav.Link>
-            <Nav.Link
-              as={Link}
-              to="/battle"
-              title={t("nav.battle")}
-              className="battle"
-              style={{ fontSize: "x-large" }}
-            >
-              {t("nav.battle")}
-            </Nav.Link>
-          </Nav>
-
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          {/* Language switcher — always visible on mobile (outside collapse) */}
+          <div className="d-lg-none" style={{ marginLeft: "auto", marginRight: "0.5rem" }}>
             <LanguageSwitcher />
-
-            {user ? (
-              <Nav>
-                <img
-                  src={userAvatar}
-                  alt="Avatar"
-                  className="NavAtar"
-                  style={{
-                    marginLeft: "1em",
-                    maxHeight: "2.5rem",
-                    maxWidth: "2.5rem",
-                    borderRadius: "50%",
-                  }}
-                />
-                <Nav.Link
-                  as={Link}
-                  to="/mysketchs"
-                  title={t("nav.userMenu")}
-                  style={{ fontSize: "x-large" }}
-                >
-                  {user.username}
-                </Nav.Link>
-                <Button
-                  title={t("nav.logout")}
-                  variant="outline-danger"
-                  onClick={handleLogout}
-                >
-                  {t("nav.logout")}
-                </Button>
-              </Nav>
-            ) : (
-              <div style={{ display: "flex" }}>
-                <Navbar.Brand
-                  title={t("nav.register")}
-                  className="registrarse"
-                  style={{ cursor: "pointer", fontSize: "large" }}
-                  onClick={() => setShowRegister(true)}
-                >
-                  {t("nav.register")}
-                </Navbar.Brand>
-                <Navbar.Brand
-                  title={t("nav.login")}
-                  className="entrar"
-                  style={{ cursor: "pointer", fontSize: "large" }}
-                  onClick={() => setShowLogin(true)}
-                >
-                  {t("nav.login")}
-                </Navbar.Brand>
-              </div>
-            )}
           </div>
+
+          {/* Hamburger toggle button */}
+          <Navbar.Toggle aria-controls="main-navbar" />
+
+          <Navbar.Collapse id="main-navbar">
+            {/* Left side: Home + Battle links */}
+            <Nav className="me-auto">
+              <Nav.Link
+                as={Link}
+                to="/homepage"
+                title={t("nav.home")}
+                onClick={closeMenu}
+                className="news"
+                style={{ fontSize: "x-large" }}
+              >
+                {t("nav.home")}
+              </Nav.Link>
+              <Nav.Link
+                as={Link}
+                to="/battle"
+                title={t("nav.battle")}
+                onClick={closeMenu}
+                className="battle"
+                style={{ fontSize: "x-large" }}
+              >
+                {t("nav.battle")}
+              </Nav.Link>
+            </Nav>
+
+            {/* Right side: language + user actions */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                flexWrap: "wrap",
+              }}
+            >
+              {/* Language switcher — only visible here on desktop */}
+              <div className="d-none d-lg-block">
+                <LanguageSwitcher />
+              </div>
+
+              {user ? (
+                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                  <img
+                    src={userAvatar}
+                    alt="Avatar"
+                    className="NavAtar"
+                    style={{
+                      maxHeight: "2.5rem",
+                      maxWidth: "2.5rem",
+                      borderRadius: "50%",
+                    }}
+                  />
+                  <Nav.Link
+                    as={Link}
+                    to="/mysketchs"
+                    title={t("nav.userMenu")}
+                    onClick={closeMenu}
+                    style={{ fontSize: "large" }}
+                  >
+                    {user.username}
+                  </Nav.Link>
+                  <Button
+                    title={t("nav.logout")}
+                    variant="outline-danger"
+                    size="sm"
+                    onClick={handleLogout}
+                  >
+                    {t("nav.logout")}
+                  </Button>
+                </div>
+              ) : (
+                <div style={{ display: "flex", gap: "0.5rem" }}>
+                  <Navbar.Brand
+                    title={t("nav.register")}
+                    className="registrarse"
+                    style={{ cursor: "pointer", fontSize: "large", margin: 0 }}
+                    onClick={() => {
+                      setShowRegister(true);
+                      closeMenu();
+                    }}
+                  >
+                    {t("nav.register")}
+                  </Navbar.Brand>
+                  <Navbar.Brand
+                    title={t("nav.login")}
+                    className="entrar"
+                    style={{ cursor: "pointer", fontSize: "large", margin: 0 }}
+                    onClick={() => {
+                      setShowLogin(true);
+                      closeMenu();
+                    }}
+                  >
+                    {t("nav.login")}
+                  </Navbar.Brand>
+                </div>
+              )}
+            </div>
+          </Navbar.Collapse>
         </Container>
       </Navbar>
 
