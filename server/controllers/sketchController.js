@@ -73,14 +73,27 @@ const getSketchbyID = async (req, res) => {
       })
       .populate({
         path: "likes",
-        populate: [{ path: "owner", select: ["username"] }],
+        select: "username avatar",
       })
       .populate({
         path: "comments",
         populate: [{ path: "owner", select: ["username"] }],
-      });
+      })
+      .lean(); // plain object, easier to mutate
 
     if (!sketch) return res.status(404).json({ error: "Sketch no encontrado" });
+
+    // Defensive cleanup: filter out orphaned comments (owner deleted from DB).
+    // Without this, populate leaves `owner: null` and the frontend crashes.
+    if (sketch.comments) {
+      sketch.comments = sketch.comments.filter((c) => c && c.owner);
+    }
+
+    // Same for likes — deleted users leave null entries
+    if (sketch.likes) {
+      sketch.likes = sketch.likes.filter((l) => l);
+    }
+
     res.status(200).json(sketch);
   } catch (error) {
     console.error("getSketchbyID error:", error);
