@@ -1,90 +1,79 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="es">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="../public/favicon2.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
     <meta
-      name="Share Your Sketch"
-      content="Share Your Sketch"
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
-    <title>Share Your Sketch</title>
-    <meta name="description"
-      content="Share your sketch online, participa en batallas de bocetos o simplemente comparte un boceto para que otros artistas lo puedan ver">
-    <meta property="og:title" content="share your sketch">
-    <meta property="og:description" content="share your sketch">
-    <meta property="og:type" content="website">
-    
-    <link rel="apple-touch-icon" href="../public/favicon2.ico" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
+
+    <!-- ===== PWA / App meta ===== -->
+    <meta name="theme-color" content="#1a1a1a" />
+    <meta name="application-name" content="Share Your Sketch" />
+    <meta name="apple-mobile-web-app-title" content="Share Your Sketch" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <!-- ===== SEO ===== -->
+    <title>Share Your Sketch — Graffiti & Sketch Community</title>
+    <meta
+      name="description"
+      content="Comparte tus bocetos online, participa en batallas mensuales, y conecta con artistas callejeros alrededor del mundo."
+    />
+
+    <!-- ===== Open Graph (social media previews) ===== -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Share Your Sketch" />
+    <meta
+      property="og:description"
+      content="Comparte tus bocetos, participa en batallas y conecta con artistas de graffiti."
+    />
+    <meta property="og:image" content="%PUBLIC_URL%/logo512.png" />
+    <meta property="og:url" content="https://shareyoursketch.com" />
+
+    <!-- ===== Twitter Card ===== -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Share Your Sketch" />
+    <meta
+      name="twitter:description"
+      content="Comparte tus bocetos y participa en batallas."
+    />
+    <meta name="twitter:image" content="%PUBLIC_URL%/logo512.png" />
+
+    <!-- ===== Icons ===== -->
+    <link rel="icon" type="image/svg+xml" href="%PUBLIC_URL%/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/apple-touch-icon.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!-- bootstrap for react -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
-      integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous" />
-      <!--Import Google Icon Font-->
-      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-      <!--Import materialize.css-->
-      <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
-<!-- ICONOS DE MATERIALIZE CSS -->
-      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-      <!-- GOOGLE FONTS -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bungee+Shade&display=swap" rel="stylesheet">
+    <!-- ===== External CSS (kept: these are used across the app) ===== -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+      integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+      crossorigin="anonymous"
+    />
 
+    <!-- Material Icons (used throughout the app for like/edit/delete icons) -->
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
 
-            <!--Let browser know website is optimized for mobile-->
-            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bungee+Shade&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
   </body>
-
-  
 </html>
-
-<script src="https://cdn.jsdelivr.net/npm/react/umd/react.production.min.js" crossorigin></script>
-
-<script src="https://cdn.jsdelivr.net/npm/react-dom/umd/react-dom.production.min.js" crossorigin></script>
-
-<!--Bootstrap-->
-<script src="https://cdn.jsdelivr.net/npm/react-bootstrap@next/dist/react-bootstrap.min.js" crossorigin></script>
-
-<!--Widget para instagram-->
-<!-- <script src="https://cdn2.woxo.tech/a.js#6473adb310ce6a41d445deab" async data-usrc></script> -->
-
-<!--Widget para instagram numbner 2-->
-    <!-- <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script> -->
-<!--Type writer - EFECTO PARA QUE SE ESCRIBAND COSAS-->
-<!-- <script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script> -->
-
-
-
-      <!--JavaScript at end of body for optimized loading-->
-      <script type="text/javascript" src="js/materialize.min.js"></script>

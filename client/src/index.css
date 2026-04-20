@@ -522,3 +522,60 @@ img {
   position: relative;
   z-index: 2;
 }
+
+
+
+
+/* ============================================================================
+   MASONRY GRID (Pinterest-style layout for sketches)
+   Uses CSS columns — each sketch keeps its natural proportions, and the
+   browser automatically distributes items across columns.
+   ============================================================================ */
+.masonry-grid {
+  column-count: 1;
+  column-gap: 1rem;
+  padding: 1rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.masonry-item {
+  break-inside: avoid;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+/* Override SketchCard's fixed aspect-ratio for masonry:
+   let the image breathe to its natural height */
+.masonry-item .SketchCard {
+  max-width: 100%;
+  width: 100%;
+}
+
+.masonry-item .sketchCardImg {
+  width: 100%;
+  aspect-ratio: auto;
+  height: auto;
+  object-fit: cover;
+}
+
+/* Tablet: 2 columns */
+@media (min-width: 600px) {
+  .masonry-grid {
+    column-count: 2;
+  }
+}
+
+/* Small desktop: 3 columns */
+@media (min-width: 900px) {
+  .masonry-grid {
+    column-count: 3;
+  }
+}
+
+/* Large desktop: 4 columns */
+@media (min-width: 1300px) {
+  .masonry-grid {
+    column-count: 4;
+  }
+}

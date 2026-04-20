@@ -1,6 +1,16 @@
 {
-  "short_name": "Share Your Sketch Online",
-  "name": "Share Your Sketch Online",
+  "short_name": "ShareYourSketch",
+  "name": "Share Your Sketch — Graffiti & Sketch Community",
+  "description": "Share your sketches online, join monthly battles, and connect with street artists around the world.",
+  "lang": "es",
+  "dir": "ltr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#1a1a1a",
+  "background_color": "#1a1a1a",
+  "categories": ["art", "social", "lifestyle"],
   "icons": [
     {
       "src": "favicon2.ico",
@@ -8,18 +18,22 @@
       "type": "image/x-icon"
     },
     {
-      "src": "favicon2.ico",
-      "type": "image/x-icon",
-      "sizes": "192x192"
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any"
     },
     {
-      "src": "favicon2.ico",
-      "type": "image/x-icon",
-      "sizes": "512x512"
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
     }
-  ],
-  "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  ]
 }
