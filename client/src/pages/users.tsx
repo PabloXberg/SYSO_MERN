@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import "../index.css";
 import SubHomeNav from "../components/SubHomeNav";
 import UserCard from "../components/UserCard";
@@ -18,32 +18,20 @@ const UsersPage = () => {
       PAGE_SIZE,
       (raw: any) => ({
         items: raw?.users || [],
-        // If backend doesn't send pagination (old version), assume no more
         hasMore: raw?.pagination?.hasMore ?? false,
-      })
+      }),
+      search
     );
 
-  const filtered = useMemo(() => {
-    if (!search.trim()) return data;
-    const q = search.toLowerCase().trim();
-    return data.filter((user) => {
-      const username = user.username?.toLowerCase() || "";
-      const info = user.info?.toLowerCase() || "";
-      return username.includes(q) || info.includes(q);
-    });
-  }, [data, search]);
-
-  // Infinite scroll via IntersectionObserver
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
   const observerCallback = useCallback(
     (entries: IntersectionObserverEntry[]) => {
-      const first = entries[0];
-      if (first.isIntersecting && hasMore && !loadingMore && !search) {
+      if (entries[0].isIntersecting && hasMore && !loadingMore) {
         loadMore();
       }
     },
-    [hasMore, loadingMore, loadMore, search]
+    [hasMore, loadingMore, loadMore]
   );
 
   useEffect(() => {
@@ -65,22 +53,18 @@ const UsersPage = () => {
         onSearch={setSearch}
       />
 
-      {search && (
-        <p style={{ textAlign: "center", color: "#666", fontStyle: "italic" }}>
-          {filtered.length === 0
-            ? "No se encontraron usuarios (en los ya cargados)"
-            : `${filtered.length} resultado${filtered.length === 1 ? "" : "s"}`}
-        </p>
-      )}
-
       {loading && data.length === 0 ? (
         <p style={{ textAlign: "center", padding: "2rem" }}>
-          Cargando usuarios...
+          {search ? "Buscando..." : "Cargando usuarios..."}
+        </p>
+      ) : data.length === 0 && search ? (
+        <p style={{ textAlign: "center", padding: "2rem", color: "#666" }}>
+          No se encontraron usuarios para "{search}"
         </p>
       ) : (
         <>
           <div className="cardcontainer">
-            {filtered.map((user) => (
+            {data.map((user) => (
               <UserCard key={user._id} props={user} />
             ))}
           </div>
@@ -93,7 +77,7 @@ const UsersPage = () => {
             </p>
           )}
 
-          {!hasMore && !search && data.length > 0 && (
+          {!hasMore && data.length > 0 && (
             <p style={{ textAlign: "center", padding: "2rem", color: "#999" }}>
               — Has visto todos los usuarios ({data.length}) —
             </p>

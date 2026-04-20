@@ -16,20 +16,24 @@ interface UsePaginatedFetchResult<T> {
 }
 
 /**
- * Hook for paginated APIs that support ?page=X&limit=N.
+ * Hook for paginated APIs that support ?page=X&limit=N&search=Y.
  *
  * - Loads the first page on mount.
- * - `loadMore()` appends the next page to the existing list.
- * - `refetch()` resets and reloads from page 1 (useful after creating/deleting).
+ * - `loadMore()` appends the next page to the list.
+ * - When `search` changes, the list resets and re-fetches from page 1,
+ *   so the server filters across the WHOLE database (not just loaded items).
+ * - `refetch()` resets and reloads (useful after creating/deleting).
  *
- * @param baseUrl   e.g. `${serverURL}sketches/all`
- * @param limit     Items per page (default 20)
+ * @param baseUrl  e.g. `${serverURL}sketches/all`
+ * @param limit    Items per page
  * @param transform Function that takes the raw response and returns {items, hasMore}
+ * @param search   Current search term (empty = no filter)
  */
 export function usePaginatedFetch<T>(
   baseUrl: string,
   limit: number,
-  transform: (raw: any) => PaginatedResponse<T>
+  transform: (raw: any) => PaginatedResponse<T>,
+  search: string = ""
 ): UsePaginatedFetchResult<T> {
   const [data, setData] = useState<T[]>([]);
   const [page, setPage] = useState(1);
@@ -39,13 +43,21 @@ export function usePaginatedFetch<T>(
   const [error, setError] = useState<Error | null>(null);
 
   const fetchPage = useCallback(
-    async (pageToFetch: number, append: boolean) => {
+    async (pageToFetch: number, append: boolean, searchTerm: string) => {
       const isFirst = pageToFetch === 1 && !append;
       if (isFirst) setLoading(true);
       else setLoadingMore(true);
 
       try {
-        const url = `${baseUrl}?page=${pageToFetch}&limit=${limit}`;
+        const params = new URLSearchParams({
+          page: String(pageToFetch),
+          limit: String(limit),
+        });
+        if (searchTerm.trim()) {
+          params.append("search", searchTerm.trim());
+        }
+        const url = `${baseUrl}?${params.toString()}`;
+
         const response = await fetch(url);
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const raw = await response.json();
@@ -65,23 +77,24 @@ export function usePaginatedFetch<T>(
     [baseUrl, limit, transform]
   );
 
-  // Initial load
+  // Initial load + whenever search changes: reset and fetch page 1
   useEffect(() => {
-    fetchPage(1, false);
+    setPage(1);
+    fetchPage(1, false, search);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [baseUrl]);
+  }, [baseUrl, search]);
 
   const loadMore = useCallback(() => {
     if (loadingMore || !hasMore) return;
     const next = page + 1;
     setPage(next);
-    fetchPage(next, true);
-  }, [page, hasMore, loadingMore, fetchPage]);
+    fetchPage(next, true, search);
+  }, [page, hasMore, loadingMore, fetchPage, search]);
 
   const refetch = useCallback(async () => {
     setPage(1);
-    await fetchPage(1, false);
-  }, [fetchPage]);
+    await fetchPage(1, false, search);
+  }, [fetchPage, search]);
 
   return { data, loading, loadingMore, hasMore, error, loadMore, refetch };
 }

@@ -8,15 +8,36 @@ import imageUpload from "../utils/imageManagement.js";
 // ==============================================================
 const getAllSketches = async (req, res) => {
   try {
-    // PERF: Paginated to avoid loading hundreds of sketches at once.
-    // Frontend can pass ?page=1&limit=20. Defaults return the 20 most recent.
     const page = Math.max(1, parseInt(req.query.page) || 1);
     const limit = Math.min(100, parseInt(req.query.limit) || 20);
     const skip = (page - 1) * limit;
+    const search = (req.query.search || "").trim();
+
+    // Build MongoDB filter. When ?search=xxx is provided, match name/comment
+    // against the term (case-insensitive). Username search is done in a second
+    // step below because username lives in the User collection.
+    let filter = {};
+    if (search) {
+      // Escape regex special chars so the user can search for "a+b" etc.
+      const escaped = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const regex = new RegExp(escaped, "i");
+
+      // First find users whose username matches — we'll include their sketches too
+      const matchingUsers = await UserModel.find({ username: regex }, "_id");
+      const userIds = matchingUsers.map((u) => u._id);
+
+      filter = {
+        $or: [
+          { name: regex },
+          { comment: regex },
+          { owner: { $in: userIds } },
+        ],
+      };
+    }
 
     const [sketches, total] = await Promise.all([
-      SketchModel.find()
-        .sort({ createdAt: -1 }) // newest first (replaces frontend `.reverse()`)
+      SketchModel.find(filter)
+        .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
         .populate({
@@ -24,7 +45,7 @@ const getAllSketches = async (req, res) => {
           select: ["email", "username", "avatar", "likes", "sketchs", "createdAt", "info"],
         })
         .populate("comments"),
-      SketchModel.countDocuments(),
+      SketchModel.countDocuments(filter),
     ]);
 
     res.status(200).json({
@@ -52,7 +73,7 @@ const getSketchbyID = async (req, res) => {
       })
       .populate({
         path: "likes",
-        select: "username avatar",
+        populate: [{ path: "owner", select: ["username"] }],
       })
       .populate({
         path: "comments",

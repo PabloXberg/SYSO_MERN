@@ -115,13 +115,24 @@ export const resetPassword = async (req, res) => {
 // ==============================================================
 const getUsers = async (req, res) => {
   try {
-    // PERF: Paginated same as sketches
     const page = Math.max(1, parseInt(req.query.page) || 1);
     const limit = Math.min(100, parseInt(req.query.limit) || 20);
     const skip = (page - 1) * limit;
+    const search = (req.query.search || "").trim();
+
+    // Build filter. When ?search=xxx is provided, match username or info
+    // (case-insensitive). Special regex chars are escaped so "foo.bar" works.
+    let filter = {};
+    if (search) {
+      const escaped = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const regex = new RegExp(escaped, "i");
+      filter = {
+        $or: [{ username: regex }, { info: regex }],
+      };
+    }
 
     const [users, total] = await Promise.all([
-      UserModel.find()
+      UserModel.find(filter)
         .select("-password -resetPasswordToken -resetPasswordExpires")
         .sort({ createdAt: -1 })
         .skip(skip)
@@ -130,7 +141,7 @@ const getUsers = async (req, res) => {
           path: "sketchs",
           populate: { path: "owner" },
         }),
-      UserModel.countDocuments(),
+      UserModel.countDocuments(filter),
     ]);
 
     res.status(200).json({
