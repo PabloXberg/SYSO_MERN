@@ -1,67 +1,38 @@
 import { useTranslation } from "react-i18next";
-import Dropdown from "react-bootstrap/Dropdown";
 
-/**
- * Language switcher dropdown.
- *
- * IMPORTANT: uses `renderMenuOnMount` + inline portal styling so the dropdown
- * menu escapes the navbar container. Without this, the menu gets clipped /
- * unclickable outside the dark navbar area on some browsers.
- */
 const LanguageSwitcher = () => {
   const { i18n, t } = useTranslation();
 
-  const current = i18n.resolvedLanguage || "es";
-  const display = current.split("-")[0].toUpperCase();
+  const current = (i18n.resolvedLanguage || "es").split("-")[0];
 
-  const changeLanguage = (lng: string) => {
-    i18n.changeLanguage(lng);
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    i18n.changeLanguage(e.target.value);
   };
 
   return (
-    <Dropdown align="end">
-      <Dropdown.Toggle
-        variant="outline-light"
-        size="sm"
-        title={t("language.label")}
-        style={{
-          fontSize: "0.75rem",
-          padding: "0.25rem 0.5rem",
-          minWidth: "auto",
-          whiteSpace: "nowrap",
-        }}
-      >
-        🌐 {display}
-      </Dropdown.Toggle>
-
-      {/*
-        popperConfig.strategy="fixed" makes the menu render in the viewport,
-        not clipped by the navbar's bounding box or z-index stack.
-      */}
-      <Dropdown.Menu
-        renderOnMount
-        popperConfig={{ strategy: "fixed" }}
-        style={{
-          minWidth: "10rem",
-          zIndex: 2000,
-        }}
-      >
-        <Dropdown.Item
-          onClick={() => changeLanguage("es")}
-          active={current.startsWith("es")}
-        >
-          <span style={{ fontWeight: "bold", marginRight: "0.4rem" }}>ES</span>
-          {t("language.spanish")}
-        </Dropdown.Item>
-        <Dropdown.Item
-          onClick={() => changeLanguage("en")}
-          active={current.startsWith("en")}
-        >
-          <span style={{ fontWeight: "bold", marginRight: "0.4rem" }}>EN</span>
-          {t("language.english")}
-        </Dropdown.Item>
-      </Dropdown.Menu>
-    </Dropdown>
+    <select
+      value={current}
+      onChange={handleChange}
+      title={t("language.label")}
+      aria-label={t("language.label")}
+      style={{
+        backgroundColor: "transparent",
+        color: "white",
+        border: "1px solid rgba(255,255,255,0.5)",
+        borderRadius: "0.25rem",
+        padding: "0.25rem 0.5rem",
+        fontSize: "0.85rem",
+        cursor: "pointer",
+        outline: "none",
+      }}
+    >
+      <option value="es" style={{ color: "black" }}>
+        🌐 ES
+      </option>
+      <option value="en" style={{ color: "black" }}>
+        🌐 EN
+      </option>
+    </select>
   );
 };
 

@@ -83,7 +83,8 @@ img {
 .NavtrapBar {
   font-family: "MiFuente", cursive;
   width: 100%;
-  z-index: 10;
+  position: relative;
+  z-index: 1050;
 }
 
 /* =============================================================================
@@ -582,18 +583,34 @@ img {
 
 
 
+
 /* ============================================================================
    NAVBAR Z-INDEX FIX
-   Ensure the navbar (and its dropdown menus) sit above page content, so
-   dropdown items are always clickable — even when they open over the content
-   below the navbar.
+   
+   Problem: the old `.NavtrapBar { z-index: 10 }` rule created a stacking
+   context that sat BELOW page content further down (cards, sketches, etc).
+   That meant the language dropdown menu, even when visually positioned over
+   the content, could not receive clicks in the area outside the dark bar.
+   
+   Fix: raise the navbar well above everything else (1050 = Bootstrap's modal
+   backdrop level), and make sure dropdown menus open with an even higher z.
    ============================================================================ */
+
+/* Raise the whole navbar */
+.NavTrap,
 .NavtrapBar {
   position: relative;
-  z-index: 1050;
+  z-index: 1050 !important;
 }
 
-/* The Bootstrap dropdown menu portal needs to be higher than anything below */
+/* Dropdowns inside the navbar must open ABOVE everything */
+.NavtrapBar .dropdown-menu,
 .dropdown-menu.show {
-  z-index: 1060 !important;
+  z-index: 1100 !important;
+}
+
+/* The collapsible part of the navbar (mobile menu) must also be on top */
+.navbar-collapse {
+  z-index: 1050;
+  position: relative;
 }
