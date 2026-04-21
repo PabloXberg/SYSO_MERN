@@ -4,6 +4,8 @@ import "../index.css";
 import SketchCard from "../components/SketchCard";
 import SubHomeNav from "../components/SubHomeNav";
 import SearchBar from "../components/SearchBar";
+import TagChip from "../components/TagChip";
+import { TAG_OPTIONS } from "../constants/tags";
 import { serverURL } from "../serverURL";
 import { usePaginatedFetch } from "../hooks/usePaginatedFetch";
 import { Sketch } from "../@types/models";
@@ -13,6 +15,7 @@ const PAGE_SIZE = 20;
 const SketchesPage = () => {
   const { t } = useTranslation();
   const [search, setSearch] = useState("");
+  const [tag, setTag] = useState("");
 
   const { data, loading, loadingMore, hasMore, loadMore, refetch } =
     usePaginatedFetch<Sketch>(
@@ -25,7 +28,8 @@ const SketchesPage = () => {
           hasMore: raw?.pagination?.hasMore ?? false,
         };
       },
-      search
+      search,
+      tag
     );
 
   const sentinelRef = useRef<HTMLDivElement | null>(null);
@@ -47,6 +51,10 @@ const SketchesPage = () => {
     return () => observer.disconnect();
   }, [observerCallback]);
 
+  const toggleTag = (value: string) => {
+    setTag((current) => (current === value ? "" : value));
+  };
+
   return (
     <div>
       <SubHomeNav />
@@ -56,13 +64,36 @@ const SketchesPage = () => {
         onSearch={setSearch}
       />
 
+      {/* Tag filter bar */}
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          gap: "0.4rem",
+          padding: "0 1rem 1rem",
+          maxWidth: "800px",
+          margin: "0 auto",
+        }}
+      >
+        {TAG_OPTIONS.map((opt) => (
+          <TagChip
+            key={opt.value}
+            tag={opt.value}
+            size="md"
+            active={tag === opt.value}
+            onClick={() => toggleTag(opt.value)}
+          />
+        ))}
+      </div>
+
       {loading && data.length === 0 ? (
         <p style={{ textAlign: "center", padding: "2rem" }}>
-          {search ? t("sketches.searching") : t("sketches.loading")}
+          {search || tag ? t("sketches.searching") : t("sketches.loading")}
         </p>
-      ) : data.length === 0 && search ? (
+      ) : data.length === 0 && (search || tag) ? (
         <p style={{ textAlign: "center", padding: "2rem", color: "#666" }}>
-          {t("sketches.noResults", { query: search })}
+          {t("sketches.noResults", { query: search || t(`tags.${tag}`) })}
         </p>
       ) : (
         <>

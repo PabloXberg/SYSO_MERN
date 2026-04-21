@@ -2,6 +2,7 @@ import { ChangeEvent, useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AuthContext } from "../contexts/AuthContext";
 import SketchCard from "../components/SketchCard";
+import TagSelector from "../components/TagSelector";
 import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
@@ -18,6 +19,7 @@ interface FormDataShape {
   comment: string;
   url: string | File;
   battle: string;
+  tags: string[];
 }
 
 const initialForm: FormDataShape = {
@@ -25,6 +27,7 @@ const initialForm: FormDataShape = {
   comment: "",
   url: "",
   battle: "",
+  tags: [],
 };
 
 const MySketchs = () => {
@@ -61,6 +64,10 @@ const MySketchs = () => {
     }
   };
 
+  const handleTagsChange = (tags: string[]) => {
+    setFormData({ ...formData, tags });
+  };
+
   const handleSubmit = async () => {
     if (!formData.name || !formData.comment || !formData.url) {
       alert(t("mySketches.missingFields"));
@@ -80,6 +87,8 @@ const MySketchs = () => {
     submitData.append("owner", userId);
     submitData.append("url", formData.url);
     submitData.append("battle", formData.battle || "0");
+    // Tags as comma-separated string
+    submitData.append("tags", formData.tags.join(","));
 
     try {
       await fetch(`${serverURL}sketches/new`, {
@@ -118,12 +127,12 @@ const MySketchs = () => {
           </Button>
 
           <Modal
-            className="UserRegisterModal"
             show={show}
             onHide={handleClose}
             backdrop="static"
             keyboard={false}
             centered
+            size="lg"
           >
             <Modal.Header style={{ fontSize: "small" }} closeButton>
               <Modal.Title style={{ fontSize: "medium" }}>
@@ -188,6 +197,12 @@ const MySketchs = () => {
                     onChange={handleChange}
                   />
                 </Form.Group>
+
+                {/* Tag selector — optional, up to 3 tags */}
+                <TagSelector
+                  selected={formData.tags}
+                  onChange={handleTagsChange}
+                />
               </div>
 
               <Modal.Footer>

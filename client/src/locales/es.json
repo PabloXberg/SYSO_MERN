@@ -1,7 +1,7 @@
 {
   "nav": {
-    "home": "Inicio",
-    "battle": "Batalla",
+    "home": "Home",
+    "battle": "Battle",
     "login": "Entrar",
     "register": "Registrar",
     "logout": "Salir",
@@ -195,5 +195,17 @@
     "label": "Idioma",
     "spanish": "Español",
     "english": "English"
+  },
+  "tags": {
+    "pickUpTo": "Elige hasta {{count}} etiquetas",
+    "sketch": "Sketch",
+    "stencil": "Stencil",
+    "graffiti": "Graffiti",
+    "tag": "Tag",
+    "bombing": "Bombing",
+    "wildstyle": "Wildstyle",
+    "throwup": "Throw-up",
+    "blockbuster": "Blockbuster",
+    "character": "Character"
   }
 }

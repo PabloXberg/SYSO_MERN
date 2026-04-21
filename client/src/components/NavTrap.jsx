@@ -6,8 +6,7 @@ import DefaultImage from "../avatar-placeholder.gif";
 import Logo1 from "../images/IMG-20231228-WA0004-removebg-preview.png";
 import Logo2 from "../images/IMG-20231228-WA0005-removebg-preview.png";
 import { AuthContext } from "../contexts/AuthContext";
-import LoginModal from "./LoginModal";
-import RegisterModal from "./RegisterModal";
+import AuthModal from "./AuthModal";
 import SpraySpinner from "./SprySpinner";
 import LanguageSwitcher from "./LanguageSwitcher";
 import "../index.css";
@@ -20,8 +19,11 @@ function NavStrap() {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const [showLogin, setShowLogin] = useState(false);
-  const [showRegister, setShowRegister] = useState(false);
+  // Single auth modal — opens with 'login' or 'register' tab pre-selected
+  const [authModal, setAuthModal] = useState({ show: false, tab: "login" });
+  const openAuth = (tab) => setAuthModal({ show: true, tab });
+  const closeAuth = () => setAuthModal({ show: false, tab: "login" });
+
   const [loading, setLoading] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -52,7 +54,7 @@ function NavStrap() {
             title={t("nav.newsTitle")}
             alt="Share Your Sketch"
             src={isHovered ? Logo2 : Logo1}
-            style={{ height: "4em", width: "4em" }}
+            style={{ height: "5em", width: "5em" }}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           />
@@ -84,30 +86,18 @@ function NavStrap() {
               <Link to="/mysketchs" className="navbar-desktop__link">
                 {user.username}
               </Link>
-              <Button
-                variant="outline-danger"
-                size="sm"
-                onClick={handleLogout}
-              >
+              <Button variant="outline-danger" size="sm" onClick={handleLogout}>
                 {t("nav.logout")}
               </Button>
             </div>
           ) : (
             <div className="navbar-desktop__auth">
-              <span
-                className="registrarse navbar-desktop__link"
-                style={{ cursor: "pointer" }}
-                onClick={() => setShowRegister(true)}
+              <button
+                className="navbar-desktop__auth-btn"
+                onClick={() => openAuth("login")}
               >
-                {t("nav.register")}
-              </span>
-              <span
-                className="entrar navbar-desktop__link"
-                style={{ cursor: "pointer" }}
-                onClick={() => setShowLogin(true)}
-              >
-                {t("nav.login")}
-              </span>
+                {t("nav.login")} / {t("nav.register")}
+              </button>
             </div>
           )}
         </div>
@@ -129,7 +119,7 @@ function NavStrap() {
           <img
             alt="Share Your Sketch"
             src={Logo1}
-            style={{ height: "2.5em", width: "2.5em" }}
+            style={{ height: "3em", width: "3em" }}
           />
         </Link>
 
@@ -139,7 +129,7 @@ function NavStrap() {
       </nav>
 
       {/* =========================================================
-          MOBILE SIDEBAR — slides from the left
+          SIDEBAR — slides from the left (mobile only)
          ========================================================= */}
       <div
         className={`sidebar-overlay ${sidebarOpen ? "open" : ""}`}
@@ -162,30 +152,9 @@ function NavStrap() {
         </div>
 
         <nav className="sidebar__nav">
-          <Link
-            to="/homepage"
-            className="sidebar__link news"
-            onClick={closeSidebar}
-          >
-            {t("nav.home")}
-          </Link>
-          <Link
-            to="/battle"
-            className="sidebar__link battle"
-            onClick={closeSidebar}
-          >
-            {t("nav.battle")}
-          </Link>
-          <Link
-            to="/news"
-            className="sidebar__link"
-            onClick={closeSidebar}
-          >
-            {t("nav.news")}
-          </Link>
+          {/* Main sections */}
 
-          <div className="sidebar__divider" />
-
+{/* User / auth section */}
           {user ? (
             <>
               <Link
@@ -213,34 +182,59 @@ function NavStrap() {
               </button>
             </>
           ) : (
-            <>
-              <button
-                className="sidebar__link registrarse"
-                onClick={() => {
-                  setShowRegister(true);
-                  closeSidebar();
-                }}
-              >
-                {t("nav.register")}
-              </button>
-              <button
-                className="sidebar__link entrar"
-                onClick={() => {
-                  setShowLogin(true);
-                  closeSidebar();
-                }}
-              >
-                {t("nav.login")}
-              </button>
-            </>
+            <button
+              className="sidebar__link entrar"
+              onClick={() => {
+                openAuth("login");
+                closeSidebar();
+              }}
+            >
+              {t("nav.login")} / {t("nav.register")}
+            </button>
           )}
+
+          <Link
+            to="/homepage"
+            className="sidebar__link news"
+            onClick={closeSidebar}
+          >
+            {t("nav.home")}
+          </Link>
+          <Link
+            to="/battle"
+            className="sidebar__link battle"
+            onClick={closeSidebar}
+          >
+            {t("nav.battle")}
+          </Link>
+          <Link to="/news" className="sidebar__link" onClick={closeSidebar}>
+            {t("nav.news")}
+          </Link>
+
+          <div className="sidebar__divider" />
+
+          {/* Secondary sections (formerly in SubHomeNavDown) */}
+          <span className="sidebar__link sidebar__link--disabled">
+            {t("subNav.supporters")}
+          </span>
+          <span className="sidebar__link sidebar__link--disabled">
+            {t("subNav.contact")}
+          </span>
+          <span className="sidebar__link sidebar__link--disabled">
+            {t("subNav.shop")}
+          </span>
+
+          <div className="sidebar__divider" />
+
+          
         </nav>
       </aside>
 
-      <LoginModal show={showLogin} onHide={() => setShowLogin(false)} />
-      <RegisterModal
-        show={showRegister}
-        onHide={() => setShowRegister(false)}
+      {/* Single combined auth modal */}
+      <AuthModal
+        show={authModal.show}
+        onHide={closeAuth}
+        initialTab={authModal.tab}
         onLoadingChange={setLoading}
       />
     </>

@@ -195,5 +195,17 @@
     "label": "Language",
     "spanish": "Español",
     "english": "English"
+  },
+  "tags": {
+    "pickUpTo": "Pick up to {{count}} tags",
+    "sketch": "Sketch",
+    "stencil": "Stencil",
+    "graffiti": "Graffiti",
+    "tag": "Tag",
+    "bombing": "Bombing",
+    "wildstyle": "Wildstyle",
+    "throwup": "Throw-up",
+    "blockbuster": "Blockbuster",
+    "character": "Character"
   }
 }

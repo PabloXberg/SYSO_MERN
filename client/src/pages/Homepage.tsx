@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
 import SubHomeNav from "../components/SubHomeNav";
-import SubHomeNavDown from "../components/SubHomeNavDown";
 
 const Homepage = () => {
   const { t } = useTranslation();
@@ -24,7 +23,6 @@ const Homepage = () => {
           <br /><br /><br /><br />
         </div>
       </div>
-      <SubHomeNavDown />
     </>
   );
 };

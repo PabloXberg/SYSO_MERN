@@ -4,7 +4,26 @@ import CommentModel from "../models/commentModel.js";
 import imageUpload from "../utils/imageManagement.js";
 
 // ==============================================================
-// READ
+// Helper: parse tags from a request body that may send them as
+// either an array (JSON) or a comma-separated string (form-data).
+// Silently drops any invalid entries and caps at 3.
+// ==============================================================
+const ALLOWED_TAGS = [
+  "sketch", "stencil", "graffiti", "tag", "bombing",
+  "wildstyle", "throw-up", "blockbuster", "character",
+];
+
+const parseTags = (raw) => {
+  if (!raw) return [];
+  let arr = Array.isArray(raw) ? raw : String(raw).split(",");
+  return arr
+    .map((t) => String(t).trim().toLowerCase())
+    .filter((t) => ALLOWED_TAGS.includes(t))
+    .slice(0, 3);
+};
+
+// ==============================================================
+// GET /sketches/all — paginated + search + tag filter
 // ==============================================================
 const getAllSketches = async (req, res) => {
   try {
@@ -12,17 +31,15 @@ const getAllSketches = async (req, res) => {
     const limit = Math.min(100, parseInt(req.query.limit) || 20);
     const skip = (page - 1) * limit;
     const search = (req.query.search || "").trim();
+    const tag = (req.query.tag || "").trim().toLowerCase();
 
-    // Build MongoDB filter. When ?search=xxx is provided, match name/comment
-    // against the term (case-insensitive). Username search is done in a second
-    // step below because username lives in the User collection.
     let filter = {};
+
+    // Text search across name, comment, and owner username
     if (search) {
-      // Escape regex special chars so the user can search for "a+b" etc.
       const escaped = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       const regex = new RegExp(escaped, "i");
 
-      // First find users whose username matches — we'll include their sketches too
       const matchingUsers = await UserModel.find({ username: regex }, "_id");
       const userIds = matchingUsers.map((u) => u._id);
 
@@ -33,6 +50,11 @@ const getAllSketches = async (req, res) => {
           { owner: { $in: userIds } },
         ],
       };
+    }
+
+    // Tag filter (combines with search via $and if both present)
+    if (tag && ALLOWED_TAGS.includes(tag)) {
+      filter = search ? { $and: [filter, { tags: tag }] } : { tags: tag };
     }
 
     const [sketches, total] = await Promise.all([
@@ -64,6 +86,9 @@ const getAllSketches = async (req, res) => {
   }
 };
 
+// ==============================================================
+// GET /sketches/id/:id
+// ==============================================================
 const getSketchbyID = async (req, res) => {
   try {
     const sketch = await SketchModel.findById(req.params.id)
@@ -79,20 +104,13 @@ const getSketchbyID = async (req, res) => {
         path: "comments",
         populate: [{ path: "owner", select: ["username"] }],
       })
-      .lean(); // plain object, easier to mutate
+      .lean();
 
     if (!sketch) return res.status(404).json({ error: "Sketch no encontrado" });
 
-    // Defensive cleanup: filter out orphaned comments (owner deleted from DB).
-    // Without this, populate leaves `owner: null` and the frontend crashes.
-    if (sketch.comments) {
-      sketch.comments = sketch.comments.filter((c) => c && c.owner);
-    }
-
-    // Same for likes — deleted users leave null entries
-    if (sketch.likes) {
-      sketch.likes = sketch.likes.filter((l) => l);
-    }
+    // Defensive: filter orphaned comments/likes
+    if (sketch.comments) sketch.comments = sketch.comments.filter((c) => c && c.owner);
+    if (sketch.likes) sketch.likes = sketch.likes.filter((l) => l);
 
     res.status(200).json(sketch);
   } catch (error) {
@@ -102,184 +120,137 @@ const getSketchbyID = async (req, res) => {
 };
 
 // ==============================================================
-// CREATE
+// POST /sketches/new
 // ==============================================================
-const addSketchToUser = async (userId, sketchId) => {
-  await UserModel.findByIdAndUpdate(
-    userId,
-    { $push: { sketchs: sketchId } },
-    { new: true }
-  );
-};
-
 const createSketch = async (req, res) => {
-  if (!req.body.name || !req.body.comment) {
-    return res.status(400).json({ error: "Nombre y descripción son obligatorios" });
-  }
-
   try {
     const url = await imageUpload(req.file, "user_sketches");
+    const tags = parseTags(req.body.tags);
 
-    const newSketch = new SketchModel({
+    const newSketch = await SketchModel.create({
       name: req.body.name,
       comment: req.body.comment,
-      url,
-      // SECURITY: use the authenticated user, not something from the body.
-      // Otherwise a logged-in user could create sketches "owned by" anyone.
-      owner: req.user._id,
       battle: req.body.battle || "",
+      owner: req.user._id,
+      url,
+      tags,
     });
 
-    const sketchToSave = await newSketch.save();
-    await addSketchToUser(req.user._id, sketchToSave._id);
-
-    res.status(200).json({
-      message: "Sketch subido exitosamente",
-      newSketch: sketchToSave,
+    await UserModel.findByIdAndUpdate(req.user._id, {
+      $push: { sketchs: newSketch._id },
     });
+
+    res.status(201).json(newSketch);
   } catch (error) {
     console.error("createSketch error:", error);
-    res.status(500).json({ error: "Algo no quedó bien..." });
+    res.status(500).json({ error: "Algo salió mal al crear el boceto" });
   }
 };
 
 // ==============================================================
-// UPDATE
+// POST /sketches/update/:id (ownership checked)
 // ==============================================================
 const updateSketch = async (req, res) => {
-  // Accept the id from URL param or body (both in case the frontend changes)
-  const sketchId = req.params.id || req.body._id;
-
   try {
-    const sketch = await SketchModel.findById(sketchId);
+    const sketch = await SketchModel.findById(req.params.id);
     if (!sketch) return res.status(404).json({ error: "Sketch no encontrado" });
-
-    // SECURITY: verify the logged-in user owns this sketch.
-    // Previously ANY logged-in user could edit ANY sketch.
     if (sketch.owner.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ error: "No tienes permiso para editar este boceto" });
+      return res.status(403).json({ error: "No autorizado" });
     }
 
     const infoToUpdate = {};
     if (req.body.name) infoToUpdate.name = req.body.name;
     if (req.body.comment) infoToUpdate.comment = req.body.comment;
-    // BUG FIX: previous line was `infoToUpdate.comment = req.body.battle`
-    // which OVERWROTE the sketch comment with the battle number.
-    if (req.body.battle) infoToUpdate.battle = req.body.battle;
+    if (req.body.battle !== undefined) infoToUpdate.battle = req.body.battle;
+    if (req.body.tags !== undefined) infoToUpdate.tags = parseTags(req.body.tags);
+    if (req.file) infoToUpdate.url = await imageUpload(req.file, "user_sketches");
 
-    if (req.file) {
-      const url = await imageUpload(req.file, "user_sketches");
-      infoToUpdate.url = url;
-    }
-
-    const updatedSketch = await SketchModel.findByIdAndUpdate(
-      sketchId,
+    const updated = await SketchModel.findByIdAndUpdate(
+      req.params.id,
       infoToUpdate,
       { new: true }
     );
-    res.status(200).json(updatedSketch);
+
+    res.status(200).json(updated);
   } catch (error) {
     console.error("updateSketch error:", error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: "Algo salió mal al actualizar el boceto" });
   }
 };
 
 // ==============================================================
-// DELETE  (with proper cleanup)
+// DELETE /sketches/delete/:id (ownership checked)
 // ==============================================================
 const deleteSketch = async (req, res) => {
-  const sketchId = req.params.id || req.body._id;
-
   try {
-    const sketch = await SketchModel.findById(sketchId);
+    const sketch = await SketchModel.findById(req.params.id);
     if (!sketch) return res.status(404).json({ error: "Sketch no encontrado" });
-
-    // SECURITY: ownership check
     if (sketch.owner.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ error: "No tienes permiso para borrar este boceto" });
+      return res.status(403).json({ error: "No autorizado" });
     }
 
-    // 1. Delete all comments on this sketch
-    await CommentModel.deleteMany({ sketch: sketchId });
-
-    // 2. Remove this sketch from ALL users' likes arrays
+    // Cleanup: comments, likes, and user reference
+    await CommentModel.deleteMany({ sketch: req.params.id });
     await UserModel.updateMany(
-      { likes: sketchId },
-      { $pull: { likes: sketchId } }
+      { likes: req.params.id },
+      { $pull: { likes: req.params.id } }
     );
+    await UserModel.findByIdAndUpdate(sketch.owner, {
+      $pull: { sketchs: req.params.id },
+    });
+    await SketchModel.findByIdAndDelete(req.params.id);
 
-    // 3. Remove from owner's sketchs array
-    await UserModel.findByIdAndUpdate(
-      sketch.owner,
-      { $pull: { sketchs: sketchId } }
-    );
-
-    // 4. Finally delete the sketch
-    await SketchModel.findByIdAndDelete(sketchId);
-
-    res.status(200).json({ message: "Sketch borrado correctamente" });
+    res.status(200).json({ msg: "Sketch eliminado" });
   } catch (error) {
     console.error("deleteSketch error:", error);
-    res.status(500).json({ error: "No se puede borrar el sketch" });
+    res.status(500).json({ error: "Algo salió mal al eliminar el boceto" });
   }
 };
 
 // ==============================================================
-// LIKES
+// POST /sketches/like
 // ==============================================================
 const addLike = async (req, res) => {
   try {
-    const sketchId = req.body.sketch;
-
-    // Prevent duplicate likes by the same user
-    await SketchModel.findByIdAndUpdate(
-      sketchId,
-      { $addToSet: { likes: req.user._id } }, // $addToSet = push only if not present
-      { new: true }
-    );
-
-    await UserModel.findByIdAndUpdate(
-      req.user._id,
-      { $addToSet: { likes: sketchId } },
-      { new: true }
-    );
-
-    res.status(200).json({ message: "Success! liked" });
+    const { sketch } = req.body;
+    await SketchModel.findByIdAndUpdate(sketch, {
+      $addToSet: { likes: req.user._id },
+    });
+    await UserModel.findByIdAndUpdate(req.user._id, {
+      $addToSet: { likes: sketch },
+    });
+    res.status(200).json({ msg: "Like agregado" });
   } catch (error) {
     console.error("addLike error:", error);
-    res.status(500).json({ error: "Algo salió mal... " + error.message });
+    res.status(500).json({ error: "Algo salió mal" });
   }
 };
 
+// ==============================================================
+// POST /sketches/unlike
+// ==============================================================
 const deleteLike = async (req, res) => {
   try {
-    const sketchId = req.body.sketch;
-
-    await SketchModel.findByIdAndUpdate(
-      sketchId,
-      { $pull: { likes: req.user._id } },
-      { new: true }
-    );
-
-    await UserModel.findByIdAndUpdate(
-      req.user._id,
-      { $pull: { likes: sketchId } },
-      { new: true }
-    );
-
-    res.status(200).json({ message: "Success! unliked" });
+    const { sketch } = req.body;
+    await SketchModel.findByIdAndUpdate(sketch, {
+      $pull: { likes: req.user._id },
+    });
+    await UserModel.findByIdAndUpdate(req.user._id, {
+      $pull: { likes: sketch },
+    });
+    res.status(200).json({ msg: "Like removido" });
   } catch (error) {
     console.error("deleteLike error:", error);
-    res.status(500).json({ error: "Algo salió mal... " + error.message });
+    res.status(500).json({ error: "Algo salió mal" });
   }
 };
 
 export {
   getAllSketches,
+  getSketchbyID,
   createSketch,
+  updateSketch,
+  deleteSketch,
   addLike,
   deleteLike,
-  getSketchbyID,
-  deleteSketch,
-  updateSketch,
 };

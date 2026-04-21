@@ -800,13 +800,18 @@ img {
   color: rgba(255, 255, 255, 0.85);
   text-decoration: none;
   font-family: "MiFuente", cursive;
-  font-size: 1.25rem;
+  font-size: 1.75rem;
   background: none;
   border: none;
   text-align: left;
   cursor: pointer;
   width: 100%;
   transition: background-color 0.2s, color 0.2s;
+}
+
+.sidebar__link.entrar {
+  font-size: 1.2rem;
+font-family: "MiFuente", cursive;
 }
 
 .sidebar__link:hover,
@@ -833,4 +838,38 @@ img {
   height: 1px;
   background-color: rgba(255, 255, 255, 0.1);
   margin: 0.5rem 1.5rem;
+}
+
+
+/* ============================================================================
+   NAVBAR EXTRAS — Auth button + sidebar disabled items
+   ============================================================================ */
+
+/* Combined Login/Register button in desktop navbar */
+.navbar-desktop__auth-btn {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: white;
+  padding: 0.4rem 1rem;
+  border-radius: 0.25rem;
+  font-family: "MiFuente", cursive;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.navbar-desktop__auth-btn:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Disabled sidebar links (Supporters, Contact, Shop) */
+.sidebar__link--disabled {
+  color: rgba(255, 255, 255, 0.35) !important;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.sidebar__link--disabled:hover {
+  background-color: transparent !important;
+  color: rgba(255, 255, 255, 0.35) !important;
 }

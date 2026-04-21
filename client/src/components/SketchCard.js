@@ -8,6 +8,8 @@ import { Button, Form, Modal } from "react-bootstrap";
 import { serverURL } from "../serverURL";
 import SpraySpinner from "./SprySpinner";
 import Likes from "../components/likes";
+import TagChip from "./TagChip";
+import TagSelector from "./TagSelector";
 
 function SketchCard(props) {
   const { t } = useTranslation();
@@ -27,11 +29,12 @@ function SketchCard(props) {
   const [avatarPreview, setAvatarPreview] = useState(sketch?.url);
 
   const [formData, setFormData] = useState({
-    owner: "",
     name: "",
     comment: "",
     url: "",
     battle: "",
+    // Initialise tags from the current sketch so editing doesn't clear them
+    tags: sketch?.tags || [],
   });
 
   const datum = props.props.createdAt?.substring(0, 10) || t("common.unknownDate");
@@ -55,10 +58,12 @@ function SketchCard(props) {
       const submitData = new FormData();
       submitData.append("_id", sketch._id);
       submitData.append("owner", sketch.owner._id);
-      submitData.append("name", formData.name);
-      submitData.append("comment", formData.comment);
+      submitData.append("name", formData.name || sketch.name);
+      submitData.append("comment", formData.comment || sketch.comment);
       submitData.append("url", formData.url);
       submitData.append("battle", formData.battle);
+      // Tags go as comma-separated string (backend handles both formats)
+      submitData.append("tags", (formData.tags || []).join(","));
 
       try {
         await fetch(`${serverURL}sketches/update/${sketch?._id}`, {
@@ -79,6 +84,10 @@ function SketchCard(props) {
 
   const handleChangeEdit = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleTagsChange = (tags) => {
+    setFormData({ ...formData, tags });
   };
 
   const handleSketchDelete = async (sketchToDelete) => {
@@ -115,8 +124,6 @@ function SketchCard(props) {
       const arrayURL = URL.createObjectURL(e.target.files[0]);
       setAvatarPreview(arrayURL);
       setFormData({ ...formData, url: e.target.files[0] });
-    } else {
-      setFormData({ ...formData, url: "" });
     }
   };
 
@@ -125,6 +132,9 @@ function SketchCard(props) {
 
   const _id = props?.props._id;
   const page = "/sketchdetail/";
+
+  // Tags visible on the card
+  const tagsToShow = sketch?.tags || [];
 
   return (
     <div className="SketchCardPage">
@@ -162,6 +172,23 @@ function SketchCard(props) {
 
             <Card.Body className="sketchCardBody">
               <Card.Title>{props?.props.name}</Card.Title>
+
+              {/* Tags row — only rendered if the sketch has at least one tag */}
+              {tagsToShow.length > 0 && (
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: "0.3rem",
+                    marginBottom: "0.5rem",
+                  }}
+                >
+                  {tagsToShow.map((tagValue) => (
+                    <TagChip key={tagValue} tag={tagValue} size="sm" />
+                  ))}
+                </div>
+              )}
+
               <Card.Text>
                 {props.props.comment
                   ? props.props.comment
@@ -247,12 +274,19 @@ function SketchCard(props) {
                     backdrop="static"
                     keyboard={false}
                     centered
+                    size="lg"
                   >
                     <Modal.Header closeButton>
                       <Modal.Title>{t("sketch.editTitle")}</Modal.Title>
                     </Modal.Header>
                     <div style={{ padding: "1rem" }}>
-                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                        }}
+                      >
                         <img
                           alt="preview"
                           src={avatarPreview}
@@ -272,7 +306,7 @@ function SketchCard(props) {
                       </div>
                       <br />
                       <Form.Group
-                        className="mb-6"
+                        className="mb-3"
                         controlId="formBasicEmail"
                         style={{
                           display: "flex",
@@ -313,18 +347,22 @@ function SketchCard(props) {
                           onChange={handleChangeEdit}
                         />
                       </Form.Group>
-                      <br />
+
+                      {/* Tag selector */}
+                      <TagSelector
+                        selected={formData.tags}
+                        onChange={handleTagsChange}
+                      />
+
                       <div
                         style={{
                           display: "flex",
                           flexDirection: "row",
                           justifyContent: "space-between",
+                          marginTop: "1rem",
                         }}
                       >
-                        <Button
-                          variant="danger"
-                          onClick={handleCloseEdit}
-                        >
+                        <Button variant="danger" onClick={handleCloseEdit}>
                           {t("mySketches.cancel")}
                         </Button>
                         <Button
