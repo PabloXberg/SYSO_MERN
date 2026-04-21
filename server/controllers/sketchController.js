@@ -3,14 +3,9 @@ import UserModel from "../models/userModels.js";
 import CommentModel from "../models/commentModel.js";
 import imageUpload from "../utils/imageManagement.js";
 
-// ==============================================================
-// Helper: parse tags from a request body that may send them as
-// either an array (JSON) or a comma-separated string (form-data).
-// Silently drops any invalid entries and caps at 3.
-// ==============================================================
 const ALLOWED_TAGS = [
   "sketch", "stencil", "graffiti", "tag", "bombing",
-  "wildstyle", "throw-up", "blockbuster", "character",
+  "wildstyle", "throw-up", "trains", "character",
 ];
 
 const parseTags = (raw) => {
@@ -22,9 +17,6 @@ const parseTags = (raw) => {
     .slice(0, 3);
 };
 
-// ==============================================================
-// GET /sketches/all — paginated + search + tag filter
-// ==============================================================
 const getAllSketches = async (req, res) => {
   try {
     const page = Math.max(1, parseInt(req.query.page) || 1);
@@ -35,11 +27,9 @@ const getAllSketches = async (req, res) => {
 
     let filter = {};
 
-    // Text search across name, comment, and owner username
     if (search) {
       const escaped = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       const regex = new RegExp(escaped, "i");
-
       const matchingUsers = await UserModel.find({ username: regex }, "_id");
       const userIds = matchingUsers.map((u) => u._id);
 
@@ -52,7 +42,6 @@ const getAllSketches = async (req, res) => {
       };
     }
 
-    // Tag filter (combines with search via $and if both present)
     if (tag && ALLOWED_TAGS.includes(tag)) {
       filter = search ? { $and: [filter, { tags: tag }] } : { tags: tag };
     }
@@ -86,9 +75,6 @@ const getAllSketches = async (req, res) => {
   }
 };
 
-// ==============================================================
-// GET /sketches/id/:id
-// ==============================================================
 const getSketchbyID = async (req, res) => {
   try {
     const sketch = await SketchModel.findById(req.params.id)
@@ -107,8 +93,6 @@ const getSketchbyID = async (req, res) => {
       .lean();
 
     if (!sketch) return res.status(404).json({ error: "Sketch no encontrado" });
-
-    // Defensive: filter orphaned comments/likes
     if (sketch.comments) sketch.comments = sketch.comments.filter((c) => c && c.owner);
     if (sketch.likes) sketch.likes = sketch.likes.filter((l) => l);
 
@@ -119,9 +103,6 @@ const getSketchbyID = async (req, res) => {
   }
 };
 
-// ==============================================================
-// POST /sketches/new
-// ==============================================================
 const createSketch = async (req, res) => {
   try {
     const url = await imageUpload(req.file, "user_sketches");
@@ -147,9 +128,6 @@ const createSketch = async (req, res) => {
   }
 };
 
-// ==============================================================
-// POST /sketches/update/:id (ownership checked)
-// ==============================================================
 const updateSketch = async (req, res) => {
   try {
     const sketch = await SketchModel.findById(req.params.id);
@@ -178,9 +156,6 @@ const updateSketch = async (req, res) => {
   }
 };
 
-// ==============================================================
-// DELETE /sketches/delete/:id (ownership checked)
-// ==============================================================
 const deleteSketch = async (req, res) => {
   try {
     const sketch = await SketchModel.findById(req.params.id);
@@ -189,7 +164,6 @@ const deleteSketch = async (req, res) => {
       return res.status(403).json({ error: "No autorizado" });
     }
 
-    // Cleanup: comments, likes, and user reference
     await CommentModel.deleteMany({ sketch: req.params.id });
     await UserModel.updateMany(
       { likes: req.params.id },
@@ -207,9 +181,6 @@ const deleteSketch = async (req, res) => {
   }
 };
 
-// ==============================================================
-// POST /sketches/like
-// ==============================================================
 const addLike = async (req, res) => {
   try {
     const { sketch } = req.body;
@@ -226,9 +197,6 @@ const addLike = async (req, res) => {
   }
 };
 
-// ==============================================================
-// POST /sketches/unlike
-// ==============================================================
 const deleteLike = async (req, res) => {
   try {
     const { sketch } = req.body;

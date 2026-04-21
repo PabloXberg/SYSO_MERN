@@ -64,27 +64,21 @@ const SketchesPage = () => {
         onSearch={setSearch}
       />
 
-      {/* Tag filter bar */}
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          gap: "0.4rem",
-          padding: "0 1rem 1rem",
-          maxWidth: "800px",
-          margin: "0 auto",
-        }}
-      >
-        {TAG_OPTIONS.map((opt) => (
-          <TagChip
-            key={opt.value}
-            tag={opt.value}
-            size="md"
-            active={tag === opt.value}
-            onClick={() => toggleTag(opt.value)}
-          />
-        ))}
+      {/* =========================================================
+          Tag filter bar with brick wall background
+         ========================================================= */}
+      <div className="tags-wall">
+        <div className="tags-wall__inner">
+          {TAG_OPTIONS.map((opt) => (
+            <TagChip
+              key={opt.value}
+              tag={opt.value}
+              size="md"
+              active={tag === opt.value}
+              onClick={() => toggleTag(opt.value)}
+            />
+          ))}
+        </div>
       </div>
 
       {loading && data.length === 0 ? (

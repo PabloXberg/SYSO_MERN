@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
 
-// Allowed tags — must match the frontend TAG_OPTIONS constant exactly.
-// Keep in sync with: client/src/constants/tags.ts
 const ALLOWED_TAGS = [
   "sketch",
   "stencil",
@@ -10,7 +8,7 @@ const ALLOWED_TAGS = [
   "bombing",
   "wildstyle",
   "throw-up",
-  "blockbuster",
+  "trains",
   "character",
 ];
 
@@ -45,7 +43,6 @@ const sketchSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Indexes for common lookups
 sketchSchema.index({ owner: 1 });
 sketchSchema.index({ createdAt: -1 });
 sketchSchema.index({ battle: 1 });

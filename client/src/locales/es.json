@@ -164,11 +164,11 @@
   },
   "mySketches": {
     "uploadTitle": "Subir Boceto",
-    "openUploadModal": "Subir Nuevo Boceto",
-    "selectSketch": "Seleccionar Boceto",
+    "openUploadModal": "Subir nuevo boceto",
+    "selectSketch": "Seleccionar boceto",
     "namePlaceholder": "Nombre",
     "descriptionPlaceholder": "Descripción",
-    "battlePlaceholder": "# Batalla",
+    "battlePlaceholder": "# Battle",
     "battleHint": "Dejar este campo vacío en caso de no participar en ninguna batalla",
     "close": "Cerrar",
     "upload": "Subir",
@@ -205,7 +205,7 @@
     "bombing": "Bombing",
     "wildstyle": "Wildstyle",
     "throwup": "Throw-up",
-    "blockbuster": "Blockbuster",
+    "trains": "Trains",
     "character": "Character"
   }
 }
