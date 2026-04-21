@@ -1,7 +1,7 @@
 {
   "nav": {
-    "home": "Home",
-    "battle": "Battle",
+    "home": "Inicio",
+    "battle": "Batalla",
     "login": "Entrar",
     "register": "Registrar",
     "logout": "Salir",
@@ -86,8 +86,8 @@
     "noInfo": "Sin información"
   },
   "auth": {
-    "login": "Iniciar Sesión",
-    "register": "Registrar Usuario",
+    "login": "Entrar",
+    "register": "Registrar",
     "email": "Correo Electrónico",
     "password": "Contraseña",
     "username": "Nombre de Usuario",
@@ -163,12 +163,12 @@
     "unknownUser": "usuario desconocido"
   },
   "mySketches": {
-    "uploadTitle": "Subir un Boceto",
-    "openUploadModal": "Subir un nuevo boceto",
-    "selectSketch": "Seleccionar boceto",
+    "uploadTitle": "Subir Boceto",
+    "openUploadModal": "Subir Nuevo Boceto",
+    "selectSketch": "Seleccionar Boceto",
     "namePlaceholder": "Nombre",
     "descriptionPlaceholder": "Descripción",
-    "battlePlaceholder": "# Battle",
+    "battlePlaceholder": "# Batalla",
     "battleHint": "Dejar este campo vacío en caso de no participar en ninguna batalla",
     "close": "Cerrar",
     "upload": "Subir",
@@ -198,7 +198,7 @@
   },
   "tags": {
     "pickUpTo": "Elige hasta {{count}} etiquetas",
-    "sketch": "Sketch",
+    "sketch": "Boceto",
     "stencil": "Stencil",
     "graffiti": "Graffiti",
     "tag": "Tag",
