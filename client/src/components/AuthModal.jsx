@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import Modal from "react-bootstrap/Modal";
@@ -11,24 +11,29 @@ import { serverURL } from "../serverURL";
 
 /**
  * Combined login + register modal with tabs.
- * Replaces the old separate LoginModal and RegisterModal.
  *
- * @param show          Whether the modal is visible
- * @param onHide        Callback to close the modal
- * @param initialTab    'login' or 'register' — which tab is active when opening
- * @param onLoadingChange  Called with true/false when register is uploading
+ * Bug fixes vs previous version:
+ *   - activeTab now syncs with initialTab when the modal re-opens
+ *     (used to stay stuck on whatever tab was last active)
+ *   - registration response is now checked: if creation fails the
+ *     user sees the actual error instead of a misleading "wrong
+ *     password" message from the auto-login that followed
+ *   - if no avatar is selected we don't send a fake string anymore;
+ *     the backend uses the default avatar from the User schema
  */
 function AuthModal({ show, onHide, initialTab = "login", onLoadingChange }) {
   const { t } = useTranslation();
   const { login } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState(initialTab);
 
-  // Reset tab to the requested one each time modal opens
-  if (show && activeTab !== initialTab && !show._opened) {
-    // no-op; we'll use an effect instead — but avoid extra state for simplicity
-  }
+  // Sync active tab with the requested tab whenever the modal opens.
+  // Previously the state only initialised once, so opening with "register"
+  // after closing on "login" still showed the login tab.
+  useEffect(() => {
+    if (show) setActiveTab(initialTab);
+  }, [show, initialTab]);
 
-  // Login form state
+  // ───── Login state ──────────────────────────────────────────────
   const [loginData, setLoginData] = useState({ email: "", password: "" });
   const handleLoginChange = (e) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
@@ -42,49 +47,71 @@ function AuthModal({ show, onHide, initialTab = "login", onLoadingChange }) {
     }
   };
 
-  // Register form state
+  // ───── Register state ───────────────────────────────────────────
   const [registerData, setRegisterData] = useState({
     username: "",
     email: "",
     password: "",
     info: "",
-    avatar: "",
+    avatar: null, // null when nothing is selected (the schema default kicks in)
   });
   const [avatarPreview, setAvatarPreview] = useState(DefaultImage);
 
   const handleRegisterChange = (e) => {
     setRegisterData({ ...registerData, [e.target.name]: e.target.value });
   };
+
   const handleFile = (e) => {
     if (e.target.files && e.target.files[0]) {
       setAvatarPreview(URL.createObjectURL(e.target.files[0]));
       setRegisterData({ ...registerData, avatar: e.target.files[0] });
     }
   };
+
   const handleRegisterSubmit = async () => {
-    if (!registerData.username || !registerData.email || !registerData.password) {
+    if (
+      !registerData.username ||
+      !registerData.email ||
+      !registerData.password
+    ) {
       alert(t("auth.missingFields"));
       return;
     }
+
     const submitData = new FormData();
     submitData.append("email", registerData.email);
     submitData.append("username", registerData.username);
     submitData.append("password", registerData.password);
     submitData.append("info", registerData.info);
-    submitData.append("avatar", registerData.avatar || DefaultImage);
+    // Only send the avatar if the user actually picked one.
+    // Otherwise the backend uses the default avatar from the user schema.
+    if (registerData.avatar instanceof File) {
+      submitData.append("avatar", registerData.avatar);
+    }
 
     onLoadingChange?.(true);
     try {
-      await fetch(`${serverURL}users/new`, {
+      const response = await fetch(`${serverURL}users/new`, {
         method: "POST",
         body: submitData,
       });
+
+      // Always check the response. If the server returned an error,
+      // surface it to the user instead of trying to log them in.
+      if (!response.ok) {
+        const errorBody = await response.json().catch(() => ({}));
+        alert(errorBody.error || t("auth.registrationError"));
+        return;
+      }
+
+      // Capture the credentials before the modal closes / state resets,
+      // then close the modal and log the user in.
+      const { email, password } = registerData;
       onHide();
-      login(registerData.email, registerData.password);
+      login(email, password);
     } catch (error) {
-      console.error(error);
+      console.error("Register failed:", error);
       alert(t("auth.registrationError"));
-      onHide();
     } finally {
       onLoadingChange?.(false);
     }
@@ -153,7 +180,14 @@ function AuthModal({ show, onHide, initialTab = "login", onLoadingChange }) {
         ) : (
           // ============ REGISTER TAB ============
           <>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "1rem" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                marginBottom: "1rem",
+              }}
+            >
               <img
                 alt="Avatar"
                 src={avatarPreview}
@@ -162,6 +196,7 @@ function AuthModal({ show, onHide, initialTab = "login", onLoadingChange }) {
                   borderRadius: "50%",
                   width: "6rem",
                   height: "6rem",
+                  objectFit: "cover",
                 }}
               />
               <br />

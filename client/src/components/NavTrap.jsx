@@ -9,6 +9,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import AuthModal from "./AuthModal";
 import SpraySpinner from "./SprySpinner";
 import LanguageSwitcher from "./LanguageSwitcher";
+import NotificationBell from "./NotificationBell";
 import "../index.css";
 
 const PLACEHOLDER_AVATAR_URL =
@@ -19,7 +20,6 @@ function NavStrap() {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // Single auth modal — opens with 'login' or 'register' tab pre-selected
   const [authModal, setAuthModal] = useState({ show: false, tab: "login" });
   const openAuth = (tab) => setAuthModal({ show: true, tab });
   const closeAuth = () => setAuthModal({ show: false, tab: "login" });
@@ -46,7 +46,7 @@ function NavStrap() {
   return (
     <>
       {/* =========================================================
-          DESKTOP NAVBAR — horizontal, visible on screens >= 992px
+          DESKTOP NAVBAR (>= 992px)
          ========================================================= */}
       <nav className="navbar-desktop">
         <Link to="/news" className="navbar-desktop__brand">
@@ -71,6 +71,7 @@ function NavStrap() {
 
         <div className="navbar-desktop__right">
           <LanguageSwitcher />
+          {user && <NotificationBell />}
           {user ? (
             <div className="navbar-desktop__user">
               <img
@@ -104,7 +105,7 @@ function NavStrap() {
       </nav>
 
       {/* =========================================================
-          MOBILE NAVBAR — thin top bar with hamburger + logo + lang
+          MOBILE NAVBAR — hamburger + logo + bell + lang
          ========================================================= */}
       <nav className="navbar-mobile">
         <button
@@ -123,7 +124,8 @@ function NavStrap() {
           />
         </Link>
 
-        <div className="navbar-mobile__right">
+        <div className="navbar-mobile__right" style={{ gap: "0.4rem" }}>
+          {user && <NotificationBell />}
           <LanguageSwitcher />
         </div>
       </nav>
@@ -152,9 +154,38 @@ function NavStrap() {
         </div>
 
         <nav className="sidebar__nav">
-          {/* Main sections */}
+          {/* Main sections (in proper order this time) */}
+          <Link
+            to="/homepage"
+            className="sidebar__link news"
+            onClick={closeSidebar}
+          >
+            {t("nav.home")}
+          </Link>
+          <Link
+            to="/battle"
+            className="sidebar__link battle"
+            onClick={closeSidebar}
+          >
+            {t("nav.battle")}
+          </Link>
+          <Link to="/news" className="sidebar__link" onClick={closeSidebar}>
+            {t("nav.news")}
+          </Link>
 
-{/* User / auth section */}
+          <div className="sidebar__divider" />
+
+          {/* User-specific links */}
+          {user && (
+            <Link
+              to="/notifications"
+              className="sidebar__link"
+              onClick={closeSidebar}
+            >
+              🔔 {t("notifications.title")}
+            </Link>
+          )}
+
           {user ? (
             <>
               <Link
@@ -193,27 +224,9 @@ function NavStrap() {
             </button>
           )}
 
-          <Link
-            to="/homepage"
-            className="sidebar__link news"
-            onClick={closeSidebar}
-          >
-            {t("nav.home")}
-          </Link>
-          <Link
-            to="/battle"
-            className="sidebar__link battle"
-            onClick={closeSidebar}
-          >
-            {t("nav.battle")}
-          </Link>
-          <Link to="/news" className="sidebar__link" onClick={closeSidebar}>
-            {t("nav.news")}
-          </Link>
-
           <div className="sidebar__divider" />
 
-          {/* Secondary sections (formerly in SubHomeNavDown) */}
+          {/* Disabled secondary sections */}
           <span className="sidebar__link sidebar__link--disabled">
             {t("subNav.supporters")}
           </span>
@@ -223,14 +236,9 @@ function NavStrap() {
           <span className="sidebar__link sidebar__link--disabled">
             {t("subNav.shop")}
           </span>
-
-          <div className="sidebar__divider" />
-
-          
         </nav>
       </aside>
 
-      {/* Single combined auth modal */}
       <AuthModal
         show={authModal.show}
         onHide={closeAuth}

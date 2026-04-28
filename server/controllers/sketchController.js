@@ -1,6 +1,8 @@
 import SketchModel from "../models/sketchModel.js";
 import UserModel from "../models/userModels.js";
 import CommentModel from "../models/commentModel.js";
+import NotificationModel from "../models/notificationModel.js";
+import { createNotification } from "./notificationController.js";
 import imageUpload from "../utils/imageManagement.js";
 
 const ALLOWED_TAGS = [
@@ -172,6 +174,8 @@ const deleteSketch = async (req, res) => {
     await UserModel.findByIdAndUpdate(sketch.owner, {
       $pull: { sketchs: req.params.id },
     });
+    // Also delete notifications related to this sketch
+    await NotificationModel.deleteMany({ sketch: req.params.id });
     await SketchModel.findByIdAndDelete(req.params.id);
 
     res.status(200).json({ msg: "Sketch eliminado" });
@@ -184,12 +188,33 @@ const deleteSketch = async (req, res) => {
 const addLike = async (req, res) => {
   try {
     const { sketch } = req.body;
-    await SketchModel.findByIdAndUpdate(sketch, {
-      $addToSet: { likes: req.user._id },
-    });
+
+    // Use $addToSet so duplicates are silently ignored.
+    // We need to know whether the like was actually new (so we don't spam
+    // the owner with notifications if the user double-clicks).
+    const result = await SketchModel.findByIdAndUpdate(
+      sketch,
+      { $addToSet: { likes: req.user._id } },
+      { new: false } // returns the document BEFORE the update so we can check
+    );
+
     await UserModel.findByIdAndUpdate(req.user._id, {
       $addToSet: { likes: sketch },
     });
+
+    // Only create a notification if the like is genuinely new
+    const wasAlreadyLiked = result?.likes?.some(
+      (id) => id.toString() === req.user._id.toString()
+    );
+    if (result && !wasAlreadyLiked) {
+      await createNotification({
+        recipient: result.owner,
+        actor: req.user._id,
+        type: "like",
+        sketch: result._id,
+      });
+    }
+
     res.status(200).json({ msg: "Like agregado" });
   } catch (error) {
     console.error("addLike error:", error);

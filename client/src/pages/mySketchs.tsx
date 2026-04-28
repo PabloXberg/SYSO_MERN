@@ -1,5 +1,6 @@
-import { ChangeEvent, useContext, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 import SketchCard from "../components/SketchCard";
 import TagSelector from "../components/TagSelector";
@@ -34,6 +35,8 @@ const MySketchs = () => {
   const { t } = useTranslation();
   const { user } = useContext(AuthContext);
   const userId = user?._id;
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const { data: activeUser, refetch } = useFetch<User>(
     userId ? `${serverURL}users/id/${userId}` : null
@@ -45,6 +48,17 @@ const MySketchs = () => {
   const [formData, setFormData] = useState<FormDataShape>(initialForm);
 
   const sketchsArray = activeUser?.sketchs || [];
+
+  // When navigated here from the welcome notification, location.state
+  // carries { openUpload: true }. We open the upload modal automatically
+  // and clear the state so refreshing the page doesn't re-open it.
+  useEffect(() => {
+    const state = location.state as { openUpload?: boolean } | null;
+    if (state?.openUpload) {
+      setShow(true);
+      navigate(location.pathname, { replace: true });
+    }
+  }, [location, navigate]);
 
   const handleClose = () => {
     setShow(false);
@@ -87,7 +101,6 @@ const MySketchs = () => {
     submitData.append("owner", userId);
     submitData.append("url", formData.url);
     submitData.append("battle", formData.battle || "0");
-    // Tags as comma-separated string
     submitData.append("tags", formData.tags.join(","));
 
     try {
@@ -198,7 +211,6 @@ const MySketchs = () => {
                   />
                 </Form.Group>
 
-                {/* Tag selector — optional, up to 3 tags */}
                 <TagSelector
                   selected={formData.tags}
                   onChange={handleTagsChange}

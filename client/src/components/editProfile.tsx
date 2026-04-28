@@ -7,6 +7,7 @@ import { Image } from "react-bootstrap";
 import { AuthContext } from "../contexts/AuthContext";
 import { serverURL } from "../serverURL";
 import SubUserNav from "./SubUserNav";
+import DeleteAccountButton from "./DeleteAccountButton";
 import "../index.css";
 
 interface UpdateFormData {
@@ -143,6 +144,7 @@ const EditProfile = () => {
           </div>
         </Form>
       </div>
+      <DeleteAccountButton />
     </>
   );
 };

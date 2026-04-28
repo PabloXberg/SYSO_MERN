@@ -1,9 +1,13 @@
 import CommentModel from "../models/commentModel.js";
 import SketchModel from "../models/sketchModel.js";
 import UserModel from "../models/userModels.js";
+import {
+  createNotification,
+  notifyCommentReplies,
+} from "./notificationController.js";
 
 // ==============================================================
-// HELPERS — keep user.comments and sketch.comments in sync
+// HELPERS
 // ==============================================================
 const addCommentToUser = (userId, commentId) =>
   UserModel.findByIdAndUpdate(userId, { $push: { comments: commentId } });
@@ -18,7 +22,7 @@ const removeCommentFromSketch = (sketchId, commentId) =>
   SketchModel.findByIdAndUpdate(sketchId, { $pull: { comments: commentId } });
 
 // ==============================================================
-// CREATE
+// CREATE — also fires notifications
 // ==============================================================
 const createComment = async (req, res) => {
   if (!req.body.comment || !req.body.sketch) {
@@ -26,6 +30,13 @@ const createComment = async (req, res) => {
   }
 
   try {
+    // Look up the sketch FIRST so we know who owns it (for the notification)
+    // and so we detect existing commenters before adding the new one.
+    const sketch = await SketchModel.findById(req.body.sketch).select("owner");
+    if (!sketch) {
+      return res.status(404).json({ error: "Sketch no encontrado" });
+    }
+
     const newComment = new CommentModel({
       comment: req.body.comment,
       // SECURITY: owner comes from the authenticated user, not the body
@@ -36,6 +47,20 @@ const createComment = async (req, res) => {
     const savedComment = await newComment.save();
     await addCommentToUser(req.user._id, savedComment._id);
     await addCommentToSketch(req.body.sketch, savedComment._id);
+
+    // ───── Notifications ─────────────────────────────────────────
+    // 1) Notify the sketch owner — gets a "comment" notification
+    await createNotification({
+      recipient: sketch.owner,
+      actor: req.user._id,
+      type: "comment",
+      sketch: req.body.sketch,
+    });
+
+    // 2) Notify other previous commenters with "comment_reply".
+    //    The helper excludes the actor and the owner so nobody gets a
+    //    duplicate notification.
+    await notifyCommentReplies(req.body.sketch, req.user._id, sketch.owner);
 
     res.status(200).json({
       message: "Mensaje guardado!",
@@ -57,7 +82,6 @@ const updatecomment = async (req, res) => {
     const comment = await CommentModel.findById(commentId);
     if (!comment) return res.status(404).json({ error: "Comentario no encontrado" });
 
-    // SECURITY: only the author can edit their comment
     if (comment.owner.toString() !== req.user._id.toString()) {
       return res
         .status(403)
@@ -91,14 +115,12 @@ const deleteComment = async (req, res) => {
     const comment = await CommentModel.findById(commentId);
     if (!comment) return res.status(404).json({ error: "Comentario no encontrado" });
 
-    // SECURITY: only the author can delete their comment
     if (comment.owner.toString() !== req.user._id.toString()) {
       return res
         .status(403)
         .json({ error: "No tienes permiso para borrar este comentario" });
     }
 
-    // BUG FIX: `findByIdAndRemove` was deprecated in Mongoose 7+ — use `findByIdAndDelete`
     const deletedComment = await CommentModel.findByIdAndDelete(commentId);
     await removeCommentFromUser(comment.owner, commentId);
     await removeCommentFromSketch(comment.sketch, commentId);

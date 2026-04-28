@@ -86,7 +86,7 @@
     "noInfo": "Sin información"
   },
   "auth": {
-    "login": "Entrar",
+    "login": "Iniciar",
     "register": "Registrar",
     "email": "Correo Electrónico",
     "password": "Contraseña",
@@ -164,7 +164,7 @@
   },
   "mySketches": {
     "uploadTitle": "Subir Boceto",
-    "openUploadModal": "Subir nuevo boceto",
+    "openUploadModal": "Subir boceto",
     "selectSketch": "Seleccionar boceto",
     "namePlaceholder": "Nombre",
     "descriptionPlaceholder": "Descripción",
@@ -198,7 +198,7 @@
   },
   "tags": {
     "pickUpTo": "Elige hasta {{count}} etiquetas",
-    "sketch": "Boceto",
+    "sketch": "Sketch",
     "stencil": "Stencil",
     "graffiti": "Graffiti",
     "tag": "Tag",
@@ -207,5 +207,34 @@
     "throwup": "Throw-up",
     "trains": "Trains",
     "character": "Character"
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "empty": "No tienes notificaciones aún",
+    "markAllRead": "Marcar todas como leídas",
+    "viewAll": "Ver todas las notificaciones",
+    "remove": "Eliminar",
+    "goExplore": "Ir a explorar bocetos →",
+    "welcome": "¡Bienvenido a Share Your Sketch! 🎨 Empezá subiendo tu primer boceto",
+    "likedYourSketch": "{{username}} le dio me gusta a tu boceto ❤️",
+    "commentedYourSketch": "{{username}} comentó tu boceto 💬",
+    "commentedSameSketch": "{{username}} también comentó un boceto que comentaste 💬"
+  },
+  "deleteAccount": {
+    "dangerZone": "Zona de peligro",
+    "description": "Si eliminas tu cuenta, perderás todos tus bocetos, comentarios y datos asociados. Esta acción no se puede deshacer.",
+    "button": "Eliminar mi cuenta",
+    "confirmTitle": "¿Eliminar tu cuenta?",
+    "warningHeader": "Estás a punto de eliminar permanentemente:",
+    "warningSketches": "Todos tus bocetos subidos",
+    "warningComments": "Todos los comentarios que has hecho",
+    "warningLikes": "Todos tus me gusta y favoritos",
+    "warningNotifications": "Todas tus notificaciones",
+    "warningIrreversible": "Esta acción es PERMANENTE e irreversible",
+    "typeUsername": "Para confirmar, escribe tu nombre de usuario",
+    "cancel": "Cancelar",
+    "confirmFinal": "Sí, eliminar mi cuenta",
+    "deleting": "Eliminando...",
+    "error": "No se pudo eliminar la cuenta. Intentá de nuevo."
   }
 }

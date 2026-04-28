@@ -207,5 +207,34 @@
     "throwup": "Throw-up",
     "trains": "Trains",
     "character": "Character"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "You don't have any notifications yet",
+    "markAllRead": "Mark all as read",
+    "viewAll": "View all notifications",
+    "remove": "Remove",
+    "goExplore": "Go explore sketches →",
+    "welcome": "Welcome to Share Your Sketch! 🎨 Start by uploading your first sketch",
+    "likedYourSketch": "{{username}} liked your sketch ❤️",
+    "commentedYourSketch": "{{username}} commented on your sketch 💬",
+    "commentedSameSketch": "{{username}} also commented on a sketch you commented on 💬"
+  },
+  "deleteAccount": {
+    "dangerZone": "Danger zone",
+    "description": "Deleting your account will erase all your sketches, comments, and associated data. This action cannot be undone.",
+    "button": "Delete my account",
+    "confirmTitle": "Delete your account?",
+    "warningHeader": "You are about to permanently delete:",
+    "warningSketches": "All your uploaded sketches",
+    "warningComments": "All comments you have made",
+    "warningLikes": "All your likes and favorites",
+    "warningNotifications": "All your notifications",
+    "warningIrreversible": "This action is PERMANENT and irreversible",
+    "typeUsername": "To confirm, type your username",
+    "cancel": "Cancel",
+    "confirmFinal": "Yes, delete my account",
+    "deleting": "Deleting...",
+    "error": "Could not delete account. Please try again."
   }
 }

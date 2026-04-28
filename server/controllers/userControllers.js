@@ -4,6 +4,8 @@ import bcrypt from "bcrypt";
 import UserModel from "../models/userModels.js";
 import SketchModel from "../models/sketchModel.js";
 import CommentModel from "../models/commentModel.js";
+import NotificationModel from "../models/notificationModel.js";
+import { createNotification } from "./notificationController.js";
 import imageUpload from "../utils/imageManagement.js";
 import { encryptPassword, verifyPassword } from "../utils/bcrypt.js";
 import { generateToken } from "../utils/jwt.js";
@@ -17,16 +19,11 @@ const testingRoute = (req, res) => {
 // ==============================================================
 export const forgotPassword = async (req, res) => {
   const { email } = req.body;
-
-  if (!email) {
-    return res.status(400).json({ message: "Email requerido" });
-  }
+  if (!email) return res.status(400).json({ message: "Email requerido" });
 
   try {
     const user = await UserModel.findOne({ email });
 
-    // SECURITY: respond the same whether the email exists or not,
-    // so attackers can't enumerate valid accounts.
     if (!user) {
       return res.status(200).json({
         message: "Si el email existe, hemos enviado un link para resetear la contraseña",
@@ -35,22 +32,17 @@ export const forgotPassword = async (req, res) => {
 
     const token = crypto.randomBytes(20).toString("hex");
     user.resetPasswordToken = token;
-    user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+    user.resetPasswordExpires = Date.now() + 3600000;
     await user.save();
 
-    // SECURITY: credentials now come from .env instead of being hardcoded.
-    // Also the client URL is an env var so we're not hardcoding the domain.
     const transporter = nodemailer.createTransport({
       service: "Gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
+      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
     });
 
     const resetUrl = `${process.env.CLIENT_URL}/resetPassword/${token}`;
 
-    const mailOptions = {
+    await transporter.sendMail({
       to: email,
       from: `Share Your Sketch <${process.env.EMAIL_USER}>`,
       subject: "Cambio de Contraseña",
@@ -67,9 +59,7 @@ Si no solicitaste esto, ignora este mensaje — tu contraseña seguirá siendo l
 
 ¡Saludos!
 El equipo de Share Your Sketch 🎨`,
-    };
-
-    await transporter.sendMail(mailOptions);
+    });
 
     res.status(200).json({
       message: "Hemos enviado a tu casilla de correo un link para resetear tu contraseña",
@@ -120,15 +110,11 @@ const getUsers = async (req, res) => {
     const skip = (page - 1) * limit;
     const search = (req.query.search || "").trim();
 
-    // Build filter. When ?search=xxx is provided, match username or info
-    // (case-insensitive). Special regex chars are escaped so "foo.bar" works.
     let filter = {};
     if (search) {
       const escaped = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       const regex = new RegExp(escaped, "i");
-      filter = {
-        $or: [{ username: regex }, { info: regex }],
-      };
+      filter = { $or: [{ username: regex }, { info: regex }] };
     }
 
     const [users, total] = await Promise.all([
@@ -137,10 +123,7 @@ const getUsers = async (req, res) => {
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
-        .populate({
-          path: "sketchs",
-          populate: { path: "owner" },
-        }),
+        .populate({ path: "sketchs", populate: { path: "owner" } }),
       UserModel.countDocuments(filter),
     ]);
 
@@ -191,8 +174,6 @@ const createUser = async (req, res) => {
   }
 
   try {
-    // Check for existing user BEFORE uploading the avatar — saves a Cloudinary
-    // upload when the email is already taken.
     const existing = await UserModel.findOne({ email: req.body.email });
     if (existing) {
       return res.status(409).json({ error: "Ya existe un usuario con ese email" });
@@ -209,7 +190,16 @@ const createUser = async (req, res) => {
 
     const registeredUser = await newUser.save();
 
-    // Don't send the password back
+    // ───── Welcome notification ─────────────────────────────────
+    // First-time greeting that shows up in the bell icon. The frontend
+    // recognises type === "welcome" and renders a special message.
+    await createNotification({
+      recipient: registeredUser._id,
+      actor: null,
+      type: "welcome",
+      sketch: null,
+    });
+
     const userResponse = registeredUser.toObject();
     delete userResponse.password;
 
@@ -219,7 +209,6 @@ const createUser = async (req, res) => {
     });
   } catch (error) {
     console.error("createUser error:", error);
-    // BUG FIX: was `.jason(...)` which crashes the server (method doesn't exist)
     res.status(500).json({ error: "Algo salió mal..." });
   }
 };
@@ -229,19 +218,15 @@ const updateUser = async (req, res) => {
   if (req.body.email) infoToUpdate.email = req.body.email;
   if (req.body.username) infoToUpdate.username = req.body.username;
   if (req.body.info) infoToUpdate.info = req.body.info;
-
-  // If the password is being updated, hash it first
   if (req.body.password) {
     infoToUpdate.password = await encryptPassword(req.body.password);
   }
-
   if (req.file) {
     const avatar = await imageUpload(req.file, "user_avatar");
     infoToUpdate.avatar = avatar;
   }
 
   try {
-    // Uses req.user._id from JWT — ignores the :id in the URL (safer).
     const updatedUser = await UserModel.findByIdAndUpdate(
       req.user._id,
       infoToUpdate,
@@ -255,34 +240,26 @@ const updateUser = async (req, res) => {
   }
 };
 
-// IMPLEMENTED: was previously an empty function.
-// Deletes the user AND cleans up all related data so we don't leave orphans.
 const deleteUser = async (req, res) => {
   const userId = req.user._id;
 
   try {
-    // 1. Delete all comments that belong to this user
     await CommentModel.deleteMany({ owner: userId });
 
-    // 2. Find all sketches owned by this user (we need their IDs to clean up comments on them)
     const userSketches = await SketchModel.find({ owner: userId }, "_id");
     const sketchIds = userSketches.map((s) => s._id);
 
-    // 3. Delete all comments on those sketches (from OTHER users)
     if (sketchIds.length > 0) {
       await CommentModel.deleteMany({ sketch: { $in: sketchIds } });
     }
 
-    // 4. Delete the sketches themselves
     await SketchModel.deleteMany({ owner: userId });
 
-    // 5. Remove this user's likes from all remaining sketches
     await SketchModel.updateMany(
       { likes: userId },
       { $pull: { likes: userId } }
     );
 
-    // 6. Remove the deleted sketches from OTHER users' likes arrays
     if (sketchIds.length > 0) {
       await UserModel.updateMany(
         { likes: { $in: sketchIds } },
@@ -290,7 +267,11 @@ const deleteUser = async (req, res) => {
       );
     }
 
-    // 7. Finally, delete the user
+    // Clean up notifications too
+    await NotificationModel.deleteMany({
+      $or: [{ recipient: userId }, { actor: userId }],
+    });
+
     await UserModel.findByIdAndDelete(userId);
 
     res.status(200).json({ message: "Usuario y todos sus datos eliminados correctamente" });
@@ -343,9 +324,6 @@ const loginUser = async (req, res) => {
 };
 
 const getActiveUser = async (req, res) => {
-  // PERF: passport no longer populates sketchs/likes/comments on every request
-  // (used to be ~5 DB queries per authenticated request). We populate here
-  // on demand since the frontend's AuthContext expects these fields.
   try {
     const user = await UserModel.findById(req.user._id)
       .select("-password -resetPasswordToken -resetPasswordExpires")

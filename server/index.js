@@ -7,6 +7,7 @@ import * as dotenv from "dotenv";
 import userRouter from "./routes/userRoutes.js";
 import sketchRouter from "./routes/sketchRoutes.js";
 import commentRouter from "./routes/commentsRoutes.js";
+import notificationRouter from "./routes/notificationRoutes.js";
 import cloudinaryConfig from "./config/cloudinary.js";
 import passportConfig from "./config/passport.js";
 import { generalLimiter } from "./middlewares/rateLimiter.js";
@@ -17,7 +18,6 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // ---------- CORS ----------
-// Restrict to known client origins (set in .env). In dev, we allow localhost too.
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || "")
   .split(",")
   .map((s) => s.trim())
@@ -25,7 +25,6 @@ const allowedOrigins = (process.env.ALLOWED_ORIGINS || "")
 
 const corsOptions = {
   origin: (origin, callback) => {
-    // Allow requests with no origin (mobile apps, curl, Postman)
     if (!origin) return callback(null, true);
     if (allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
       return callback(null, true);
@@ -40,9 +39,7 @@ const setMiddlewares = () => {
   app.use(bodyParser.json({ limit: "10mb" }));
   app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" }));
   app.use(cors(corsOptions));
-  app.use(generalLimiter); // Protect all endpoints from DoS
-
-  // Trust first proxy (important for rate limiting on hosted platforms like Vercel)
+  app.use(generalLimiter);
   app.set("trust proxy", 1);
 
   cloudinaryConfig();
@@ -66,6 +63,7 @@ const connectRoutes = () => {
   app.use("/api/users", userRouter);
   app.use("/api/sketches", sketchRouter);
   app.use("/api/comments", commentRouter);
+  app.use("/api/notifications", notificationRouter); // NEW
 
   app.use("*", (req, res) => {
     res.status(404).json({ error: "Endpoint not found" });
