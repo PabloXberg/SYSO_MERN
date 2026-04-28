@@ -12,28 +12,19 @@ import { serverURL } from "../serverURL";
 /**
  * Combined login + register modal with tabs.
  *
- * Bug fixes vs previous version:
- *   - activeTab now syncs with initialTab when the modal re-opens
- *     (used to stay stuck on whatever tab was last active)
- *   - registration response is now checked: if creation fails the
- *     user sees the actual error instead of a misleading "wrong
- *     password" message from the auto-login that followed
- *   - if no avatar is selected we don't send a fake string anymore;
- *     the backend uses the default avatar from the User schema
+ * Style: matches the underground/graffiti theme used in the sidebar
+ * and notifications dropdown — graffiti title, yellow accents,
+ * rotated for sticker vibe.
  */
 function AuthModal({ show, onHide, initialTab = "login", onLoadingChange }) {
   const { t } = useTranslation();
   const { login } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState(initialTab);
 
-  // Sync active tab with the requested tab whenever the modal opens.
-  // Previously the state only initialised once, so opening with "register"
-  // after closing on "login" still showed the login tab.
   useEffect(() => {
     if (show) setActiveTab(initialTab);
   }, [show, initialTab]);
 
-  // ───── Login state ──────────────────────────────────────────────
   const [loginData, setLoginData] = useState({ email: "", password: "" });
   const handleLoginChange = (e) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
@@ -47,13 +38,12 @@ function AuthModal({ show, onHide, initialTab = "login", onLoadingChange }) {
     }
   };
 
-  // ───── Register state ───────────────────────────────────────────
   const [registerData, setRegisterData] = useState({
     username: "",
     email: "",
     password: "",
     info: "",
-    avatar: null, // null when nothing is selected (the schema default kicks in)
+    avatar: null,
   });
   const [avatarPreview, setAvatarPreview] = useState(DefaultImage);
 
@@ -83,8 +73,6 @@ function AuthModal({ show, onHide, initialTab = "login", onLoadingChange }) {
     submitData.append("username", registerData.username);
     submitData.append("password", registerData.password);
     submitData.append("info", registerData.info);
-    // Only send the avatar if the user actually picked one.
-    // Otherwise the backend uses the default avatar from the user schema.
     if (registerData.avatar instanceof File) {
       submitData.append("avatar", registerData.avatar);
     }
@@ -96,16 +84,12 @@ function AuthModal({ show, onHide, initialTab = "login", onLoadingChange }) {
         body: submitData,
       });
 
-      // Always check the response. If the server returned an error,
-      // surface it to the user instead of trying to log them in.
       if (!response.ok) {
         const errorBody = await response.json().catch(() => ({}));
         alert(errorBody.error || t("auth.registrationError"));
         return;
       }
 
-      // Capture the credentials before the modal closes / state resets,
-      // then close the modal and log the user in.
       const { email, password } = registerData;
       onHide();
       login(email, password);
@@ -117,6 +101,44 @@ function AuthModal({ show, onHide, initialTab = "login", onLoadingChange }) {
     }
   };
 
+  // ─── Inline styles for the graffiti coherence ────────────────────
+  // Defined here (not in CSS file) so the AuthModal stays self-contained.
+  const graffitiTitleStyle = {
+    fontFamily: "MiFuente2, MiFuente, cursive",
+    fontSize: "1.6rem",
+    color: "#ffcc00",
+    letterSpacing: "0.04em",
+    textShadow: "2px 2px 0 #000",
+    transform: "rotate(-1deg)",
+    display: "inline-block",
+    margin: 0,
+  };
+
+  const tabStyle = (active) => ({
+    fontFamily: "MiFuente2, MiFuente, cursive",
+    fontSize: "1.1rem",
+    letterSpacing: "0.04em",
+    color: active ? "#ffcc00" : "#888",
+    border: "none",
+    borderBottom: active ? "3px solid #ffcc00" : "3px solid transparent",
+    background: "transparent",
+  });
+
+  const buttonStyle = (variant) => ({
+    fontFamily: "MiFuente2, MiFuente, cursive",
+    fontSize: "1rem",
+    letterSpacing: "0.04em",
+    border: `2px solid ${variant === "success" ? "#00ff88" : "#ff3030"}`,
+    color: variant === "success" ? "#00ff88" : "#ff3030",
+    background: "transparent",
+    padding: "0.35rem 0.9rem",
+    textTransform: "uppercase",
+    boxShadow: "2px 2px 0 rgba(0,0,0,0.7)",
+    transform: "rotate(-0.5deg)",
+    cursor: "pointer",
+    transition: "all 0.2s ease",
+  });
+
   return (
     <Modal
       show={show}
@@ -126,31 +148,61 @@ function AuthModal({ show, onHide, initialTab = "login", onLoadingChange }) {
       centered
       size={activeTab === "register" ? "md" : "sm"}
     >
-      <Modal.Header closeButton>
-        <Modal.Title style={{ fontSize: "1.1rem" }}>
-          {activeTab === "login" ? t("auth.login") : t("auth.register")}
+      {/* Header with graffiti title */}
+      <Modal.Header
+        closeButton
+        style={{
+          backgroundColor: "#0d0d0d",
+          borderBottom: "2px solid #ffcc00",
+        }}
+        closeVariant="white"
+      >
+        <Modal.Title>
+          <span style={graffitiTitleStyle}>
+            {activeTab === "login" ? t("auth.login") : t("auth.register")}
+          </span>
         </Modal.Title>
       </Modal.Header>
 
+      {/* Custom tabs styled coherently */}
       <Nav
         variant="tabs"
         activeKey={activeTab}
         onSelect={(k) => setActiveTab(k || "login")}
-        style={{ margin: "0 1rem" }}
+        style={{
+          backgroundColor: "#1a1a1a",
+          borderBottom: "2px solid #333",
+          padding: "0 1rem",
+        }}
       >
         <Nav.Item>
-          <Nav.Link eventKey="login">{t("auth.login")}</Nav.Link>
+          <Nav.Link
+            eventKey="login"
+            style={tabStyle(activeTab === "login")}
+          >
+            {t("auth.login")}
+          </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link eventKey="register">{t("auth.register")}</Nav.Link>
+          <Nav.Link
+            eventKey="register"
+            style={tabStyle(activeTab === "register")}
+          >
+            {t("auth.register")}
+          </Nav.Link>
         </Nav.Item>
       </Nav>
 
-      <div style={{ padding: "1rem" }}>
+      <div
+        style={{
+          padding: "1rem",
+          backgroundColor: "#1a1a1a",
+          color: "#f0f0f0",
+        }}
+      >
         {activeTab === "login" ? (
-          // ============ LOGIN TAB ============
           <Form.Group>
-            <Form.Label>
+            <Form.Label style={{ color: "#ffcc00" }}>
               <i>{t("auth.email")}</i>
             </Form.Label>
             <Form.Control
@@ -158,8 +210,9 @@ function AuthModal({ show, onHide, initialTab = "login", onLoadingChange }) {
               name="email"
               placeholder={t("auth.email").toLowerCase()}
               onChange={handleLoginChange}
+              style={{ backgroundColor: "#0d0d0d", color: "#f0f0f0", border: "1px solid #333" }}
             />
-            <Form.Label className="text-muted mt-2">
+            <Form.Label className="mt-2" style={{ color: "#ffcc00" }}>
               <i>{t("auth.password")}</i>
             </Form.Label>
             <Form.Control
@@ -170,15 +223,15 @@ function AuthModal({ show, onHide, initialTab = "login", onLoadingChange }) {
               onKeyDown={(e) => {
                 if (e.key === "Enter") handleLoginSubmit();
               }}
+              style={{ backgroundColor: "#0d0d0d", color: "#f0f0f0", border: "1px solid #333" }}
             />
-            <Form.Label className="text-muted mt-2">
-              <Link to="/forgotPassword" onClick={onHide}>
+            <Form.Label className="mt-2">
+              <Link to="/forgotPassword" onClick={onHide} style={{ color: "#00e5ff" }}>
                 {t("auth.forgotPassword")}
               </Link>
             </Form.Label>
           </Form.Group>
         ) : (
-          // ============ REGISTER TAB ============
           <>
             <div
               style={{
@@ -192,7 +245,7 @@ function AuthModal({ show, onHide, initialTab = "login", onLoadingChange }) {
                 alt="Avatar"
                 src={avatarPreview}
                 style={{
-                  border: "black 2px solid",
+                  border: "2px solid #ffcc00",
                   borderRadius: "50%",
                   width: "6rem",
                   height: "6rem",
@@ -205,56 +258,64 @@ function AuthModal({ show, onHide, initialTab = "login", onLoadingChange }) {
                 name="avatar"
                 accept="image/jpg, image/jpeg, image/png"
                 onChange={handleFile}
-                style={{ fontSize: "0.85rem" }}
+                style={{ fontSize: "0.85rem", color: "#f0f0f0" }}
               />
             </div>
 
             <Form.Group>
-              <Form.Label>(*) {t("auth.email")}:</Form.Label>
+              <Form.Label style={{ color: "#ffcc00" }}>(*) {t("auth.email")}:</Form.Label>
               <Form.Control
                 type="email"
                 name="email"
                 placeholder={t("auth.email").toLowerCase()}
                 onChange={handleRegisterChange}
+                style={{ backgroundColor: "#0d0d0d", color: "#f0f0f0", border: "1px solid #333" }}
               />
-              <Form.Label className="mt-2">(*) {t("auth.password")}:</Form.Label>
+              <Form.Label className="mt-2" style={{ color: "#ffcc00" }}>(*) {t("auth.password")}:</Form.Label>
               <Form.Control
                 type="password"
                 name="password"
                 placeholder={t("auth.password")}
                 onChange={handleRegisterChange}
+                style={{ backgroundColor: "#0d0d0d", color: "#f0f0f0", border: "1px solid #333" }}
               />
-              <Form.Label className="mt-2">(*) {t("auth.username")}:</Form.Label>
+              <Form.Label className="mt-2" style={{ color: "#ffcc00" }}>(*) {t("auth.username")}:</Form.Label>
               <Form.Control
                 name="username"
                 placeholder={t("auth.username").toLowerCase()}
                 onChange={handleRegisterChange}
+                style={{ backgroundColor: "#0d0d0d", color: "#f0f0f0", border: "1px solid #333" }}
               />
-              <Form.Label className="mt-2">{t("auth.info")}</Form.Label>
+              <Form.Label className="mt-2" style={{ color: "#ffcc00" }}>{t("auth.info")}</Form.Label>
               <Form.Control
                 type="text"
                 name="info"
                 placeholder={t("auth.personalInfo")}
                 onChange={handleRegisterChange}
+                style={{ backgroundColor: "#0d0d0d", color: "#f0f0f0", border: "1px solid #333" }}
               />
             </Form.Group>
           </>
         )}
       </div>
 
-      <Modal.Footer>
-        <Button variant="danger" onClick={onHide} size="sm">
+      <Modal.Footer
+        style={{
+          backgroundColor: "#0d0d0d",
+          borderTop: "2px solid #333",
+        }}
+      >
+        <button onClick={onHide} style={buttonStyle("danger")}>
           {t("auth.close")}
-        </Button>
-        <Button
-          variant="success"
-          size="sm"
+        </button>
+        <button
           onClick={
             activeTab === "login" ? handleLoginSubmit : handleRegisterSubmit
           }
+          style={buttonStyle("success")}
         >
           {activeTab === "login" ? t("auth.accept") : t("auth.submit")}
-        </Button>
+        </button>
       </Modal.Footer>
     </Modal>
   );

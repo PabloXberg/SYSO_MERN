@@ -35,6 +35,7 @@ const EditProfile = () => {
     user?.avatar
   );
   const [formData, setFormData] = useState<UpdateFormData>(initialForm);
+  const [saving, setSaving] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -56,22 +57,37 @@ const EditProfile = () => {
     myHeaders.append("Authorization", `Bearer ${token}`);
 
     const submitData = new FormData();
-    submitData.append("email", formData.email);
-    submitData.append("username", formData.username);
-    submitData.append("password", formData.password);
-    submitData.append("info", formData.info);
-    submitData.append("avatar", formData.avatar as Blob);
+    // Only append fields that the user actually changed. Sending empty
+    // strings would otherwise overwrite existing values with blanks.
+    if (formData.email) submitData.append("email", formData.email);
+    if (formData.username) submitData.append("username", formData.username);
+    if (formData.password) submitData.append("password", formData.password);
+    if (formData.info) submitData.append("info", formData.info);
+    if (formData.avatar instanceof File) {
+      submitData.append("avatar", formData.avatar);
+    }
 
+    setSaving(true);
     try {
-      await fetch(`${serverURL}users/update/${user._id}`, {
+      const response = await fetch(`${serverURL}users/update/${user._id}`, {
         method: "POST",
         headers: myHeaders,
         body: submitData,
       });
+
+      // Check the actual response so we don't navigate on a server error.
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({}));
+        alert(body.error || t("profile.updateError"));
+        return;
+      }
+
       navigate("/mysketchs");
     } catch (error) {
-      console.error(error);
+      console.error("Update profile failed:", error);
       alert(t("profile.updateError"));
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -135,11 +151,12 @@ const EditProfile = () => {
               variant="dark"
               type="button"
               onClick={() => navigate("/mysketchs")}
+              disabled={saving}
             >
               {t("profile.cancel")}
             </Button>
-            <Button variant="success" type="submit">
-              {t("profile.save")}
+            <Button variant="success" type="submit" disabled={saving}>
+              {saving ? "..." : t("profile.save")}
             </Button>
           </div>
         </Form>

@@ -1,7 +1,6 @@
 import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
-import Button from "react-bootstrap/Button";
 import DefaultImage from "../avatar-placeholder.gif";
 import Logo1 from "../images/IMG-20231228-WA0004-removebg-preview.png";
 import Logo2 from "../images/IMG-20231228-WA0005-removebg-preview.png";
@@ -45,9 +44,7 @@ function NavStrap() {
 
   return (
     <>
-      {/* =========================================================
-          DESKTOP NAVBAR (>= 992px)
-         ========================================================= */}
+      {/* DESKTOP NAVBAR */}
       <nav className="navbar-desktop">
         <Link to="/news" className="navbar-desktop__brand">
           <img
@@ -78,18 +75,17 @@ function NavStrap() {
                 src={userAvatar}
                 alt="Avatar"
                 className="NavAtar"
-                style={{
-                  height: "2.5rem",
-                  width: "2.5rem",
-                  borderRadius: "50%",
-                }}
+                style={{ height: "2.5rem", width: "2.5rem", borderRadius: "50%" }}
               />
               <Link to="/mysketchs" className="navbar-desktop__link">
                 {user.username}
               </Link>
-              <Button variant="outline-danger" size="sm" onClick={handleLogout}>
+              <button
+                className="navbar-desktop__signout"
+                onClick={handleLogout}
+              >
                 {t("nav.logout")}
-              </Button>
+              </button>
             </div>
           ) : (
             <div className="navbar-desktop__auth">
@@ -104,9 +100,7 @@ function NavStrap() {
         </div>
       </nav>
 
-      {/* =========================================================
-          MOBILE NAVBAR — hamburger + logo + bell + lang
-         ========================================================= */}
+      {/* MOBILE NAVBAR */}
       <nav className="navbar-mobile">
         <button
           className="navbar-mobile__hamburger"
@@ -130,9 +124,7 @@ function NavStrap() {
         </div>
       </nav>
 
-      {/* =========================================================
-          SIDEBAR — slides from the left (mobile only)
-         ========================================================= */}
+      {/* SIDEBAR */}
       <div
         className={`sidebar-overlay ${sidebarOpen ? "open" : ""}`}
         onClick={closeSidebar}
@@ -154,7 +146,6 @@ function NavStrap() {
         </div>
 
         <nav className="sidebar__nav">
-          {/* Main sections (in proper order this time) */}
           <Link
             to="/homepage"
             className="sidebar__link news"
@@ -175,17 +166,8 @@ function NavStrap() {
 
           <div className="sidebar__divider" />
 
-          {/* User-specific links */}
-          {user && (
-            <Link
-              to="/notifications"
-              className="sidebar__link"
-              onClick={closeSidebar}
-            >
-              🔔 {t("notifications.title")}
-            </Link>
-          )}
-
+          {/* Notifications removed — accessible via the bell in the navbar.
+              Keeping the username + sign-out section compact. */}
           {user ? (
             <>
               <Link
@@ -200,10 +182,11 @@ function NavStrap() {
                     height: "2rem",
                     width: "2rem",
                     borderRadius: "50%",
-                    marginRight: "0.75rem",
+                    marginRight: "0.6rem",
+                    flexShrink: 0,
                   }}
                 />
-                {user.username}
+                <span className="sidebar__username">{user.username}</span>
               </Link>
               <button
                 className="sidebar__link sidebar__link--logout"
@@ -226,7 +209,6 @@ function NavStrap() {
 
           <div className="sidebar__divider" />
 
-          {/* Disabled secondary sections */}
           <span className="sidebar__link sidebar__link--disabled">
             {t("subNav.supporters")}
           </span>
