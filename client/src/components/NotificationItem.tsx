@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Notification } from "../hooks/useNotifications";
 
@@ -6,16 +6,20 @@ interface Props {
   notification: Notification;
   onMarkRead: (id: string) => void;
   onRemove: (id: string) => void;
-  onClose: () => void;
+  /**
+   * Called after activation to close the parent UI (e.g. the dropdown).
+   * Optional because this component is also rendered standalone on the
+   * /notifications page, where there's nothing to close.
+   */
+  onClose?: () => void;
 }
 
 /**
  * Single row in the notifications dropdown / page.
  *
- * Handles all notification types:
- *   - like / comment / comment_reply / welcome  → existing flow
- *   - battle_voting / battle_finished           → links to /actualbattle
- *   - battle_winner_popular / battle_winner_jury → "win" styling (green accent)
+ * MOBILE NOTES (see commit history): uses onPointerUp + onClick with
+ * a double-fire guard, touch-action: manipulation, and pointer-events:
+ * none on inner visuals so taps reliably land on the activatable parent.
  */
 const NotificationItem = ({
   notification,
@@ -24,18 +28,12 @@ const NotificationItem = ({
   onClose,
 }: Props) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
-  // Fallback name when the actor user has been deleted or is missing.
-  // Uses i18n so it's localized — add `"common.someone"` to your locales
-  // if not present (es: "alguien", en: "someone").
   const actorName =
     notification.actor?.username || t("common.someone", "alguien");
   const battleTheme = notification.battle?.theme || "";
 
-  /**
-   * Map notification type → translated message.
-   * Battle messages use {{theme}} interpolation; like/comment use {{username}}.
-   */
   const getMessage = (): string => {
     switch (notification.type) {
       case "welcome":
@@ -59,12 +57,6 @@ const NotificationItem = ({
     }
   };
 
-  /**
-   * Where clicking the notification takes you.
-   *   - battle_*  → /actualbattle (the live battle page)
-   *   - welcome   → /mysketchs (with state to auto-open the upload modal)
-   *   - rest      → /sketchdetail/{id} (the sketch the action happened on)
-   */
   const getLink = (): { to: string; state?: any } => {
     if (notification.type?.startsWith("battle_")) {
       return { to: "/actualbattle" };
@@ -78,31 +70,45 @@ const NotificationItem = ({
     return { to: "/sketches" };
   };
 
-  // Battle wins get a brighter accent (green) on the unread bar
   const isWinNotification =
     notification.type === "battle_winner_popular" ||
     notification.type === "battle_winner_jury";
-
   const accent = isWinNotification ? "#39ff14" : "#ffcc00";
 
-  const handleClick = () => {
+  const activate = (e: React.SyntheticEvent) => {
+    const target = e.currentTarget as HTMLElement;
+    if (target.dataset.handled === "1") return;
+    target.dataset.handled = "1";
+    setTimeout(() => {
+      target.dataset.handled = "";
+    }, 500);
+
+    e.stopPropagation();
+
     if (!notification.read) onMarkRead(notification._id);
-    onClose();
+    const link = getLink();
+    navigate(link.to, link.state ? { state: link.state } : undefined);
+    // Only close if a closer was provided (dropdown context).
+    // On the /notifications page this component is rendered standalone
+    // and there's nothing to close.
+    if (typeof onClose === "function") onClose();
   };
 
-  const handleRemove = (e: React.MouseEvent) => {
+  const handleRemove = (e: React.MouseEvent | React.PointerEvent) => {
     e.preventDefault();
     e.stopPropagation();
     onRemove(notification._id);
   };
 
-  const link = getLink();
-
   return (
-    <Link
-      to={link.to}
-      state={link.state}
-      onClick={handleClick}
+    <div
+      onPointerUp={activate}
+      onClick={activate}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") activate(e);
+      }}
       style={{
         display: "flex",
         alignItems: "center",
@@ -117,9 +123,12 @@ const NotificationItem = ({
           : `3px solid ${accent}`,
         position: "relative",
         transition: "background-color 0.15s ease",
+        cursor: "pointer",
+        touchAction: "manipulation",
+        WebkitTapHighlightColor: "transparent",
+        userSelect: "none",
       }}
     >
-      {/* Avatar — actor for like/comment, sketch thumb for battle, fallback emoji */}
       {notification.actor?.avatar && (
         <img
           src={notification.actor.avatar}
@@ -130,6 +139,7 @@ const NotificationItem = ({
             borderRadius: "50%",
             objectFit: "cover",
             flexShrink: 0,
+            pointerEvents: "none",
           }}
         />
       )}
@@ -143,16 +153,17 @@ const NotificationItem = ({
             objectFit: "cover",
             flexShrink: 0,
             border: `1px solid ${accent}`,
+            pointerEvents: "none",
           }}
         />
       )}
       {!notification.actor && !notification.sketch?.url && (
-        <span style={{ fontSize: "1.6rem", flexShrink: 0 }}>
+        <span style={{ fontSize: "1.6rem", flexShrink: 0, pointerEvents: "none" }}>
           {isWinNotification ? "🏆" : "⚔"}
         </span>
       )}
 
-      <div style={{ flex: 1, minWidth: 0 }}>
+      <div style={{ flex: 1, minWidth: 0, pointerEvents: "none" }}>
         <div
           style={{
             fontSize: "0.85rem",
@@ -175,6 +186,7 @@ const NotificationItem = ({
       </div>
 
       <button
+        onPointerUp={handleRemove}
         onClick={handleRemove}
         title={t("notifications.remove")}
         aria-label={t("notifications.remove")}
@@ -186,11 +198,13 @@ const NotificationItem = ({
           padding: "0.2rem 0.4rem",
           fontSize: "1rem",
           flexShrink: 0,
+          touchAction: "manipulation",
+          WebkitTapHighlightColor: "transparent",
         }}
       >
         ✕
       </button>
-    </Link>
+    </div>
   );
 };
 
