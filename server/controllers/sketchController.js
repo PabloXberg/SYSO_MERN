@@ -19,6 +19,17 @@ const parseTags = (raw) => {
     .slice(0, 3);
 };
 
+/**
+ * Coerce the battleId field from the form (it arrives as a string in multipart/form-data).
+ * Empty / "null" / "false" → null. Anything else → the raw string (Mongoose casts to ObjectId).
+ */
+const parseBattleId = (raw) => {
+  if (!raw) return null;
+  const s = String(raw).trim();
+  if (!s || s === "null" || s === "false" || s === "0") return null;
+  return s;
+};
+
 const getAllSketches = async (req, res) => {
   try {
     const page = Math.max(1, parseInt(req.query.page) || 1);
@@ -57,7 +68,8 @@ const getAllSketches = async (req, res) => {
           path: "owner",
           select: ["email", "username", "avatar", "likes", "sketchs", "createdAt", "info"],
         })
-        .populate("comments"),
+        .populate("comments")
+        .populate("battleId", "theme state isCurrent"),
       SketchModel.countDocuments(filter),
     ]);
 
@@ -92,6 +104,7 @@ const getSketchbyID = async (req, res) => {
         path: "comments",
         populate: [{ path: "owner", select: ["username"] }],
       })
+      .populate("battleId", "theme state isCurrent")
       .lean();
 
     if (!sketch) return res.status(404).json({ error: "Sketch no encontrado" });
@@ -109,11 +122,13 @@ const createSketch = async (req, res) => {
   try {
     const url = await imageUpload(req.file, "user_sketches");
     const tags = parseTags(req.body.tags);
+    const battleId = parseBattleId(req.body.battleId);
 
     const newSketch = await SketchModel.create({
       name: req.body.name,
       comment: req.body.comment,
-      battle: req.body.battle || "",
+      battle: req.body.battle || "", // legacy field, kept for compat
+      battleId,
       owner: req.user._id,
       url,
       tags,
@@ -142,6 +157,9 @@ const updateSketch = async (req, res) => {
     if (req.body.name) infoToUpdate.name = req.body.name;
     if (req.body.comment) infoToUpdate.comment = req.body.comment;
     if (req.body.battle !== undefined) infoToUpdate.battle = req.body.battle;
+    if (req.body.battleId !== undefined) {
+      infoToUpdate.battleId = parseBattleId(req.body.battleId);
+    }
     if (req.body.tags !== undefined) infoToUpdate.tags = parseTags(req.body.tags);
     if (req.file) infoToUpdate.url = await imageUpload(req.file, "user_sketches");
 
@@ -174,7 +192,6 @@ const deleteSketch = async (req, res) => {
     await UserModel.findByIdAndUpdate(sketch.owner, {
       $pull: { sketchs: req.params.id },
     });
-    // Also delete notifications related to this sketch
     await NotificationModel.deleteMany({ sketch: req.params.id });
     await SketchModel.findByIdAndDelete(req.params.id);
 
@@ -189,20 +206,16 @@ const addLike = async (req, res) => {
   try {
     const { sketch } = req.body;
 
-    // Use $addToSet so duplicates are silently ignored.
-    // We need to know whether the like was actually new (so we don't spam
-    // the owner with notifications if the user double-clicks).
     const result = await SketchModel.findByIdAndUpdate(
       sketch,
       { $addToSet: { likes: req.user._id } },
-      { new: false } // returns the document BEFORE the update so we can check
+      { new: false }
     );
 
     await UserModel.findByIdAndUpdate(req.user._id, {
       $addToSet: { likes: sketch },
     });
 
-    // Only create a notification if the like is genuinely new
     const wasAlreadyLiked = result?.likes?.some(
       (id) => id.toString() === req.user._id.toString()
     );

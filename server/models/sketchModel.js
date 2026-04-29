@@ -16,7 +16,20 @@ const sketchSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
     comment: { type: String, required: true },
+
+    // LEGACY — keep for backward compat with old sketches that used "1", "2", etc.
+    // New sketches that participate in a battle use `battleId` below instead.
     battle: { type: String, required: false },
+
+    // NEW — the proper relation to a Battle document.
+    // Null means this sketch does not participate in any battle.
+    battleId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "battle",
+      default: null,
+      index: true,
+    },
+
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
     comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "comment" }],
     owner: { type: mongoose.Schema.Types.ObjectId, ref: "user" },

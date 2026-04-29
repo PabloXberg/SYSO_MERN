@@ -31,7 +31,9 @@
     "contact": "Contact",
     "contactTitle": "Get in touch",
     "shop": "Shop",
-    "shopTitle": "Online store"
+    "shopTitle": "Online store",
+        "adminBattles": "Admin",
+    "adminBattlesTitle": "Manage battles (admin)"
   },
   "home": {
     "title": "Non-profit artistic association.",
@@ -63,7 +65,23 @@
     "formatDescription": "DIN A4 paper, landscape and in color. Signed as Sketch Battle # 2",
     "winnerDate": "Winner announcement",
     "prizes": "Prizes",
-    "judges": "Judges"
+    "judges": "Judges",
+        "state": {
+      "open": "Open",
+      "voting": "Voting",
+      "finished": "Finished"
+    },
+    "noActiveBattle": "No active battle right now",
+    "checkBackSoon": "We'll announce the next one soon — don't miss it!",
+    "submissionDeadline": "Submission deadline",
+    "votingDeadline": "Voting deadline",
+    "winners": "Winners",
+    "popularWinner": "Popular Winner",
+    "juryWinner": "Jury Winner",
+    "currentParticipants": "Participants",
+    "allParticipants": "All Participants",
+    "voteHint": "Like your favorites to vote!",
+    "noSubmissionsYet": "No sketches yet in this battle. Be the first!"
   },
   "sketches": {
     "searchPlaceholder": "Search sketches by name, description, or author...",
@@ -142,7 +160,11 @@
     "deleteConfirmTitle": "WARNING",
     "deleteConfirmText": "Are you sure you want to delete this sketch?",
     "delete": "Delete",
-    "updateError": "Something went wrong — try again..."
+    "updateError": "Something went wrong — try again...",
+      "inBattle": "In battle",
+    "noActiveBattle": "There's no active battle open to join right now.",
+    "deleteTitle": "Delete sketch?",
+    "deleteConfirm": "This cannot be undone. Are you sure?"
   },
   "sketchDetail": {
     "addComment": "Add a comment...",
@@ -175,7 +197,8 @@
     "uploadTooltip": "Upload Sketch",
     "cancel": "Cancel",
     "missingFields": "Please fill in all fields",
-    "uploadError": "Something went wrong — sketch not uploaded"
+    "uploadError": "Something went wrong — sketch not uploaded",
+        "participateInBattle": "Participate in the current battle"
   },
   "common": {
     "loading": "Loading...",
@@ -236,5 +259,41 @@
     "confirmFinal": "Yes, delete my account",
     "deleting": "Deleting...",
     "error": "Could not delete account. Please try again."
+  },
+  
+
+  "admin": {
+    "battle": {
+      "title": "Battle Administration",
+      "newBattle": "New Battle",
+      "newTitle": "Create New Battle",
+      "editTitle": "Edit Battle",
+      "theme": "Theme / Keyword",
+      "themePlaceholder": "e.g. STYLE, WILDSTYLE, TRAINS...",
+      "description": "Description",
+      "submissionDeadline": "Submission deadline",
+      "votingDeadline": "Voting deadline",
+      "prizes": "Prizes",
+      "prizesPlaceholder": "One per line:\n* A4 print\n* MTN94 spray can\n* ...",
+      "judges": "Judges",
+      "judgesPlaceholder": "Judges' names, comma-separated or one per line",
+      "state": "State",
+      "isCurrent": "Is the current battle (shown on /actualbattle)",
+      "juryWinnerPick": "Winner picked by jury",
+      "noJuryWinner": "— Not picked yet —",
+      "save": "Save",
+      "delete": "Delete",
+      "edit": "Edit",
+      "currentTag": "CURRENT",
+      "noBattles": "No battles yet. Create the first one!",
+      "runTransitions": "Force state transitions",
+      "transitionsRan": "Transitions applied:",
+      "missingFields": "Missing required fields: theme and deadlines",
+      "saveError": "Error saving battle",
+      "deleteConfirm": "Delete this battle? Cannot be undone.",
+      "deleteError": "Error deleting battle"
+    }
   }
+
 }
+

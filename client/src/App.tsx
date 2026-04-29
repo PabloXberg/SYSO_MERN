@@ -15,6 +15,7 @@ import News from "./pages/news";
 import ForgotPassword from "./pages/forgotPassword";
 import ResetPassword from "./pages/resetPassword";
 import Notifications from "./pages/Notifications"; // NEW
+import BattleAdmin from "./pages/BattleAdmin";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
             <Route path="forgotPassword" element={<ForgotPassword />} />
             <Route path="resetPassword/:token" element={<ResetPassword />} />
             <Route path="notifications" element={<Notifications />} /> {/* NEW */}
+            <Route path="battleadmin" element={<BattleAdmin />} />
           </Routes>
         </BrowserRouter>
       </AuthContextProvider>

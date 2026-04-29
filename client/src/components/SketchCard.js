@@ -1,5 +1,5 @@
 import Card from "react-bootstrap/Card";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AuthContext } from "../contexts/AuthContext";
 import UserModal from "./UserModal";
@@ -28,14 +28,28 @@ function SketchCard(props) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [avatarPreview, setAvatarPreview] = useState(sketch?.url);
 
+  // Current battle, fetched lazily — only needed when the edit modal opens.
+  const [currentBattle, setCurrentBattle] = useState(null);
+
+  // formData.battleId is the source of truth for the toggle:
+  //   null  → not participating
+  //   "<id>" → participating in that battle
   const [formData, setFormData] = useState({
     name: "",
     comment: "",
     url: "",
-    battle: "",
-    // Initialise tags from the current sketch so editing doesn't clear them
+    battleId: sketch?.battleId?._id || sketch?.battleId || null,
     tags: sketch?.tags || [],
   });
+
+  // Fetch the current battle once when the edit modal opens
+  useEffect(() => {
+    if (!showEdit || currentBattle !== null) return;
+    fetch(`${serverURL}battles/current`)
+      .then((r) => r.json())
+      .then((data) => setCurrentBattle(data || { _id: null }))
+      .catch(() => setCurrentBattle({ _id: null }));
+  }, [showEdit, currentBattle]);
 
   const datum = props.props.createdAt?.substring(0, 10) || t("common.unknownDate");
   const partesFecha = datum.split("-");
@@ -49,8 +63,6 @@ function SketchCard(props) {
     setLoading(true);
 
     if (user?._id === sketch?.owner._id) {
-      if (formData.battle === "") formData.battle = "0";
-
       const myHeaders = new Headers();
       const token = localStorage.getItem("token");
       myHeaders.append("Authorization", `Bearer ${token}`);
@@ -61,8 +73,8 @@ function SketchCard(props) {
       submitData.append("name", formData.name || sketch.name);
       submitData.append("comment", formData.comment || sketch.comment);
       submitData.append("url", formData.url);
-      submitData.append("battle", formData.battle);
-      // Tags go as comma-separated string (backend handles both formats)
+      // battleId can be null (sent as empty string → backend treats as null)
+      submitData.append("battleId", formData.battleId || "");
       submitData.append("tags", (formData.tags || []).join(","));
 
       try {
@@ -136,6 +148,15 @@ function SketchCard(props) {
   // Tags visible on the card
   const tagsToShow = sketch?.tags || [];
 
+  // Battle toggle helpers ------------------------------------------------
+  // Can the user join (or stay in) the current battle? Only if it exists
+  // and is still in "open" state for new submissions.
+  const canJoinBattle =
+    currentBattle && currentBattle._id && currentBattle.state === "open";
+  // Is this sketch currently participating in the active battle?
+  const isInCurrentBattle =
+    formData.battleId && currentBattle && formData.battleId === currentBattle._id;
+
   return (
     <div className="SketchCardPage">
       {loading ? (
@@ -173,7 +194,6 @@ function SketchCard(props) {
             <Card.Body className="sketchCardBody">
               <Card.Title>{props?.props.name}</Card.Title>
 
-              {/* Tags row — only rendered if the sketch has at least one tag */}
               {tagsToShow.length > 0 && (
                 <div
                   style={{
@@ -194,6 +214,27 @@ function SketchCard(props) {
                   ? props.props.comment
                   : t("sketchDetail.noDescription")}
               </Card.Text>
+
+              {/* Show a small badge if this sketch is in the current battle */}
+              {sketch?.battleId && (
+                <div
+                  style={{
+                    display: "inline-block",
+                    padding: "0.2rem 0.6rem",
+                    backgroundColor: "#3a2a00",
+                    color: "#ffcc00",
+                    border: "1px solid #ffcc00",
+                    borderRadius: "0.3rem",
+                    fontSize: "0.75rem",
+                    fontFamily: "MiFuente2, MiFuente, cursive",
+                    letterSpacing: "0.05em",
+                    textTransform: "uppercase",
+                    marginBottom: "0.5rem",
+                  }}
+                >
+                  ⚔ {t("sketch.inBattle")}
+                </div>
+              )}
 
               {location.pathname === "/sketches" ? (
                 <Card.Footer className="text-muted">
@@ -230,44 +271,31 @@ function SketchCard(props) {
                         onClick={handleShowDelete}
                         style={{ cursor: "pointer" }}
                       >
-                        delete_forever
+                        delete
                       </i>
                     </div>
                   </Card.Footer>
 
-                  {/* DELETE CONFIRMATION MODAL */}
-                  <Modal
-                    show={showDelete}
-                    onHide={handleCloseDelete}
-                    backdrop="static"
-                    keyboard={false}
-                    centered
-                  >
+                  {/* Delete confirmation modal */}
+                  <Modal show={showDelete} onHide={handleCloseDelete} centered>
                     <Modal.Header closeButton>
-                      <Modal.Title>{t("sketch.deleteConfirmTitle")}</Modal.Title>
+                      <Modal.Title>{t("sketch.deleteTitle")}</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body>
-                      <p>{t("sketch.deleteConfirmText")}</p>
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-around",
-                        }}
+                    <Modal.Body>{t("sketch.deleteConfirm")}</Modal.Body>
+                    <Modal.Footer>
+                      <Button variant="secondary" onClick={handleCloseDelete}>
+                        {t("mySketches.cancel")}
+                      </Button>
+                      <Button
+                        variant="danger"
+                        onClick={() => handleSketchDelete(sketch)}
                       >
-                        <Button variant="success" onClick={handleCloseDelete}>
-                          {t("mySketches.cancel")}
-                        </Button>
-                        <Button
-                          variant="danger"
-                          onClick={() => handleSketchDelete(sketch)}
-                        >
-                          {t("sketch.delete")}
-                        </Button>
-                      </div>
-                    </Modal.Body>
+                        {t("sketch.delete")}
+                      </Button>
+                    </Modal.Footer>
                   </Modal>
 
-                  {/* EDIT SKETCH MODAL */}
+                  {/* Edit modal */}
                   <Modal
                     show={showEdit}
                     onHide={handleCloseEdit}
@@ -332,23 +360,53 @@ function SketchCard(props) {
                           onChange={handleChangeEdit}
                         />
 
-                        <Form.Label>
-                          {t("sketch.battleNumber")}{" "}
-                          <i style={{ fontSize: "small" }}>
-                            ({t("sketch.battleHint")})
+                        {/* Battle toggle — replaces the old "número de batalla" text input.
+                            Only enabled if the current battle is open for submissions. */}
+                        {canJoinBattle && (
+                          <div
+                            style={{
+                              marginTop: "1rem",
+                              padding: "0.75rem 1rem",
+                              border: "2px solid #ffcc00",
+                              borderRadius: "0.3rem",
+                              backgroundColor: "#1a1a1a",
+                              color: "#ffcc00",
+                            }}
+                          >
+                            <Form.Check
+                              type="switch"
+                              id={`battle-toggle-${sketch._id}`}
+                              checked={!!isInCurrentBattle}
+                              onChange={(e) =>
+                                setFormData({
+                                  ...formData,
+                                  battleId: e.target.checked
+                                    ? currentBattle._id
+                                    : null,
+                                })
+                              }
+                              label={
+                                <span
+                                  style={{
+                                    fontFamily: "MiFuente2, MiFuente, cursive",
+                                    letterSpacing: "0.05em",
+                                  }}
+                                >
+                                  {t("mySketches.participateInBattle")}:{" "}
+                                  <b>"{currentBattle.theme}"</b>
+                                </span>
+                              }
+                            />
+                          </div>
+                        )}
+                        {/* Helpful explanation when there's no joinable battle */}
+                        {!canJoinBattle && (
+                          <i style={{ fontSize: "0.85rem", color: "#888", marginTop: "0.5rem" }}>
+                            {t("sketch.noActiveBattle")}
                           </i>
-                        </Form.Label>
-                        <Form.Control
-                          style={{ maxWidth: "10rem" }}
-                          type="text"
-                          name="battle"
-                          placeholder={props.props.battle}
-                          defaultValue={props.props.battle}
-                          onChange={handleChangeEdit}
-                        />
+                        )}
                       </Form.Group>
 
-                      {/* Tag selector */}
                       <TagSelector
                         selected={formData.tags}
                         onChange={handleTagsChange}

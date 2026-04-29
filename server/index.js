@@ -8,6 +8,8 @@ import userRouter from "./routes/userRoutes.js";
 import sketchRouter from "./routes/sketchRoutes.js";
 import commentRouter from "./routes/commentsRoutes.js";
 import notificationRouter from "./routes/notificationRoutes.js";
+import battleRouter from "./routes/battleRoutes.js";
+import { runStateTransitions } from "./controllers/battleController.js";
 import cloudinaryConfig from "./config/cloudinary.js";
 import passportConfig from "./config/passport.js";
 import { generalLimiter } from "./middlewares/rateLimiter.js";
@@ -53,6 +55,16 @@ const connectMongoose = () => {
     .then(() => {
       app.listen(port, () => {
         console.log(`✅ MongoDB connected — server running on port ${port}`);
+        // Run battle state transitions on startup, then every 10 minutes.
+        // Cheap, idempotent — just checks dates and updates docs if needed.
+        runStateTransitions().catch((e) =>
+          console.error("Initial battle transition check failed:", e)
+        );
+        setInterval(() => {
+          runStateTransitions().catch((e) =>
+            console.error("Periodic battle transition check failed:", e)
+          );
+        }, 10 * 60 * 1000);
       });
     })
     .catch((err) => console.error("❌ MongoDB connection error:", err));
@@ -63,7 +75,8 @@ const connectRoutes = () => {
   app.use("/api/users", userRouter);
   app.use("/api/sketches", sketchRouter);
   app.use("/api/comments", commentRouter);
-  app.use("/api/notifications", notificationRouter); // NEW
+  app.use("/api/notifications", notificationRouter);
+  app.use("/api/battles", battleRouter); // NEW
 
   app.use("*", (req, res) => {
     res.status(404).json({ error: "Endpoint not found" });

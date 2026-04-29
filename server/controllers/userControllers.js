@@ -103,6 +103,16 @@ export const resetPassword = async (req, res) => {
 // ==============================================================
 // USERS CRUD
 // ==============================================================
+//
+// PRIVACY NOTE on isAdmin:
+// - getUsers (lists everyone): we hide isAdmin — nobody else needs to know who's admin
+// - getUser  (any user by id): we hide isAdmin — same privacy reason
+// - getActiveUser (the logged-in user): we INCLUDE isAdmin — the user needs to know
+//   their own admin status so the frontend can show admin-only buttons
+// - loginUser: includes isAdmin in the response so AuthContext gets it from day one
+// - updateUser: includes isAdmin so the AuthContext stays correct after profile edits
+// ==============================================================
+
 const getUsers = async (req, res) => {
   try {
     const page = Math.max(1, parseInt(req.query.page) || 1);
@@ -119,7 +129,7 @@ const getUsers = async (req, res) => {
 
     const [users, total] = await Promise.all([
       UserModel.find(filter)
-        .select("-password -resetPasswordToken -resetPasswordExpires")
+        .select("-password -resetPasswordToken -resetPasswordExpires -isAdmin")
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
@@ -147,7 +157,7 @@ const getUsers = async (req, res) => {
 const getUser = async (req, res) => {
   try {
     const user = await UserModel.findById(req.params.id)
-      .select("-password -resetPasswordToken -resetPasswordExpires")
+      .select("-password -resetPasswordToken -resetPasswordExpires -isAdmin")
       .populate({
         path: "likes",
         populate: [{ path: "owner", select: ["username"] }],
@@ -182,8 +192,12 @@ const createUser = async (req, res) => {
     const avatar = await imageUpload(req.file, "user_avatar");
     const encryptedPassword = await encryptPassword(req.body.password);
 
+    // Whitelist only the fields a registrant is allowed to set. This prevents
+    // a malicious POST from sneaking `isAdmin: true` through the spread.
     const newUser = new UserModel({
-      ...req.body,
+      email: req.body.email,
+      username: req.body.username,
+      info: req.body.info,
       password: encryptedPassword,
       avatar: avatar,
     });
@@ -191,8 +205,6 @@ const createUser = async (req, res) => {
     const registeredUser = await newUser.save();
 
     // ───── Welcome notification ─────────────────────────────────
-    // First-time greeting that shows up in the bell icon. The frontend
-    // recognises type === "welcome" and renders a special message.
     await createNotification({
       recipient: registeredUser._id,
       actor: null,
@@ -225,8 +237,11 @@ const updateUser = async (req, res) => {
     const avatar = await imageUpload(req.file, "user_avatar");
     infoToUpdate.avatar = avatar;
   }
+  // NOTE: we deliberately do NOT copy req.body.isAdmin here — admin status can
+  // only be granted via direct DB edit, never through this endpoint.
 
   try {
+    // Include isAdmin in the response so the AuthContext stays in sync after edits.
     const updatedUser = await UserModel.findByIdAndUpdate(
       req.user._id,
       infoToUpdate,
@@ -267,7 +282,6 @@ const deleteUser = async (req, res) => {
       );
     }
 
-    // Clean up notifications too
     await NotificationModel.deleteMany({
       $or: [{ recipient: userId }, { actor: userId }],
     });
@@ -315,6 +329,7 @@ const loginUser = async (req, res) => {
         comments: existingUser.comments,
         info: existingUser.info,
         avatar: existingUser.avatar,
+        isAdmin: !!existingUser.isAdmin, // ← needed for admin UI to appear
       },
     });
   } catch (error) {
@@ -325,6 +340,7 @@ const loginUser = async (req, res) => {
 
 const getActiveUser = async (req, res) => {
   try {
+    // Logged-in user fetching their own profile — they DO need to know their isAdmin
     const user = await UserModel.findById(req.user._id)
       .select("-password -resetPasswordToken -resetPasswordExpires")
       .populate({

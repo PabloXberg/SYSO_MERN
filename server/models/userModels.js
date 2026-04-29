@@ -15,6 +15,10 @@ const userSchema = new mongoose.Schema(
         "https://res.cloudinary.com/dhaezmblt/image/upload/v1716493293/avatar-3814049_640_ykc5lj.png",
     },
 
+    // Admin role — required to create/edit Battles. Default false; set manually in DB
+    // for your account: db.users.updateOne({email:"you@..."},{$set:{isAdmin:true}})
+    isAdmin: { type: Boolean, default: false },
+
     // Password reset fields
     resetPasswordToken: String,
     resetPasswordExpires: Date,
@@ -22,10 +26,6 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// PERF: Indexes speed up common queries.
-// - email: already has unique index from `unique: true` above
-// - createdAt: used for sorting users newest-first in paginated responses
-// - resetPasswordToken: used in the reset-password lookup (+ expiry check)
 userSchema.index({ createdAt: -1 });
 userSchema.index({ resetPasswordToken: 1 });
 

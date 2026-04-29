@@ -15,11 +15,17 @@ import { useFetch } from "../hooks/useFetch";
 import { User } from "../@types/models";
 import "../index.css";
 
+interface CurrentBattle {
+  _id: string;
+  theme: string;
+  state: "open" | "voting" | "finished";
+}
+
 interface FormDataShape {
   name: string;
   comment: string;
   url: string | File;
-  battle: string;
+  participatesInBattle: boolean;
   tags: string[];
 }
 
@@ -27,7 +33,7 @@ const initialForm: FormDataShape = {
   name: "",
   comment: "",
   url: "",
-  battle: "",
+  participatesInBattle: false,
   tags: [],
 };
 
@@ -42,16 +48,22 @@ const MySketchs = () => {
     userId ? `${serverURL}users/id/${userId}` : null
   );
 
+  // Fetch the current battle so we can show its theme on the toggle.
+  // If there's no active battle, the toggle is hidden entirely.
+  const { data: currentBattle } = useFetch<CurrentBattle | null>(
+    `${serverURL}battles/current`
+  );
+
   const [show, setShow] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState<string>(DefaultImage);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<FormDataShape>(initialForm);
 
   const sketchsArray = activeUser?.sketchs || [];
+  // Only allow joining a battle that is still accepting submissions
+  const canJoinBattle =
+    currentBattle && currentBattle.state === "open";
 
-  // When navigated here from the welcome notification, location.state
-  // carries { openUpload: true }. We open the upload modal automatically
-  // and clear the state so refreshing the page doesn't re-open it.
   useEffect(() => {
     const state = location.state as { openUpload?: boolean } | null;
     if (state?.openUpload) {
@@ -100,7 +112,10 @@ const MySketchs = () => {
     submitData.append("comment", formData.comment);
     submitData.append("owner", userId);
     submitData.append("url", formData.url);
-    submitData.append("battle", formData.battle || "0");
+    // Only attach battleId if the user opted in AND there is an active battle
+    if (formData.participatesInBattle && canJoinBattle && currentBattle) {
+      submitData.append("battleId", currentBattle._id);
+    }
     submitData.append("tags", formData.tags.join(","));
 
     try {
@@ -200,15 +215,45 @@ const MySketchs = () => {
                     placeholder={t("mySketches.descriptionPlaceholder")}
                     onChange={handleChange}
                   />
-                  <Form.Label>{t("mySketches.battlePlaceholder")}: </Form.Label>
-                  <i>* {t("mySketches.battleHint")}</i>
-                  <Form.Control
-                    style={{ maxWidth: "10rem" }}
-                    type="text"
-                    name="battle"
-                    placeholder="-"
-                    onChange={handleChange}
-                  />
+
+                  {/* Battle toggle — only shown when there's an active battle
+                      that's still accepting submissions */}
+                  {canJoinBattle && currentBattle && (
+                    <div
+                      style={{
+                        marginTop: "1rem",
+                        padding: "0.75rem 1rem",
+                        border: "2px solid #ffcc00",
+                        borderRadius: "0.3rem",
+                        backgroundColor: "#1a1a1a",
+                        color: "#ffcc00",
+                        maxWidth: "30rem",
+                      }}
+                    >
+                      <Form.Check
+                        type="switch"
+                        id="battle-toggle"
+                        checked={formData.participatesInBattle}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            participatesInBattle: e.target.checked,
+                          })
+                        }
+                        label={
+                          <span
+                            style={{
+                              fontFamily: "MiFuente2, MiFuente, cursive",
+                              letterSpacing: "0.05em",
+                            }}
+                          >
+                            {t("mySketches.participateInBattle")}:{" "}
+                            <b>"{currentBattle.theme}"</b>
+                          </span>
+                        }
+                      />
+                    </div>
+                  )}
                 </Form.Group>
 
                 <TagSelector

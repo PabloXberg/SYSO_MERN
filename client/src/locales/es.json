@@ -31,7 +31,9 @@
     "contact": "Contacto",
     "contactTitle": "Vías de comunicación",
     "shop": "Shop",
-    "shopTitle": "Tienda online"
+    "shopTitle": "Tienda online",
+       "adminBattles": "Admin",
+    "adminBattlesTitle": "Administrar batallas (admin)"
   },
   "home": {
     "title": "Asociación artística sin ánimo de lucro.",
@@ -63,7 +65,23 @@
     "formatDescription": "Papel DIN A4, horizontal y a color. Firmado como Sketch Battle # 2",
     "winnerDate": "Fecha Ganador",
     "prizes": "Premios",
-    "judges": "Jueces"
+    "judges": "Jueces",
+       "state": {
+      "open": "Abierta",
+      "voting": "En votación",
+      "finished": "Finalizada"
+    },
+    "noActiveBattle": "No hay batalla activa en este momento",
+    "checkBackSoon": "Pronto anunciaremos la próxima — ¡no te la pierdas!",
+    "submissionDeadline": "Fecha límite para subir bocetos",
+    "votingDeadline": "Fecha límite de votación",
+    "winners": "Ganadores",
+    "popularWinner": "Ganador Popular",
+    "juryWinner": "Ganador del Jurado",
+    "currentParticipants": "Participantes",
+    "allParticipants": "Todos los Participantes",
+    "voteHint": "¡Dale like a tus favoritos para votar!",
+    "noSubmissionsYet": "Todavía no hay bocetos en esta batalla. ¡Sé el primero!"
   },
   "sketches": {
     "searchPlaceholder": "Buscar bocetos por nombre, descripción o autor...",
@@ -142,7 +160,11 @@
     "deleteConfirmTitle": "ATENCIÓN",
     "deleteConfirmText": "¿Estás seguro de eliminar este Boceto?",
     "delete": "Eliminar",
-    "updateError": "Algo salió Mal - Inténtalo otra vez..."
+    "updateError": "Algo salió Mal - Inténtalo otra vez...",
+        "inBattle": "En batalla",
+    "noActiveBattle": "No hay batalla activa abierta para participar.",
+    "deleteTitle": "¿Eliminar boceto?",
+    "deleteConfirm": "Esta acción no se puede deshacer. ¿Estás seguro?"
   },
   "sketchDetail": {
     "addComment": "Agrega un comentario...",
@@ -175,7 +197,8 @@
     "uploadTooltip": "Subir Boceto",
     "cancel": "Cancelar",
     "missingFields": "Falta rellenar alguno de los campos",
-    "uploadError": "Algo salió mal, boceto no subido"
+    "uploadError": "Algo salió mal, boceto no subido",
+     "participateInBattle": "Participar en la batalla actual"
   },
   "common": {
     "loading": "Cargando...",
@@ -236,5 +259,39 @@
     "confirmFinal": "Sí, eliminar mi cuenta",
     "deleting": "Eliminando...",
     "error": "No se pudo eliminar la cuenta. Intentá de nuevo."
+  },
+
+  "admin": {
+    "battle": {
+      "title": "Administración de Batallas",
+      "newBattle": "Nueva Batalla",
+      "newTitle": "Crear Nueva Batalla",
+      "editTitle": "Editar Batalla",
+      "theme": "Tema / Palabra clave",
+      "themePlaceholder": "Ej: STYLE, WILDSTYLE, TRAINS...",
+      "description": "Descripción",
+      "submissionDeadline": "Fecha límite para subir",
+      "votingDeadline": "Fecha límite de votación",
+      "prizes": "Premios",
+      "prizesPlaceholder": "Una línea por premio:\n* Lámina A4\n* Aerosol MTN94\n* ...",
+      "judges": "Jurado",
+      "judgesPlaceholder": "Nombres del jurado, separados por comas o saltos de línea",
+      "state": "Estado",
+      "isCurrent": "Es la batalla actual (visible en /actualbattle)",
+      "juryWinnerPick": "Ganador elegido por el jurado",
+      "noJuryWinner": "— Sin elegir todavía —",
+      "save": "Guardar",
+      "delete": "Borrar",
+      "edit": "Editar",
+      "currentTag": "ACTUAL",
+      "noBattles": "No hay batallas todavía. ¡Crea la primera!",
+      "runTransitions": "Forzar transiciones de estado",
+      "transitionsRan": "Transiciones aplicadas:",
+      "missingFields": "Faltan campos obligatorios: tema y fechas",
+      "saveError": "Error al guardar la batalla",
+      "deleteConfirm": "¿Borrar esta batalla? No se puede deshacer.",
+      "deleteError": "Error al borrar la batalla"
+    }
   }
+
 }
