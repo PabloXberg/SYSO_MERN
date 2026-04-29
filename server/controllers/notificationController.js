@@ -3,14 +3,16 @@ import CommentModel from "../models/commentModel.js";
 
 // ============================================================
 // HELPERS — these are exported and called from other controllers
-// (sketchController, commentsController, userControllers)
+// (sketchController, commentsController, userControllers, battleController)
 // ============================================================
 
 /**
  * Create a single notification. Silently fails on error so it never
- * blocks the main action (liking, commenting, etc).
+ * blocks the main action (liking, commenting, state transitioning…).
  *
- * @param {Object} data { recipient, actor, type, sketch? }
+ * For battle_* types pass `battle` so the frontend can route correctly.
+ *
+ * @param {Object} data { recipient, actor, type, sketch?, battle? }
  * @returns {Promise<Notification|null>}
  */
 export const createNotification = async (data) => {
@@ -34,14 +36,9 @@ export const createNotification = async (data) => {
 /**
  * Notify everyone who commented on a sketch (except the actor and the
  * sketch owner — the owner gets a "comment" notification instead).
- *
- * @param {ObjectId} sketchId   The sketch being commented on
- * @param {ObjectId} actorId    The user posting the new comment
- * @param {ObjectId} ownerId    The sketch owner (excluded from replies)
  */
 export const notifyCommentReplies = async (sketchId, actorId, ownerId) => {
   try {
-    // Find all unique commenters on this sketch except actor and owner
     const comments = await CommentModel.find({ sketch: sketchId }, "owner");
     const uniqueOwners = [
       ...new Set(comments.map((c) => c.owner?.toString()).filter(Boolean)),
@@ -51,7 +48,6 @@ export const notifyCommentReplies = async (sketchId, actorId, ownerId) => {
       (id) => id !== actorId.toString() && id !== ownerId.toString()
     );
 
-    // Create one notification per other commenter
     await Promise.all(
       recipients.map((recipientId) =>
         createNotification({
@@ -71,12 +67,6 @@ export const notifyCommentReplies = async (sketchId, actorId, ownerId) => {
 // API ENDPOINTS
 // ============================================================
 
-/**
- * GET /api/notifications
- * Returns the latest N notifications for the logged-in user + unread count.
- * Query params:
- *   - limit (default 20, max 100)
- */
 export const listNotifications = async (req, res) => {
   try {
     const limit = Math.min(100, parseInt(req.query.limit) || 20);
@@ -87,6 +77,7 @@ export const listNotifications = async (req, res) => {
         .limit(limit)
         .populate({ path: "actor", select: "username avatar" })
         .populate({ path: "sketch", select: "name url" })
+        .populate({ path: "battle", select: "theme state" })
         .lean(),
       NotificationModel.countDocuments({
         recipient: req.user._id,
@@ -101,10 +92,6 @@ export const listNotifications = async (req, res) => {
   }
 };
 
-/**
- * GET /api/notifications/unread-count
- * Lightweight endpoint just for the navbar badge (used by polling).
- */
 export const getUnreadCount = async (req, res) => {
   try {
     const unreadCount = await NotificationModel.countDocuments({
@@ -118,10 +105,6 @@ export const getUnreadCount = async (req, res) => {
   }
 };
 
-/**
- * POST /api/notifications/:id/read
- * Mark a single notification as read.
- */
 export const markAsRead = async (req, res) => {
   try {
     const notif = await NotificationModel.findById(req.params.id);
@@ -138,10 +121,6 @@ export const markAsRead = async (req, res) => {
   }
 };
 
-/**
- * POST /api/notifications/read-all
- * Mark all notifications as read for the current user.
- */
 export const markAllAsRead = async (req, res) => {
   try {
     await NotificationModel.updateMany(
@@ -155,10 +134,6 @@ export const markAllAsRead = async (req, res) => {
   }
 };
 
-/**
- * DELETE /api/notifications/:id
- * Delete a single notification.
- */
 export const deleteNotification = async (req, res) => {
   try {
     const notif = await NotificationModel.findById(req.params.id);

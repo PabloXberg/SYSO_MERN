@@ -81,7 +81,10 @@
     "currentParticipants": "Participantes",
     "allParticipants": "Todos los Participantes",
     "voteHint": "¡Dale like a tus favoritos para votar!",
-    "noSubmissionsYet": "Todavía no hay bocetos en esta batalla. ¡Sé el primero!"
+    "noSubmissionsYet": "Todavía no hay bocetos en esta batalla. ¡Sé el primero!",
+      "previousBattles": "Batallas Anteriores",
+    "noPastBattles": "Todavía no hay batallas finalizadas. ¡La historia se está escribiendo!",
+    "noWinnersAnnounced": "Ganadores no anunciados todavía"
   },
   "sketches": {
     "searchPlaceholder": "Buscar bocetos por nombre, descripción o autor...",
@@ -164,8 +167,25 @@
         "inBattle": "En batalla",
     "noActiveBattle": "No hay batalla activa abierta para participar.",
     "deleteTitle": "¿Eliminar boceto?",
-    "deleteConfirm": "Esta acción no se puede deshacer. ¿Estás seguro?"
+    "deleteConfirm": "Esta acción no se puede deshacer. ¿Estás seguro?",
+     "addToBattle": "Sumar a la batalla",
+    "addToBattleError": "No se pudo sumar a la batalla",
+    "adding": "Agregando...",
+    "inCurrentBattle": "Tu boceto participa en la batalla"
   },
+
+"battleBanner": {
+    "openLastChance": "¡Última oportunidad para participar en \"{{theme}}\"!",
+    "openOneDay": "Batalla \"{{theme}}\" — ¡último día para subir tu boceto!",
+    "openManyDays": "Batalla \"{{theme}}\" — quedan {{days}} días para participar",
+    "votingLastChance": "¡Última oportunidad para votar en \"{{theme}}\"!",
+    "votingOneDay": "Batalla \"{{theme}}\" — ¡último día de votación!",
+    "votingManyDays": "Batalla \"{{theme}}\" — quedan {{days}} días de votación",
+    "dismiss": "Cerrar",
+    "clickHint": "Click para ir a la batalla"
+  },
+
+
   "sketchDetail": {
     "addComment": "Agrega un comentario...",
     "saidOn": "dijo el",
@@ -212,7 +232,8 @@
     "imageUnavailable": "Imagen no disponible",
     "unableToLoad": "No se pudo cargar el boceto",
     "backToSketches": "← Volver a todos los bocetos",
-    "connectionError": "No se pudo conectar al servidor."
+    "connectionError": "No se pudo conectar al servidor.",
+    "someone": "alguien"
   },
   "language": {
     "label": "Idioma",
@@ -225,11 +246,11 @@
     "stencil": "Stencil",
     "graffiti": "Graffiti",
     "tag": "Tag",
-    "bombing": "Bombing",
+    "vertical": "Vertical",
     "wildstyle": "Wildstyle",
     "throwup": "Throw-up",
     "trains": "Trains",
-    "character": "Character"
+    "ilustracion": "Ilustración"
   },
   "notifications": {
     "title": "Notificaciones",
@@ -241,7 +262,11 @@
     "welcome": "¡Bienvenido a Share Your Sketch! 🎨 Empezá subiendo tu primer boceto",
     "likedYourSketch": "{{username}} le dio me gusta a tu boceto ❤️",
     "commentedYourSketch": "{{username}} comentó tu boceto 💬",
-    "commentedSameSketch": "{{username}} también comentó un boceto que comentaste 💬"
+    "commentedSameSketch": "{{username}} también comentó un boceto que comentaste 💬",
+       "battleVotingStarted": "Empezó la votación en \"{{theme}}\". ¡Votá tus favoritos! 🗳️",
+    "battleFinished": "Terminó la batalla \"{{theme}}\". ¡Mirá los ganadores! 🏆",
+    "battleWinnerPopular": "❤️ ¡Tu boceto fue el más votado en \"{{theme}}\"!",
+    "battleWinnerJury": "🏆 ¡Tu boceto ganó el premio del jurado en \"{{theme}}\"!"
   },
   "deleteAccount": {
     "dangerZone": "Zona de peligro",

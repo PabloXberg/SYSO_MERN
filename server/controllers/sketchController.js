@@ -5,9 +5,11 @@ import NotificationModel from "../models/notificationModel.js";
 import { createNotification } from "./notificationController.js";
 import imageUpload from "../utils/imageManagement.js";
 
+// Mirror of ALLOWED_TAGS in sketchModel.js. Kept duplicated for performance.
+// If you change one, change both.
 const ALLOWED_TAGS = [
-  "sketch", "stencil", "graffiti", "tag", "bombing",
-  "wildstyle", "throw-up", "trains", "character",
+  "sketch", "stencil", "graffiti", "tag", "vertical",
+  "wildstyle", "throw-up", "trains", "ilustracion",
 ];
 
 const parseTags = (raw) => {
@@ -21,7 +23,7 @@ const parseTags = (raw) => {
 
 /**
  * Coerce the battleId field from the form (it arrives as a string in multipart/form-data).
- * Empty / "null" / "false" → null. Anything else → the raw string (Mongoose casts to ObjectId).
+ * Empty / "null" / "false" / "0" → null. Anything else → the raw string.
  */
 const parseBattleId = (raw) => {
   if (!raw) return null;
@@ -127,7 +129,6 @@ const createSketch = async (req, res) => {
     const newSketch = await SketchModel.create({
       name: req.body.name,
       comment: req.body.comment,
-      battle: req.body.battle || "", // legacy field, kept for compat
       battleId,
       owner: req.user._id,
       url,
@@ -156,7 +157,6 @@ const updateSketch = async (req, res) => {
     const infoToUpdate = {};
     if (req.body.name) infoToUpdate.name = req.body.name;
     if (req.body.comment) infoToUpdate.comment = req.body.comment;
-    if (req.body.battle !== undefined) infoToUpdate.battle = req.body.battle;
     if (req.body.battleId !== undefined) {
       infoToUpdate.battleId = parseBattleId(req.body.battleId);
     }

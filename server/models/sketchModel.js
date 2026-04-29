@@ -1,28 +1,40 @@
 import mongoose from "mongoose";
 
+// Tag categories. Two renamed in this revision:
+//   "bombing"   → "vertical"
+//   "character" → "ilustracion"
 const ALLOWED_TAGS = [
   "sketch",
   "stencil",
   "graffiti",
   "tag",
-  "bombing",
+  "vertical",
   "wildstyle",
   "throw-up",
   "trains",
-  "character",
+  "ilustracion",
 ];
 
+/**
+ * Sketch model.
+ *
+ * NOTE on the removed `battle: String` field:
+ * Earlier versions stored battle participation as a free-text number string
+ * ("1", "2", ...). It's been fully replaced by `battleId` (proper ObjectId
+ * relation). Old documents may still have a `battle` field in the DB —
+ * Mongoose's `strict: true` (default) silently ignores it on read/write,
+ * but to physically clean it up run:
+ *
+ *   db.sketches.updateMany({}, { $unset: { battle: "" } })
+ *
+ * (See INSTRUCCIONES.txt in this drop.)
+ */
 const sketchSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
     comment: { type: String, required: true },
 
-    // LEGACY — keep for backward compat with old sketches that used "1", "2", etc.
-    // New sketches that participate in a battle use `battleId` below instead.
-    battle: { type: String, required: false },
-
-    // NEW — the proper relation to a Battle document.
-    // Null means this sketch does not participate in any battle.
+    // Proper relation to a Battle document. Null = not participating.
     battleId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "battle",
@@ -58,7 +70,6 @@ const sketchSchema = new mongoose.Schema(
 
 sketchSchema.index({ owner: 1 });
 sketchSchema.index({ createdAt: -1 });
-sketchSchema.index({ battle: 1 });
 sketchSchema.index({ tags: 1 });
 
 const SketchModel = mongoose.model("sketche", sketchSchema);

@@ -1,9 +1,67 @@
 import BattleModel from "../models/battleModel.js";
 import SketchModel from "../models/sketchModel.js";
+import { createNotification } from "./notificationController.js";
+
+// ============================================================
+// HELPERS
+// ============================================================
 
 /**
- * GET /api/battles — list all battles, newest first
+ * Notify all unique participants of a battle.
+ * "Unique" = one notification per user, even if they have multiple sketches in
+ * the battle. Useful to avoid spamming the bell icon.
+ *
+ * @param {ObjectId} battleId
+ * @param {string}   type           One of the battle_* notification types
+ * @param {Set<string>} excludeIds  User IDs to skip (e.g. the popular winner,
+ *                                  who gets a different notification)
  */
+const notifyBattleParticipants = async (battleId, type, excludeIds = new Set()) => {
+  try {
+    const sketches = await SketchModel.find({ battleId }).select("_id owner").lean();
+    const seenOwners = new Set();
+    for (const s of sketches) {
+      if (!s.owner) continue;
+      const ownerStr = s.owner.toString();
+      if (seenOwners.has(ownerStr)) continue;       // dedupe per user
+      if (excludeIds.has(ownerStr)) continue;       // skip excluded users
+      seenOwners.add(ownerStr);
+      await createNotification({
+        recipient: s.owner,
+        actor: null,
+        type,
+        sketch: s._id,
+        battle: battleId,
+      });
+    }
+  } catch (err) {
+    console.error("notifyBattleParticipants error:", err);
+  }
+};
+
+/**
+ * Notify a single sketch owner that they won (popular or jury).
+ */
+const notifyWinner = async (sketchId, battleId, type) => {
+  try {
+    const sketch = await SketchModel.findById(sketchId).select("_id owner").lean();
+    if (!sketch || !sketch.owner) return;
+    await createNotification({
+      recipient: sketch.owner,
+      actor: null,
+      type,
+      sketch: sketch._id,
+      battle: battleId,
+    });
+  } catch (err) {
+    console.error("notifyWinner error:", err);
+  }
+};
+
+// ============================================================
+// READ ENDPOINTS
+// ============================================================
+
 const getAllBattles = async (req, res) => {
   try {
     const battles = await BattleModel.find()
@@ -20,10 +78,6 @@ const getAllBattles = async (req, res) => {
   }
 };
 
-/**
- * GET /api/battles/current — the one battle marked isCurrent: true
- * Returns null (200) if no current battle exists, so frontend handles gracefully.
- */
 const getCurrentBattle = async (req, res) => {
   try {
     const battle = await BattleModel.findOne({ isCurrent: true })
@@ -40,10 +94,6 @@ const getCurrentBattle = async (req, res) => {
   }
 };
 
-/**
- * GET /api/battles/:id — a specific battle plus its participating sketches
- * (sorted by likes desc, so the gallery is "leaderboard-style" out of the box).
- */
 const getBattleById = async (req, res) => {
   try {
     const battle = await BattleModel.findById(req.params.id)
@@ -58,8 +108,6 @@ const getBattleById = async (req, res) => {
     const sketches = await SketchModel.find({ battleId: battle._id })
       .populate("owner", "username avatar")
       .lean();
-
-    // Sort by likes count desc (Mongo can't sort by array length cheaply without aggregation)
     sketches.sort((a, b) => (b.likes?.length || 0) - (a.likes?.length || 0));
 
     res.status(200).json({ battle, sketches });
@@ -69,27 +117,21 @@ const getBattleById = async (req, res) => {
   }
 };
 
-/**
- * POST /api/battles — create a new battle (admin only).
- * If isCurrent: true, automatically un-currents any other battle so there's
- * never two current battles at once.
- */
+// ============================================================
+// WRITE ENDPOINTS (admin only — guarded by adminAuth middleware)
+// ============================================================
+
 const createBattle = async (req, res) => {
   try {
     const {
-      theme,
-      description,
-      submissionDeadline,
-      votingDeadline,
-      prizes,
-      judges,
-      isCurrent,
+      theme, description, submissionDeadline, votingDeadline,
+      prizes, judges, isCurrent,
     } = req.body;
 
     if (!theme || !submissionDeadline || !votingDeadline) {
-      return res
-        .status(400)
-        .json({ error: "Faltan campos: theme, submissionDeadline, votingDeadline" });
+      return res.status(400).json({
+        error: "Faltan campos: theme, submissionDeadline, votingDeadline",
+      });
     }
 
     if (isCurrent) {
@@ -115,23 +157,19 @@ const createBattle = async (req, res) => {
 };
 
 /**
- * PUT /api/battles/:id — edit any field (admin only).
- * Special handling: if isCurrent is set to true, un-current others.
- * Special handling: if state is set, just trust the admin (manual override).
+ * PUT /api/battles/:id
+ *
+ * Special handling: if `juryWinners` is provided and contains NEW sketch IDs
+ * (compared to what's currently saved), we send a "battle_winner_jury"
+ * notification to each new jury winner. This way admins can announce winners
+ * over time without retriggering notifications for previously-announced ones.
  */
 const updateBattle = async (req, res) => {
   try {
     const allowed = [
-      "theme",
-      "description",
-      "submissionDeadline",
-      "votingDeadline",
-      "prizes",
-      "judges",
-      "isCurrent",
-      "state",
-      "popularWinners",
-      "juryWinners",
+      "theme", "description", "submissionDeadline", "votingDeadline",
+      "prizes", "judges", "isCurrent", "state",
+      "popularWinners", "juryWinners",
     ];
     const update = {};
     for (const key of allowed) {
@@ -145,10 +183,23 @@ const updateBattle = async (req, res) => {
       );
     }
 
+    // Snapshot before-state to diff jury winners later
+    const before = await BattleModel.findById(req.params.id).lean();
+    if (!before) return res.status(404).json({ error: "Batalla no encontrada" });
+
     const battle = await BattleModel.findByIdAndUpdate(req.params.id, update, {
       new: true,
     });
-    if (!battle) return res.status(404).json({ error: "Batalla no encontrada" });
+
+    // Detect newly-added jury winners and notify them
+    if (update.juryWinners !== undefined) {
+      const beforeJury = (before.juryWinners || []).map((id) => id.toString());
+      const afterJury = (battle.juryWinners || []).map((id) => id.toString());
+      const newWinners = afterJury.filter((id) => !beforeJury.includes(id));
+      for (const sketchId of newWinners) {
+        await notifyWinner(sketchId, battle._id, "battle_winner_jury");
+      }
+    }
 
     res.status(200).json(battle);
   } catch (err) {
@@ -157,11 +208,6 @@ const updateBattle = async (req, res) => {
   }
 };
 
-/**
- * DELETE /api/battles/:id — admin only.
- * Sketches that participated keep their reference (battleId); we don't null them
- * to preserve historical context.
- */
 const deleteBattle = async (req, res) => {
   try {
     const battle = await BattleModel.findByIdAndDelete(req.params.id);
@@ -173,13 +219,13 @@ const deleteBattle = async (req, res) => {
   }
 };
 
+// ============================================================
+// STATE MACHINE
+// ============================================================
+
 /**
- * Calculate the popular winner for a battle: sketch with the most likes among
- * those participating. Used both by automatic state transitions and by admin
- * "recalculate" action.
- *
- * In case of a tie, the most recently created sketch wins (slight bias toward
- * later submissions, but consistent and non-arbitrary).
+ * Calculate the popular winner for a battle (most likes; ties broken by
+ * createdAt desc — slight bias toward later submissions, but deterministic).
  */
 const calculatePopularWinner = async (battleId) => {
   const sketches = await SketchModel.find({ battleId })
@@ -194,11 +240,6 @@ const calculatePopularWinner = async (battleId) => {
   return sketches[0]._id;
 };
 
-/**
- * POST /api/battles/run-transitions — admin trigger.
- * Same logic as the automatic interval, exposed as an endpoint so admins can
- * force a check without waiting for the timer.
- */
 const triggerStateTransitions = async (req, res) => {
   try {
     const result = await runStateTransitions();
@@ -210,11 +251,20 @@ const triggerStateTransitions = async (req, res) => {
 };
 
 /**
- * Core state machine. Runs on an interval (see index.js) AND can be triggered
- * manually. Idempotent: safe to run repeatedly.
+ * Core state machine.
  *
- *   open + submissionDeadline passed       → voting
- *   voting + votingDeadline passed          → finished + auto-fill popularWinner
+ * Notifications are sent ONLY on the actual transition (not on every check),
+ * so this is safe to run on a 10-minute interval indefinitely. Idempotent:
+ * a battle already in "voting" doesn't trigger another notification because
+ * the find query only matches battles still in "open".
+ *
+ *   open + submissionDeadline passed → voting
+ *     ↳ notify all participants ("battle_voting")
+ *
+ *   voting + votingDeadline passed → finished
+ *     ↳ auto-pick popular winner if not already set
+ *     ↳ notify popular winner ("battle_winner_popular")
+ *     ↳ notify everyone else ("battle_finished")
  */
 const runStateTransitions = async () => {
   const now = new Date();
@@ -229,21 +279,43 @@ const runStateTransitions = async () => {
   for (const b of toVote) {
     b.state = "voting";
     await b.save();
+    await notifyBattleParticipants(b._id, "battle_voting");
     opened++;
   }
 
-  // voting → finished (and auto-pick popular winner)
+  // voting → finished
   const toClose = await BattleModel.find({
     state: "voting",
     votingDeadline: { $lte: now },
   });
   for (const b of toClose) {
     b.state = "finished";
-    if (!b.popularWinners || b.popularWinners.length === 0) {
-      const winnerId = await calculatePopularWinner(b._id);
-      if (winnerId) b.popularWinners = [winnerId];
+
+    // Calculate popular winner if not already manually set
+    let popularWinnerId = b.popularWinners?.[0]?.toString() || null;
+    if (!popularWinnerId) {
+      const calculated = await calculatePopularWinner(b._id);
+      if (calculated) {
+        b.popularWinners = [calculated];
+        popularWinnerId = calculated.toString();
+      }
     }
     await b.save();
+
+    // Notify the popular winner specifically
+    if (popularWinnerId) {
+      await notifyWinner(popularWinnerId, b._id, "battle_winner_popular");
+    }
+
+    // Notify everyone else (exclude the popular winner)
+    const exclude = new Set();
+    if (popularWinnerId) {
+      const winnerSketch = await SketchModel.findById(popularWinnerId)
+        .select("owner").lean();
+      if (winnerSketch?.owner) exclude.add(winnerSketch.owner.toString());
+    }
+    await notifyBattleParticipants(b._id, "battle_finished", exclude);
+
     closed++;
   }
 

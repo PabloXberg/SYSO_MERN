@@ -1,5 +1,5 @@
 import Card from "react-bootstrap/Card";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AuthContext } from "../contexts/AuthContext";
 import UserModal from "./UserModal";
@@ -10,14 +10,18 @@ import SpraySpinner from "./SprySpinner";
 import Likes from "../components/likes";
 import TagChip from "./TagChip";
 import TagSelector from "./TagSelector";
+import { useCurrentBattle } from "../hooks/useCurrentBattle";
 
 function SketchCard(props) {
   const { t } = useTranslation();
   const { user } = useContext(AuthContext);
+  const { battle: currentBattle, refetch: refetchBattle } = useCurrentBattle();
+
   const [show, setShow] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
+  const [addingToBattle, setAddingToBattle] = useState(false);
   const handleCloseDelete = () => setShowDelete(false);
   const handleShowDelete = () => setShowDelete(true);
   const handleCloseEdit = () => setShowEdit(false);
@@ -28,28 +32,17 @@ function SketchCard(props) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [avatarPreview, setAvatarPreview] = useState(sketch?.url);
 
-  // Current battle, fetched lazily — only needed when the edit modal opens.
-  const [currentBattle, setCurrentBattle] = useState(null);
+  // Resolve battleId — could be a populated object or a plain string id.
+  const sketchBattleId =
+    sketch?.battleId?._id || sketch?.battleId || null;
 
-  // formData.battleId is the source of truth for the toggle:
-  //   null  → not participating
-  //   "<id>" → participating in that battle
   const [formData, setFormData] = useState({
     name: "",
     comment: "",
     url: "",
-    battleId: sketch?.battleId?._id || sketch?.battleId || null,
+    battleId: sketchBattleId,
     tags: sketch?.tags || [],
   });
-
-  // Fetch the current battle once when the edit modal opens
-  useEffect(() => {
-    if (!showEdit || currentBattle !== null) return;
-    fetch(`${serverURL}battles/current`)
-      .then((r) => r.json())
-      .then((data) => setCurrentBattle(data || { _id: null }))
-      .catch(() => setCurrentBattle({ _id: null }));
-  }, [showEdit, currentBattle]);
 
   const datum = props.props.createdAt?.substring(0, 10) || t("common.unknownDate");
   const partesFecha = datum.split("-");
@@ -73,7 +66,6 @@ function SketchCard(props) {
       submitData.append("name", formData.name || sketch.name);
       submitData.append("comment", formData.comment || sketch.comment);
       submitData.append("url", formData.url);
-      // battleId can be null (sent as empty string → backend treats as null)
       submitData.append("battleId", formData.battleId || "");
       submitData.append("tags", (formData.tags || []).join(","));
 
@@ -100,6 +92,41 @@ function SketchCard(props) {
 
   const handleTagsChange = (tags) => {
     setFormData({ ...formData, tags });
+  };
+
+  /**
+   * Quick action: attach this sketch to the current battle without opening
+   * the full edit modal. Sends just the battleId so name/comment/tags/url
+   * stay untouched on the server (the controller updates only fields present
+   * in the request body).
+   */
+  const handleAddToBattle = async () => {
+    if (!currentBattle || !user || addingToBattle) return;
+    setAddingToBattle(true);
+    try {
+      const myHeaders = new Headers();
+      const token = localStorage.getItem("token");
+      myHeaders.append("Authorization", `Bearer ${token}`);
+
+      const submitData = new FormData();
+      submitData.append("battleId", currentBattle._id);
+
+      const res = await fetch(`${serverURL}sketches/update/${sketch._id}`, {
+        method: "POST",
+        headers: myHeaders,
+        body: submitData,
+      });
+      if (!res.ok) throw new Error("Failed to add to battle");
+      // Refresh both the parent list and the cached battle (in case the
+      // server affected something we'd display from it).
+      props.onUpdate?.();
+      refetchBattle();
+    } catch (err) {
+      console.error("handleAddToBattle error:", err);
+      alert(t("sketch.addToBattleError"));
+    } finally {
+      setAddingToBattle(false);
+    }
   };
 
   const handleSketchDelete = async (sketchToDelete) => {
@@ -148,14 +175,28 @@ function SketchCard(props) {
   // Tags visible on the card
   const tagsToShow = sketch?.tags || [];
 
-  // Battle toggle helpers ------------------------------------------------
-  // Can the user join (or stay in) the current battle? Only if it exists
-  // and is still in "open" state for new submissions.
-  const canJoinBattle =
-    currentBattle && currentBattle._id && currentBattle.state === "open";
-  // Is this sketch currently participating in the active battle?
+  // ─── Battle integration logic ──────────────────────────────────────
+  const isOwner = !!user && user._id === sketch?.owner?._id;
   const isInCurrentBattle =
-    formData.battleId && currentBattle && formData.battleId === currentBattle._id;
+    !!currentBattle && sketchBattleId === currentBattle._id;
+  const isInPastBattle = !!sketchBattleId && !isInCurrentBattle;
+  // The "Add to battle" shortcut only makes sense when:
+  //   - this user owns the sketch
+  //   - there's a current battle still open for submissions
+  //   - the sketch isn't already in it
+  const canAddToBattle =
+    isOwner &&
+    !!currentBattle &&
+    currentBattle.state === "open" &&
+    !isInCurrentBattle;
+
+  // For edit modal
+  const canJoinBattle =
+    !!currentBattle && currentBattle.state === "open";
+  const editingIsInCurrentBattle =
+    !!formData.battleId &&
+    !!currentBattle &&
+    formData.battleId === currentBattle._id;
 
   return (
     <div className="SketchCardPage">
@@ -215,15 +256,36 @@ function SketchCard(props) {
                   : t("sketchDetail.noDescription")}
               </Card.Text>
 
-              {/* Show a small badge if this sketch is in the current battle */}
-              {sketch?.battleId && (
+              {/* Battle status block — three mutually exclusive states */}
+              {isInCurrentBattle && currentBattle && (
+                <div
+                  style={{
+                    display: "inline-block",
+                    padding: "0.3rem 0.7rem",
+                    backgroundColor: "#3a2a00",
+                    color: "#ffcc00",
+                    border: "2px solid #ffcc00",
+                    borderRadius: "0.3rem",
+                    fontSize: "0.8rem",
+                    fontFamily: "MiFuente2, MiFuente, cursive",
+                    letterSpacing: "0.05em",
+                    textTransform: "uppercase",
+                    marginBottom: "0.5rem",
+                    boxShadow: "1px 1px 0 rgba(0,0,0,0.6)",
+                  }}
+                  title={currentBattle.theme}
+                >
+                  ⚔ {t("sketch.inCurrentBattle")}
+                </div>
+              )}
+              {isInPastBattle && !isInCurrentBattle && (
                 <div
                   style={{
                     display: "inline-block",
                     padding: "0.2rem 0.6rem",
-                    backgroundColor: "#3a2a00",
-                    color: "#ffcc00",
-                    border: "1px solid #ffcc00",
+                    backgroundColor: "#222",
+                    color: "#aaa",
+                    border: "1px solid #555",
                     borderRadius: "0.3rem",
                     fontSize: "0.75rem",
                     fontFamily: "MiFuente2, MiFuente, cursive",
@@ -233,6 +295,28 @@ function SketchCard(props) {
                   }}
                 >
                   ⚔ {t("sketch.inBattle")}
+                </div>
+              )}
+
+              {/* Quick-action: add this sketch to the current battle */}
+              {canAddToBattle && (
+                <div style={{ marginBottom: "0.6rem" }}>
+                  <Button
+                    size="sm"
+                    variant="warning"
+                    onClick={handleAddToBattle}
+                    disabled={addingToBattle}
+                    style={{
+                      fontFamily: "MiFuente2, MiFuente, cursive",
+                      letterSpacing: "0.05em",
+                      fontWeight: "bold",
+                    }}
+                    title={`${t("sketch.addToBattle")}: "${currentBattle.theme}"`}
+                  >
+                    {addingToBattle
+                      ? t("sketch.adding")
+                      : `⚔ ${t("sketch.addToBattle")}`}
+                  </Button>
                 </div>
               )}
 
@@ -276,7 +360,6 @@ function SketchCard(props) {
                     </div>
                   </Card.Footer>
 
-                  {/* Delete confirmation modal */}
                   <Modal show={showDelete} onHide={handleCloseDelete} centered>
                     <Modal.Header closeButton>
                       <Modal.Title>{t("sketch.deleteTitle")}</Modal.Title>
@@ -295,7 +378,6 @@ function SketchCard(props) {
                     </Modal.Footer>
                   </Modal>
 
-                  {/* Edit modal */}
                   <Modal
                     show={showEdit}
                     onHide={handleCloseEdit}
@@ -360,9 +442,7 @@ function SketchCard(props) {
                           onChange={handleChangeEdit}
                         />
 
-                        {/* Battle toggle — replaces the old "número de batalla" text input.
-                            Only enabled if the current battle is open for submissions. */}
-                        {canJoinBattle && (
+                        {canJoinBattle && currentBattle && (
                           <div
                             style={{
                               marginTop: "1rem",
@@ -376,7 +456,7 @@ function SketchCard(props) {
                             <Form.Check
                               type="switch"
                               id={`battle-toggle-${sketch._id}`}
-                              checked={!!isInCurrentBattle}
+                              checked={editingIsInCurrentBattle}
                               onChange={(e) =>
                                 setFormData({
                                   ...formData,
@@ -399,7 +479,6 @@ function SketchCard(props) {
                             />
                           </div>
                         )}
-                        {/* Helpful explanation when there's no joinable battle */}
                         {!canJoinBattle && (
                           <i style={{ fontSize: "0.85rem", color: "#888", marginTop: "0.5rem" }}>
                             {t("sketch.noActiveBattle")}

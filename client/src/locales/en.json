@@ -81,7 +81,10 @@
     "currentParticipants": "Participants",
     "allParticipants": "All Participants",
     "voteHint": "Like your favorites to vote!",
-    "noSubmissionsYet": "No sketches yet in this battle. Be the first!"
+    "noSubmissionsYet": "No sketches yet in this battle. Be the first!",
+    "previousBattles": "Past Battles",
+    "noPastBattles": "No finished battles yet. History is being written!",
+    "noWinnersAnnounced": "Winners not announced yet"
   },
   "sketches": {
     "searchPlaceholder": "Search sketches by name, description, or author...",
@@ -164,8 +167,24 @@
       "inBattle": "In battle",
     "noActiveBattle": "There's no active battle open to join right now.",
     "deleteTitle": "Delete sketch?",
-    "deleteConfirm": "This cannot be undone. Are you sure?"
+    "deleteConfirm": "This cannot be undone. Are you sure?",
+      "addToBattle": "Add to battle",
+    "addToBattleError": "Could not add to battle",
+    "adding": "Adding...",
+    "inCurrentBattle": "Your sketch is in the battle"
   },
+
+  "battleBanner": {
+    "openLastChance": "Last chance to enter \"{{theme}}\"!",
+    "openOneDay": "Battle \"{{theme}}\" — last day to submit your sketch!",
+    "openManyDays": "Battle \"{{theme}}\" — {{days}} days left to enter",
+    "votingLastChance": "Last chance to vote in \"{{theme}}\"!",
+    "votingOneDay": "Battle \"{{theme}}\" — last day of voting!",
+    "votingManyDays": "Battle \"{{theme}}\" — {{days}} days left to vote",
+    "dismiss": "Close",
+    "clickHint": "Click to go to the battle"
+  },
+
   "sketchDetail": {
     "addComment": "Add a comment...",
     "saidOn": "said on",
@@ -212,7 +231,8 @@
     "imageUnavailable": "Image unavailable",
     "unableToLoad": "Could not load sketch",
     "backToSketches": "← Back to all sketches",
-    "connectionError": "Could not connect to the server."
+    "connectionError": "Could not connect to the server.",
+    "someone": "someone"
   },
   "language": {
     "label": "Language",
@@ -225,11 +245,11 @@
     "stencil": "Stencil",
     "graffiti": "Graffiti",
     "tag": "Tag",
-    "bombing": "Bombing",
+    "vertical": "Vertical",
     "wildstyle": "Wildstyle",
     "throwup": "Throw-up",
     "trains": "Trains",
-    "character": "Character"
+    "ilustracion": "Illustration"
   },
   "notifications": {
     "title": "Notifications",
@@ -241,7 +261,11 @@
     "welcome": "Welcome to Share Your Sketch! 🎨 Start by uploading your first sketch",
     "likedYourSketch": "{{username}} liked your sketch ❤️",
     "commentedYourSketch": "{{username}} commented on your sketch 💬",
-    "commentedSameSketch": "{{username}} also commented on a sketch you commented on 💬"
+    "commentedSameSketch": "{{username}} also commented on a sketch you commented on 💬",
+        "battleVotingStarted": "Voting started for \"{{theme}}\". Vote your favorites! 🗳️",
+    "battleFinished": "Battle \"{{theme}}\" is over. Check out the winners! 🏆",
+    "battleWinnerPopular": "❤️ Your sketch got the most votes in \"{{theme}}\"!",
+    "battleWinnerJury": "🏆 Your sketch won the jury prize in \"{{theme}}\"!"
   },
   "deleteAccount": {
     "dangerZone": "Danger zone",

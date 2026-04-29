@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Homepage from "./pages/Homepage";
 import { AuthContextProvider } from "./contexts/AuthContext";
 import NavStrap from "./components/NavTrap";
+import BattleBanner from "./components/BattleBanner";
 import Sketches from "./pages/sketches";
 import UsersPage from "./pages/users";
 import MySketchs from "./pages/mySketchs";
@@ -14,7 +15,7 @@ import BattleHistory from "./pages/battlehistory";
 import News from "./pages/news";
 import ForgotPassword from "./pages/forgotPassword";
 import ResetPassword from "./pages/resetPassword";
-import Notifications from "./pages/Notifications"; // NEW
+import Notifications from "./pages/Notifications";
 import BattleAdmin from "./pages/BattleAdmin";
 
 function App() {
@@ -22,7 +23,10 @@ function App() {
     <div>
       <AuthContextProvider>
         <BrowserRouter>
+          {/* Banner sits between NavStrap and Routes — visible on every page
+              when an active battle exists, hidden otherwise. */}
           <NavStrap />
+          <BattleBanner />
           <Routes>
             <Route path="/" element={<Navigate to="/sketches" />} />
             <Route path="/homepage" element={<Homepage />} />
@@ -38,8 +42,9 @@ function App() {
             <Route path="news" element={<News />} />
             <Route path="forgotPassword" element={<ForgotPassword />} />
             <Route path="resetPassword/:token" element={<ResetPassword />} />
-            <Route path="notifications" element={<Notifications />} /> {/* NEW */}
-            <Route path="battleadmin" element={<BattleAdmin />} />
+            <Route path="notifications" element={<Notifications />} />
+            <Route path="admin/battles" element={<BattleAdmin />} />
+            <Route path="*" element={<Navigate to="/sketches" replace />} />
           </Routes>
         </BrowserRouter>
       </AuthContextProvider>

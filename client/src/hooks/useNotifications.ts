@@ -2,15 +2,23 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { serverURL } from "../serverURL";
 
-export interface Notification {
-  _id: string;
-  recipient: string;
-  actor: { _id: string; username: string; avatar: string } | null;
-  type: "like" | "comment" | "comment_reply" | "welcome";
-  sketch: { _id: string; name: string; url: string } | null;
-  read: boolean;
-  createdAt: string;
-}
+  export interface Notification {
+    _id: string;
+    type:
+      | "like"
+      | "comment"
+      | "comment_reply"
+      | "welcome"
+      | "battle_voting"
+      | "battle_finished"
+      | "battle_winner_popular"
+      | "battle_winner_jury";
+    actor?: { _id: string; username: string; avatar: string } | null;
+    sketch?: { _id: string; name: string; url: string } | null;
+    battle?: { _id: string; theme: string; state: string } | null;
+    read: boolean;
+    createdAt: string;
+  }
 
 const POLL_INTERVAL_MS = 30_000; // 30 seconds
 
