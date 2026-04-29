@@ -1,12 +1,16 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
 
 /**
- * Language switcher with country flags + fully custom dropdown so we can
- * apply the graffiti font to BOTH the trigger and the option list.
+ * Language switcher with country flags + custom-styled dropdown.
  *
- * Native <select> options can't be styled with custom fonts in most browsers,
- * so this rolls a small custom <button> + popup pattern instead.
+ * IMPORTANT — why createPortal:
+ * The navbar (and the NavtrapBar/SubNav) create their own stacking contexts via
+ * `position: relative` + `z-index`. Anything rendered inside the navbar — even
+ * with z-index 9999 — is trapped in that context and ends up BEHIND the SubNav
+ * for hit-testing, which steals all clicks/hover. Rendering the options panel
+ * directly into <body> via a portal escapes the trap.
  */
 
 const SpanishFlag = () => (
@@ -14,7 +18,7 @@ const SpanishFlag = () => (
     width="20"
     height="14"
     viewBox="0 0 3 2"
-    style={{ display: "inline-block", verticalAlign: "middle" }}
+    style={{ display: "inline-block", verticalAlign: "middle", flexShrink: 0 }}
   >
     <rect width="3" height="2" fill="#c60b1e" />
     <rect width="3" height="1" y="0.5" fill="#ffc400" />
@@ -26,7 +30,7 @@ const UKFlag = () => (
     width="20"
     height="14"
     viewBox="0 0 60 30"
-    style={{ display: "inline-block", verticalAlign: "middle" }}
+    style={{ display: "inline-block", verticalAlign: "middle", flexShrink: 0 }}
   >
     <clipPath id="uk-clip">
       <path d="M0,0 v30 h60 v-30 z" />
@@ -50,31 +54,81 @@ const UKFlag = () => (
 );
 
 const LANGS = [
-  { code: "es", label: "ES", Flag: SpanishFlag },
-  { code: "en", label: "EN", Flag: UKFlag },
+  { code: "es", label: "ES", Flag: SpanishFlag, key: "spanish" as const },
+  { code: "en", label: "EN", Flag: UKFlag, key: "english" as const },
 ] as const;
 
 const LanguageSwitcher = () => {
   const { i18n, t } = useTranslation();
   const [open, setOpen] = useState(false);
-  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const [hoveredCode, setHoveredCode] = useState<string | null>(null);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const panelRef = useRef<HTMLDivElement | null>(null);
+  const [pos, setPos] = useState<{ top: number; right: number }>({
+    top: 0,
+    right: 0,
+  });
 
   const current = (i18n.resolvedLanguage || "es").split("-")[0];
   const currentLang = LANGS.find((l) => l.code === current) || LANGS[0];
 
-  // Click-outside to close
+  // Position the panel right under the trigger, right-aligned with it.
+  // useLayoutEffect avoids a one-frame flash at the wrong position.
+  useLayoutEffect(() => {
+    if (!open || !triggerRef.current) return;
+    const rect = triggerRef.current.getBoundingClientRect();
+    setPos({
+      top: rect.bottom + 6,
+      right: Math.max(8, window.innerWidth - rect.right),
+    });
+  }, [open]);
+
+  // Reposition on resize/scroll while open
+  useEffect(() => {
+    if (!open) return;
+    const reposition = () => {
+      if (!triggerRef.current) return;
+      const rect = triggerRef.current.getBoundingClientRect();
+      setPos({
+        top: rect.bottom + 6,
+        right: Math.max(8, window.innerWidth - rect.right),
+      });
+    };
+    window.addEventListener("resize", reposition);
+    window.addEventListener("scroll", reposition, true);
+    return () => {
+      window.removeEventListener("resize", reposition);
+      window.removeEventListener("scroll", reposition, true);
+    };
+  }, [open]);
+
+  // Click-outside: ignore clicks inside trigger OR panel (panel is in portal,
+  // so we have to check both refs explicitly — `contains` on wrapper alone
+  // wouldn't include the portaled panel).
   useEffect(() => {
     if (!open) return;
     const handler = (e: MouseEvent) => {
+      const target = e.target as Node;
       if (
-        wrapperRef.current &&
-        !wrapperRef.current.contains(e.target as Node)
+        triggerRef.current?.contains(target) ||
+        panelRef.current?.contains(target)
       ) {
-        setOpen(false);
+        return;
       }
+      setOpen(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
+  }, [open]);
+
+  // Close on Escape for keyboard accessibility
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
   }, [open]);
 
   const change = (code: string) => {
@@ -100,80 +154,85 @@ const LanguageSwitcher = () => {
     outline: "none",
   };
 
+  const optionStyle = (code: string): React.CSSProperties => {
+    const isActive = code === current;
+    const isHovered = code === hoveredCode;
+    return {
+      display: "flex",
+      alignItems: "center",
+      gap: "0.55rem",
+      width: "100%",
+      padding: "0.55rem 0.85rem",
+      backgroundColor: isActive
+        ? "#3a2a00"
+        : isHovered
+        ? "#2a2a2a"
+        : "transparent",
+      color: isActive ? "#ff3b3b" : "#ffcc00",
+      border: "none",
+      fontFamily: "MiFuente2, MiFuente, cursive",
+      fontSize: "0.95rem",
+      letterSpacing: "0.05em",
+      textTransform: "uppercase",
+      cursor: "pointer",
+      textAlign: "left",
+      transition: "background-color 0.12s ease",
+    };
+  };
+
   return (
-    <div
-      ref={wrapperRef}
-      style={{ position: "relative" }}
-      title={t("language.label")}
-    >
+    <div style={{ position: "relative" }} title={t("language.label")}>
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => setOpen((o) => !o)}
-        style={triggerStyle}
-        aria-label={t("language.label")}
+        aria-haspopup="listbox"
         aria-expanded={open}
+        style={triggerStyle}
       >
         <currentLang.Flag />
         <span>{currentLang.label}</span>
         <span style={{ fontSize: "0.7rem", marginLeft: "0.1rem" }}>▾</span>
       </button>
 
-      {open && (
-        <div
-          style={{
-            position: "absolute",
-            top: "calc(100% + 0.3rem)",
-            right: 0,
-            minWidth: "100%",
-            backgroundColor: "#1a1a1a",
-            border: "2px solid #ffcc00",
-            boxShadow:
-              "3px 3px 0 rgba(0,0,0,0.85), 0 0 8px rgba(255,204,0,0.25)",
-            zIndex: 1500,
-            overflow: "hidden",
-          }}
-        >
-          {LANGS.map(({ code, label, Flag }) => {
-            const isActive = code === current;
-            return (
+      {open &&
+        createPortal(
+          <div
+            ref={panelRef}
+            role="listbox"
+            style={{
+              position: "fixed",
+              top: pos.top,
+              right: pos.right,
+              minWidth: "9rem",
+              backgroundColor: "#1a1a1a",
+              border: "2px solid #ffcc00",
+              borderRadius: "0.2rem",
+              boxShadow:
+                "3px 3px 0 rgba(0,0,0,0.85), 0 0 10px rgba(255,204,0,0.25)",
+              zIndex: 9999,
+              padding: "0.25rem 0",
+              overflow: "hidden",
+            }}
+          >
+            {LANGS.map((lang) => (
               <button
-                key={code}
+                key={lang.code}
                 type="button"
-                onClick={() => change(code)}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                  width: "100%",
-                  padding: "0.4rem 0.7rem",
-                  backgroundColor: isActive ? "rgba(255,204,0,0.15)" : "transparent",
-                  color: isActive ? "#ffcc00" : "#f0f0f0",
-                  border: "none",
-                  borderBottom: code === LANGS[LANGS.length - 1].code ? "none" : "1px solid #333",
-                  fontFamily: "MiFuente2, MiFuente, cursive",
-                  fontSize: "0.95rem",
-                  letterSpacing: "0.05em",
-                  textTransform: "uppercase",
-                  cursor: "pointer",
-                  textAlign: "left",
-                  transition: "background-color 0.15s",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = "rgba(255,204,0,0.2)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = isActive
-                    ? "rgba(255,204,0,0.15)"
-                    : "transparent";
-                }}
+                role="option"
+                aria-selected={lang.code === current}
+                onClick={() => change(lang.code)}
+                onMouseEnter={() => setHoveredCode(lang.code)}
+                onMouseLeave={() => setHoveredCode(null)}
+                style={optionStyle(lang.code)}
               >
-                <Flag />
-                <span>{label}</span>
+                <lang.Flag />
+                <span>{lang.label}</span>
               </button>
-            );
-          })}
-        </div>
-      )}
+            ))}
+          </div>,
+          document.body
+        )}
     </div>
   );
 };
