@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
 
 /**
- * Language switcher with country flags + custom-styled dropdown.
+ * Language switcher with 6 country flags + custom-styled dropdown.
  *
  * IMPORTANT — why createPortal:
  * The navbar (and the NavtrapBar/SubNav) create their own stacking contexts via
@@ -12,6 +12,12 @@ import { useTranslation } from "react-i18next";
  * for hit-testing, which steals all clicks/hover. Rendering the options panel
  * directly into <body> via a portal escapes the trap.
  */
+
+// =============================================================================
+// FLAG COMPONENTS
+// All flags are inline SVG so they render identically across OS/browsers
+// without depending on emoji fonts. Each is 20x14 viewBox to fit in the navbar.
+// =============================================================================
 
 const SpanishFlag = () => (
   <svg
@@ -53,9 +59,74 @@ const UKFlag = () => (
   </svg>
 );
 
+const GermanFlag = () => (
+  <svg
+    width="20"
+    height="14"
+    viewBox="0 0 5 3"
+    style={{ display: "inline-block", verticalAlign: "middle", flexShrink: 0 }}
+  >
+    <rect width="5" height="1" y="0" fill="#000" />
+    <rect width="5" height="1" y="1" fill="#dd0000" />
+    <rect width="5" height="1" y="2" fill="#ffce00" />
+  </svg>
+);
+
+const FrenchFlag = () => (
+  <svg
+    width="20"
+    height="14"
+    viewBox="0 0 3 2"
+    style={{ display: "inline-block", verticalAlign: "middle", flexShrink: 0 }}
+  >
+    <rect width="1" height="2" x="0" fill="#002654" />
+    <rect width="1" height="2" x="1" fill="#ffffff" />
+    <rect width="1" height="2" x="2" fill="#ce1126" />
+  </svg>
+);
+
+const ItalianFlag = () => (
+  <svg
+    width="20"
+    height="14"
+    viewBox="0 0 3 2"
+    style={{ display: "inline-block", verticalAlign: "middle", flexShrink: 0 }}
+  >
+    <rect width="1" height="2" x="0" fill="#009246" />
+    <rect width="1" height="2" x="1" fill="#ffffff" />
+    <rect width="1" height="2" x="2" fill="#ce2b37" />
+  </svg>
+);
+
+const PortugueseFlag = () => (
+  <svg
+    width="20"
+    height="14"
+    viewBox="0 0 5 3"
+    style={{ display: "inline-block", verticalAlign: "middle", flexShrink: 0 }}
+  >
+    <rect width="2" height="3" x="0" fill="#006600" />
+    <rect width="3" height="3" x="2" fill="#ff0000" />
+    {/* Simple yellow disk to suggest the armillary sphere without
+        getting into heraldic detail at this size */}
+    <circle cx="2" cy="1.5" r="0.55" fill="#ffd700" stroke="#000" strokeWidth="0.05" />
+    <circle cx="2" cy="1.5" r="0.3" fill="#ffffff" stroke="#000" strokeWidth="0.04" />
+  </svg>
+);
+
+// =============================================================================
+// LANGUAGE LIST
+// To disable a language: comment out its entry below.
+// To add a new one: add a flag component above + an entry here + update i18n.ts.
+// =============================================================================
+
 const LANGS = [
   { code: "es", label: "ES", Flag: SpanishFlag, key: "spanish" as const },
   { code: "en", label: "EN", Flag: UKFlag, key: "english" as const },
+  { code: "de", label: "DE", Flag: GermanFlag, key: "german" as const },
+  { code: "fr", label: "FR", Flag: FrenchFlag, key: "french" as const },
+  { code: "it", label: "IT", Flag: ItalianFlag, key: "italian" as const },
+  { code: "pt", label: "PT", Flag: PortugueseFlag, key: "portuguese" as const },
 ] as const;
 
 const LanguageSwitcher = () => {
@@ -73,7 +144,6 @@ const LanguageSwitcher = () => {
   const currentLang = LANGS.find((l) => l.code === current) || LANGS[0];
 
   // Position the panel right under the trigger, right-aligned with it.
-  // useLayoutEffect avoids a one-frame flash at the wrong position.
   useLayoutEffect(() => {
     if (!open || !triggerRef.current) return;
     const rect = triggerRef.current.getBoundingClientRect();
@@ -102,9 +172,7 @@ const LanguageSwitcher = () => {
     };
   }, [open]);
 
-  // Click-outside: ignore clicks inside trigger OR panel (panel is in portal,
-  // so we have to check both refs explicitly — `contains` on wrapper alone
-  // wouldn't include the portaled panel).
+  // Click-outside: ignore clicks inside trigger OR panel
   useEffect(() => {
     if (!open) return;
     const handler = (e: MouseEvent) => {
@@ -121,7 +189,7 @@ const LanguageSwitcher = () => {
     return () => document.removeEventListener("mousedown", handler);
   }, [open]);
 
-  // Close on Escape for keyboard accessibility
+  // Close on Escape
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
@@ -205,6 +273,8 @@ const LanguageSwitcher = () => {
               top: pos.top,
               right: pos.right,
               minWidth: "9rem",
+              maxHeight: "min(70vh, 22rem)",
+              overflowY: "auto",
               backgroundColor: "#1a1a1a",
               border: "2px solid #ffcc00",
               borderRadius: "0.2rem",
@@ -212,7 +282,6 @@ const LanguageSwitcher = () => {
                 "3px 3px 0 rgba(0,0,0,0.85), 0 0 10px rgba(255,204,0,0.25)",
               zIndex: 9999,
               padding: "0.25rem 0",
-              overflow: "hidden",
             }}
           >
             {LANGS.map((lang) => (

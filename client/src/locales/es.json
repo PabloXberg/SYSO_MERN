@@ -236,9 +236,13 @@
     "someone": "alguien"
   },
   "language": {
-    "label": "Idioma",
+      "label": "Idioma",
     "spanish": "Español",
-    "english": "English"
+    "english": "English",
+    "german": "Deutsch",
+    "french": "Français",
+    "italian": "Italiano",
+    "portuguese": "Português"
   },
   "tags": {
     "pickUpTo": "Elige hasta {{count}} etiquetas",
