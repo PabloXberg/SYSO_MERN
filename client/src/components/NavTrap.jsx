@@ -218,6 +218,15 @@ function NavStrap() {
           <span className="sidebar__link sidebar__link--disabled">
             {t("subNav.shop")}
           </span>
+
+  {/* <Link to="/sponsors" className="sidebar__link" onClick={closeSidebar}>
+    {t("subNav.supporters")}
+  </Link>
+  <Link to="/contact" className="sidebar__link" onClick={closeSidebar}>
+    {t("subNav.contact")}
+  </Link> */}
+
+
         </nav>
       </aside>
 

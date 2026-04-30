@@ -17,6 +17,8 @@ import ForgotPassword from "./pages/forgotPassword";
 import ResetPassword from "./pages/resetPassword";
 import Notifications from "./pages/Notifications";
 import BattleAdmin from "./pages/BattleAdmin";
+import Sponsors from "./pages/Sponsors";
+import Contact from "./pages/Contact";
 
 function App() {
   return (
@@ -45,6 +47,8 @@ function App() {
             <Route path="notifications" element={<Notifications />} />
             <Route path="admin/battles" element={<BattleAdmin />} />
             <Route path="*" element={<Navigate to="/sketches" replace />} />
+            <Route path="sponsors" element={<Sponsors />} />
+            <Route path="contact" element={<Contact />} />
           </Routes>
         </BrowserRouter>
       </AuthContextProvider>

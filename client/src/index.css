@@ -1419,3 +1419,97 @@ h6,
 .tags-wall .tag-chip {
   font-family: 'Permanent Marker', cursive !important;
 }
+
+
+/* =============================================================================
+   APPEND THIS to the end of client/src/index.css
+   Containers and hover effects for the new Sponsors and Contact pages.
+   ============================================================================= */
+
+/* ---- SPONSORS PAGE ---- */
+
+.sponsors-container {
+  position: relative;
+  min-height: calc(100vh - 60px);
+  background: linear-gradient(135deg, #0d0d0d 0%, #1f1f1f 50%, #0d0d0d 100%);
+  padding: 2rem 1rem 4rem 1rem;
+  color: #f0f0f0;
+}
+
+.sponsors-container::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("./images/syso-logo.png");
+  background-size: min(60vmin, 500px);
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.sponsors-container>* {
+  position: relative;
+  z-index: 1;
+}
+
+.sponsors-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Hover lift on sponsor cards */
+.sponsor-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.7),
+    0 0 18px rgba(255, 204, 0, 0.3) !important;
+}
+
+
+/* ---- CONTACT PAGE ---- */
+
+.contact-container {
+  position: relative;
+  min-height: calc(100vh - 60px);
+  background: linear-gradient(135deg, #0d0d0d 0%, #1f1f1f 50%, #0d0d0d 100%);
+  padding: 2rem 1rem 4rem 1rem;
+  color: #f0f0f0;
+}
+
+.contact-container::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("./images/syso-logo.png");
+  background-size: min(60vmin, 500px);
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.contact-container>* {
+  position: relative;
+  z-index: 1;
+}
+
+.contact-content {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Hover lift on contact cards (matches sponsor cards for consistency) */
+.contact-container a>div:hover,
+.contact-container [style*="cursor: pointer"]:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.7),
+    0 0 18px rgba(255, 204, 0, 0.2) !important;
+}

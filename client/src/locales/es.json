@@ -317,6 +317,37 @@
       "deleteConfirm": "¿Borrar esta batalla? No se puede deshacer.",
       "deleteError": "Error al borrar la batalla"
     }
+  },
+    "sponsors": {
+    "pageTitle": "Sponsors",
+    "pageDescription": "Las marcas, locales y personas que hacen posible este movimiento. Sin ellos, nada de esto pasa.",
+    "mainSponsorsTitle": "Sponsors Principales",
+    "mainSponsorsDescription": "Marcas que hacen posible cada edición de Share Your Sketch",
+    "localsTitle": "Locales que nos apoyan",
+    "localsDescription": "Bares, espacios y comercios de Valencia que nos abren sus puertas",
+    "brandsTitle": "Marcas Colaboradoras",
+    "brandsDescription": "Marcas que aportan productos para premios y experiencias",
+    "mediaTitle": "Medios y Difusión",
+    "mediaDescription": "Plataformas que nos ayudan a llegar a más artistas",
+    "thanks": "¡Gracias a todos por hacer que esto sea posible! 🙌",
+    "becomeOne": "¿Te gustaría ser sponsor? Escribinos a través de la página de contacto."
+  },
+
+  "contact": {
+    "pageTitle": "Contacto",
+    "pageDescription": "¿Querés colaborar, ser sponsor, o simplemente saludar? Te leemos.",
+    "email": "Email",
+    "emailDescription": "Para cualquier consulta, propuesta o colaboración",
+    "instagramDescription": "Seguinos para no perderte nada de lo que pasa",
+    "joinChannel": "Unirse al canal",
+    "telegramDescription": "Avisos rápidos sobre eventos y batallas",
+    "sendMessage": "Enviá un mensaje",
+    "whatsappDescription": "Para temas más rápidos o personales",
+    "location": "Ubicación",
+    "locationDescription": "Nuestra base. Los eventos suelen ser acá.",
+    "responseTime": "Respondemos lo más rápido que podemos 🤘",
+    "responseDisclaimer": "Generalmente entre 24 y 48 horas. Si es urgente, IG es lo más rápido."
   }
+
 
 }

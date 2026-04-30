@@ -317,7 +317,39 @@
       "deleteConfirm": "Delete this battle? Cannot be undone.",
       "deleteError": "Error deleting battle"
     }
+  },
+
+  "sponsors": {
+    "pageTitle": "Sponsors",
+    "pageDescription": "The brands, venues, and people who make this movement possible. Without them, none of this happens.",
+    "mainSponsorsTitle": "Main Sponsors",
+    "mainSponsorsDescription": "Brands that make every Share Your Sketch edition possible",
+    "localsTitle": "Local venues backing us",
+    "localsDescription": "Bars, spaces, and businesses in Valencia that open their doors to us",
+    "brandsTitle": "Collaborating Brands",
+    "brandsDescription": "Brands that contribute products for prizes and experiences",
+    "mediaTitle": "Media & Outreach",
+    "mediaDescription": "Platforms that help us reach more artists",
+    "thanks": "Thanks to everyone for making this possible! 🙌",
+    "becomeOne": "Want to be a sponsor? Reach out via the contact page."
+  },
+
+  "contact": {
+    "pageTitle": "Contact",
+    "pageDescription": "Want to collaborate, sponsor us, or just say hi? We're listening.",
+    "email": "Email",
+    "emailDescription": "For any question, proposal, or collaboration",
+    "instagramDescription": "Follow us so you don't miss what's happening",
+    "joinChannel": "Join the channel",
+    "telegramDescription": "Quick updates about events and battles",
+    "sendMessage": "Send a message",
+    "whatsappDescription": "For faster or more personal topics",
+    "location": "Location",
+    "locationDescription": "Our base. Events usually happen here.",
+    "responseTime": "We answer as fast as we can 🤘",
+    "responseDisclaimer": "Usually within 24-48 hours. If urgent, IG is fastest."
   }
+
 
 }
 

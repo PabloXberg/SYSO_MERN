@@ -2,25 +2,30 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { serverURL } from "../serverURL";
 
-  export interface Notification {
-    _id: string;
-    type:
-      | "like"
-      | "comment"
-      | "comment_reply"
-      | "welcome"
-      | "battle_voting"
-      | "battle_finished"
-      | "battle_winner_popular"
-      | "battle_winner_jury";
-    actor?: { _id: string; username: string; avatar: string } | null;
-    sketch?: { _id: string; name: string; url: string } | null;
-    battle?: { _id: string; theme: string; state: string } | null;
-    read: boolean;
-    createdAt: string;
-  }
+export interface Notification {
+  _id: string;
+  type:
+    | "like"
+    | "comment"
+    | "comment_reply"
+    | "welcome"
+    | "battle_voting"
+    | "battle_finished"
+    | "battle_winner_popular"
+    | "battle_winner_jury";
+  actor?: { _id: string; username: string; avatar: string } | null;
+  sketch?: { _id: string; name: string; url: string } | null;
+  battle?: { _id: string; theme: string; state: string } | null;
+  read: boolean;
+  createdAt: string;
+}
 
-const POLL_INTERVAL_MS = 30_000; // 30 seconds
+// Polling interval: how often to check for new notifications.
+// 10 seconds = good balance between responsiveness and server load.
+// Lowering further (e.g. 5s) is fine for a small community but starts adding
+// up on a busy site. The lightweight unread-count endpoint is cheap so this
+// is mostly about respect for mobile data / battery.
+const POLL_INTERVAL_MS = 10_000;
 
 interface UseNotificationsResult {
   notifications: Notification[];
@@ -36,10 +41,13 @@ interface UseNotificationsResult {
 /**
  * Custom hook that:
  *   - fetches notifications from the server when the user logs in
- *   - polls the unread count every 30s while the user is active
+ *   - polls the unread count every POLL_INTERVAL_MS while the user is active
  *   - exposes helpers to mark as read / remove
  *
- * Notifications are only fetched when there's a logged-in user.
+ * UX note: when the count goes UP between polls, we trigger a full refresh
+ * so that the new notification appears in the dropdown immediately, not just
+ * the badge number. This makes the system feel near-instant from the user's
+ * perspective even though we're polling.
  */
 export function useNotifications(limit: number = 20): UseNotificationsResult {
   const { user } = useContext(AuthContext);
@@ -74,7 +82,9 @@ export function useNotifications(limit: number = 20): UseNotificationsResult {
     }
   }, [user?._id, limit]);
 
-  // Lightweight count-only fetch — used by the polling timer
+  // Lightweight count-only fetch — used by the polling timer.
+  // If the count went UP since last check, trigger a full refresh so the
+  // new notification appears in the list right away, not just the badge.
   const refreshCount = useCallback(async () => {
     if (!user?._id) return;
     try {
@@ -83,16 +93,22 @@ export function useNotifications(limit: number = 20): UseNotificationsResult {
       });
       if (!res.ok) return;
       const data = await res.json();
-      setUnreadCount(data.unreadCount || 0);
+      const newCount = data.unreadCount || 0;
+      setUnreadCount((prev) => {
+        // If new notifications arrived, do a full refresh in the background
+        if (newCount > prev) {
+          refresh();
+        }
+        return newCount;
+      });
     } catch (err) {
       // Silent fail — polling shouldn't surface errors to the user
     }
-  }, [user?._id]);
+  }, [user?._id, refresh]);
 
   // Initial fetch + polling
   useEffect(() => {
     if (!user?._id) {
-      // User logged out — clear state
       setNotifications([]);
       setUnreadCount(0);
       return;
@@ -111,7 +127,6 @@ export function useNotifications(limit: number = 20): UseNotificationsResult {
           method: "POST",
           headers: authHeaders(),
         });
-        // Optimistic update
         setNotifications((prev) =>
           prev.map((n) => (n._id === id ? { ...n, read: true } : n))
         );
