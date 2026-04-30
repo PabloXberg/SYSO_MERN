@@ -57,8 +57,6 @@ const EditProfile = () => {
     myHeaders.append("Authorization", `Bearer ${token}`);
 
     const submitData = new FormData();
-    // Only append fields that the user actually changed. Sending empty
-    // strings would otherwise overwrite existing values with blanks.
     if (formData.email) submitData.append("email", formData.email);
     if (formData.username) submitData.append("username", formData.username);
     if (formData.password) submitData.append("password", formData.password);
@@ -75,7 +73,6 @@ const EditProfile = () => {
         body: submitData,
       });
 
-      // Check the actual response so we don't navigate on a server error.
       if (!response.ok) {
         const body = await response.json().catch(() => ({}));
         alert(body.error || t("profile.updateError"));
@@ -94,7 +91,7 @@ const EditProfile = () => {
   return (
     <>
       <SubUserNav />
-      <div className="editProfile">
+      <div className="editprofile-container">
         <div className="editProfile__avatar">
           <Image
             alt="User Avatar"
@@ -160,8 +157,11 @@ const EditProfile = () => {
             </Button>
           </div>
         </Form>
+
+        {/* Moved INSIDE the dark container so it inherits the dark background
+            instead of sitting on the white page underneath. */}
+        <DeleteAccountButton />
       </div>
-      <DeleteAccountButton />
     </>
   );
 };

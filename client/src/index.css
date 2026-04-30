@@ -1,6 +1,8 @@
 /* =============================================================================
    FONTS
    ============================================================================= */
+
+   
 @font-face {
   font-family: "MiFuente";
   src: url("./fonts/DonGraffiti.otf") format("opentype");
@@ -1191,4 +1193,229 @@ font-family: "MiFuente", cursive;
 /* Hover: subtle yellow tint, no background change */
 .NavtrapBar .nav-link:hover {
   color: #ffcc00 !important;
+}
+
+/* =============================================================================
+   REPLACEMENT for the previous appended block at the end of index.css
+   IMPORTANT: open client/src/index.css and DELETE the previous block we
+   appended (the one starting with "@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker..."
+   and ending with the .editprofile-container danger zone rule).
+   Then paste this entire file in its place.
+   ============================================================================= */
+
+
+/* ---- 1. GOOGLE FONTS — load 3 graffiti-style options ---- */
+
+@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Bangers&family=Rubik+Mono+One&display=swap');
+
+
+/* ---- 2. FONT OVERRIDE via global selector ----
+   This selector matches EVERY element on the page (the *) and forces the
+   new font for any element whose computed font-family includes "MiFuente"
+   or "MiFuente2". It uses the [style*="MiFuente"] hack which catches
+   inline styles, AND we override the named CSS classes below.
+
+   To switch fonts, change the THREE references to 'Permanent Marker' below
+   to one of:
+     - 'Permanent Marker' (recommended — marker thick)
+     - 'Bangers'          (taller, comic book style)
+     - 'Rubik Mono One'   (bold geometric, very different)
+*/
+
+/* Catches all class-based MiFuente usages by overriding the rules in CSS */
+.tituloFuente,
+.fuente,
+.tituloFuente *,
+[class*="MiFuente"],
+[class*="mifuente"] {
+  font-family: 'Permanent Marker', cursive !important;
+}
+
+/* Catches inline styles (style="font-family: MiFuente...") via the
+   attribute selector. This works because inline styles can be matched
+   with [style*="..."]. */
+[style*="MiFuente"],
+[style*="Mifuente"],
+[style*="mifuente"] {
+  font-family: 'Permanent Marker', cursive !important;
+}
+
+/* Helper classes for testing without editing the global rules above.
+   Add className="font-bangers" or "font-rubik" to any element to try
+   them on a single component before committing to a global change. */
+.font-permanent-marker {
+  font-family: 'Permanent Marker', cursive !important;
+}
+
+.font-bangers {
+  font-family: 'Bangers', cursive !important;
+  letter-spacing: 0.05em;
+}
+
+.font-rubik {
+  font-family: 'Rubik Mono One', sans-serif !important;
+}
+
+
+/* ---- 3. SUBNAV: PERMANENTLY DARK ---- */
+
+.NavtrapBar {
+  background-color: #0d0d0d !important;
+  border: none !important;
+  border-bottom: 1px solid #2a2a2a !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+  padding: 0.4rem 0 !important;
+}
+
+.NavtrapBar .container,
+.NavtrapBar .container-fluid {
+  background-color: transparent !important;
+}
+
+.NavtrapBar .nav-link:hover {
+  color: #ffcc00 !important;
+}
+
+.NavtrapBar .nav-link.disabled {
+  color: #555 !important;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
+/* ---- 4. EDIT PROFILE PAGE ---- */
+
+.editprofile-container {
+  position: relative;
+  min-height: calc(100vh - 60px);
+  background: linear-gradient(135deg, #0d0d0d 0%, #1f1f1f 50%, #0d0d0d 100%);
+  padding: 2rem 1rem 3rem 1rem;
+  color: #f0f0f0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.editprofile-container::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("./images/syso-logo.png");
+  background-size: min(50vmin, 400px);
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.editprofile-container>* {
+  position: relative;
+  z-index: 1;
+}
+
+.editprofile-container .editProfile__avatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 20rem;
+}
+
+.editprofile-container .editProfile__avatar img {
+  width: 12rem;
+  height: 12rem;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #ffcc00;
+  box-shadow: 0 0 12px rgba(255, 204, 0, 0.25);
+}
+
+.editprofile-container .editProfile__form {
+  width: 100%;
+  max-width: 32rem;
+}
+
+.editprofile-container .form-label,
+.editprofile-container label {
+  color: #f0f0f0;
+  font-weight: bold;
+}
+
+.editprofile-container .form-control {
+  background-color: #f5f5f5;
+  border: 2px solid #ffcc00;
+  color: #0d0d0d;
+}
+
+.editprofile-container .form-control:focus {
+  background-color: #ffffff;
+  border-color: #ffcc00;
+  box-shadow: 0 0 0 0.2rem rgba(255, 204, 0, 0.25);
+}
+
+.editprofile-container .form-text,
+.editprofile-container .text-muted {
+  color: #aaa !important;
+}
+
+.editprofile-container input[type="file"] {
+  background-color: #1a1a1a;
+  color: #f0f0f0;
+  border: 2px solid #ffcc00;
+  border-radius: 0.3rem;
+  padding: 0.4rem;
+  width: 100%;
+}
+
+.editprofile-container .editProfile__actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+
+/* ---- 5. BODY DARK BACKGROUND ---- */
+
+body {
+  background-color: #0d0d0d;
+}
+
+#root {
+  background-color: #0d0d0d;
+  min-height: 100vh;
+}
+
+
+/* ---- 6. ALSO REPLACE FONT IN ALL EXISTING RULES THAT USE "MiFuente" ----
+   These are the most common selectors throughout your CSS that declare
+   font-family with "MiFuente". Listing them explicitly with !important
+   guarantees the override wins even when CSS specificity says otherwise. */
+
+.tituloFuente,
+.title,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.navbar-desktop__link,
+.navbar-desktop__brand,
+.NavtrapBar .nav-link,
+.subnav .nav-link,
+.sidebar__link,
+.sidebar__username,
+.tags-wall .tag-chip {
+  font-family: 'Permanent Marker', cursive !important;
 }
