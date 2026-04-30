@@ -1,39 +1,17 @@
-import  { useEffect} from 'react'
-import '../../src/index.css'
-// import SubHomeNav from '../components/SubHomeNav'
-import { Card } from 'react-bootstrap'
-import cartel from '../images/sys nov 24.jpg.jpg'
+import "../../src/index.css";
+// Updated poster: Share Your Style 4.0 (June 2026)
+import cartel from "../images/share-your-style-4.jpeg";
 
-//import { InstagramEmbed } from 'react-social-media-embed';
-
-type Props = {}
-
-const News = (props: Props) => {
-
-  useEffect(() => {
-
-  }, [])
-
+const News = () => {
   return (
-      <>
-          {/* <SubHomeNav /> */}
-      <div className='newsContainer'>
-
-      {/* WIDget para instagram */}
-      {/* <div className="elfsight-app-26d13d88-234a-4eed-b7a3-a4622ef81e45"></div> */}
-
-  <Card.Img className="sketchDetailsImg" variant="top"
-   
-            src={cartel} alt={"Share Your Style"} />
-
-
+    <div className="news-container">
+      <img
+        className="sketchDetailsImg"
+        src={cartel}
+        alt="Share Your Style 4.0 — 6 y 7 de Junio"
+      />
     </div>
+  );
+};
 
-    </>
-   )
-
- 
-
-}
-
-export default News
+export default News;

@@ -16,7 +16,7 @@ const MyFav = () => {
   const favorites = activeUser?.likes || [];
 
   return (
-    <>
+    <div className="myfav-container">
       <SubUserNav />
       <div className="cardcontainer">
         {favorites.map((sketch) => (
@@ -27,7 +27,7 @@ const MyFav = () => {
           />
         ))}
       </div>
-    </>
+    </div>
   );
 };
 

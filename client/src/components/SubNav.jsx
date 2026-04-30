@@ -7,13 +7,11 @@ import "../index.css";
 /**
  * Generic sub-navigation bar.
  * Receives an array of links and renders them as SPA-safe Links.
- * The active link is auto-highlighted in red based on the current route.
  *
- * Usage:
- *   <SubNav links={[
- *     { to: "/sketches", label: "Bocetos", title: "..." },
- *     { to: "/users", label: "Usuarios", title: "..." },
- *   ]} />
+ * COLOR SCHEME (matches the new dark page backgrounds):
+ *   active   → bright red, glows a bit
+ *   inactive → off-white with a subtle dark text-shadow (graffiti look)
+ *   disabled → mid gray (visible but clearly "not for clicking")
  */
 function SubNav({ links }) {
   const { pathname } = useLocation();
@@ -24,6 +22,18 @@ function SubNav({ links }) {
         <Nav navbarScroll>
           {links.map(({ to, label, title, disabled }) => {
             const isActive = pathname === to;
+
+            // Calculate color and shadow per-state to keep the JSX readable
+            let color = "#f0f0f0";
+            let shadow = "1px 1px 0 rgba(0,0,0,0.7)";
+            if (disabled) {
+              color = "#666";
+              shadow = "none";
+            } else if (isActive) {
+              color = "#ff3b3b";
+              shadow = "1px 1px 0 rgba(0,0,0,0.7), 0 0 8px rgba(255,59,59,0.35)";
+            }
+
             return (
               <Nav.Link
                 key={to}
@@ -33,7 +43,10 @@ function SubNav({ links }) {
                 disabled={disabled}
                 style={{
                   fontSize: "x-large",
-                  color: isActive ? "red" : "black",
+                  color,
+                  textShadow: shadow,
+                  // Keep link clickable area honest even with the shadow
+                  textDecoration: "none",
                 }}
               >
                 {label}

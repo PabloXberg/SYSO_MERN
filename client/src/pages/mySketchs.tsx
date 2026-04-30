@@ -48,8 +48,6 @@ const MySketchs = () => {
     userId ? `${serverURL}users/id/${userId}` : null
   );
 
-  // Fetch the current battle so we can show its theme on the toggle.
-  // If there's no active battle, the toggle is hidden entirely.
   const { data: currentBattle } = useFetch<CurrentBattle | null>(
     `${serverURL}battles/current`
   );
@@ -60,7 +58,6 @@ const MySketchs = () => {
   const [formData, setFormData] = useState<FormDataShape>(initialForm);
 
   const sketchsArray = activeUser?.sketchs || [];
-  // Only allow joining a battle that is still accepting submissions
   const canJoinBattle =
     currentBattle && currentBattle.state === "open";
 
@@ -112,7 +109,6 @@ const MySketchs = () => {
     submitData.append("comment", formData.comment);
     submitData.append("owner", userId);
     submitData.append("url", formData.url);
-    // Only attach battleId if the user opted in AND there is an active battle
     if (formData.participatesInBattle && canJoinBattle && currentBattle) {
       submitData.append("battleId", currentBattle._id);
     }
@@ -137,7 +133,7 @@ const MySketchs = () => {
   if (loading) return <SpraySpinner />;
 
   return (
-    <div className="mySketch">
+    <div className="mysketches-container">
       <SubUserNav />
       <div>
         <div className="title">
@@ -216,8 +212,6 @@ const MySketchs = () => {
                     onChange={handleChange}
                   />
 
-                  {/* Battle toggle — only shown when there's an active battle
-                      that's still accepting submissions */}
                   {canJoinBattle && currentBattle && (
                     <div
                       style={{

@@ -337,7 +337,7 @@ img {
 }
 
 .user-conteiner::before {
-  background-image: url("./images/IMG-20231228-WA0003.jpg");
+  background-image: url("./images/syso-logo.png");
 }
 
 /* Ensure direct content sits above the ::before overlay */
@@ -1078,4 +1078,117 @@ font-family: "MiFuente", cursive;
   [class*="SubNav"] {
     z-index: 1 !important;
   }
+}
+
+
+/* =============================================================================
+   DARK CONTENT BACKGROUNDS — replaces white empty space on Sketches/Users/etc
+   pages with a subtle dark gradient + translucent SYSO logo backdrop.
+   Pattern follows the existing .homeContainer / .Battle-container approach
+   (image as ::before with low opacity) but applied via fixed positioning so
+   the logo stays put while content scrolls.
+   ============================================================================= */
+
+.sketches-container,
+.users-container,
+.mysketches-container,
+.myfav-container,
+.news-container {
+  position: relative;
+  min-height: calc(100vh - 60px);
+  /* Diagonal dark gradient — slightly off-flat so it doesn't feel like a
+     cheap solid color, but subtle enough not to compete with the cards. */
+  background:
+    linear-gradient(135deg, #0d0d0d 0%, #1f1f1f 50%, #0d0d0d 100%);
+  z-index: 0;
+}
+
+/* Translucent SYSO logo backdrop. Uses position:fixed so the logo stays
+   centered in the viewport regardless of scroll, giving the page a
+   consistent identity throughout long lists.
+   IMPORTANT: file path is relative to this CSS file, so the logo lives at
+   client/src/images/syso-logo.png — see INSTRUCCIONES.txt. */
+.sketches-container::before,
+.users-container::before,
+.mysketches-container::before,
+.myfav-container::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("./images/syso-logo.png");
+  background-size: min(70vmin, 600px);
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.06;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Stack actual content above the backdrop */
+.sketches-container>*,
+.users-container>*,
+.mysketches-container>*,
+.myfav-container>*,
+.news-container>* {
+  position: relative;
+  z-index: 1;
+}
+
+/* Empty/loading/info paragraphs on dark pages get a lighter color so they
+   stay legible. Inline `color: #666` / `#999` from the JSX wins via
+   specificity — that's why the new files I'm shipping use #aaa instead. */
+.sketches-container .empty-msg,
+.users-container .empty-msg,
+.mysketches-container .empty-msg,
+.myfav-container .empty-msg {
+  color: #aaa;
+}
+
+/* News page: full bleed dark background behind the poster.
+   Slightly different gradient — deeper black radial — to make the poster
+   stand out as the centerpiece. */
+.news-container {
+  background:
+    radial-gradient(ellipse at center, #1a1a1a 0%, #0a0a0a 100%);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem 1rem;
+}
+
+/* The poster image inside news gets a subtle frame */
+.news-container .sketchDetailsImg {
+  max-width: min(900px, 95vw);
+  height: auto;
+  border: 2px solid rgba(255, 204, 0, 0.3);
+  box-shadow:
+    0 0 30px rgba(255, 204, 0, 0.15),
+    4px 4px 0 rgba(0, 0, 0, 0.6);
+  border-radius: 4px;
+}
+
+.NavtrapBar {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* The inner .container Bootstrap wraps around the nav links can also paint white */
+.NavtrapBar .container,
+.NavtrapBar .container-fluid {
+  background-color: transparent !important;
+}
+
+/* Bootstrap Nav.Link disabled state defaults to a hard-to-see color too */
+.NavtrapBar .nav-link.disabled {
+  color: #666 !important;
+  opacity: 0.7;
+}
+
+/* Hover: subtle yellow tint, no background change */
+.NavtrapBar .nav-link:hover {
+  color: #ffcc00 !important;
 }

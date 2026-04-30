@@ -56,7 +56,7 @@ const SketchesPage = () => {
   };
 
   return (
-    <div>
+    <div className="sketches-container">
       <SubHomeNav />
 
       <SearchBar
@@ -64,9 +64,7 @@ const SketchesPage = () => {
         onSearch={setSearch}
       />
 
-      {/* =========================================================
-          Tag filter bar with brick wall background
-         ========================================================= */}
+      {/* Tag filter bar with brick wall background */}
       <div className="tags-wall">
         <div className="tags-wall__inner">
           {TAG_OPTIONS.map((opt) => (
@@ -82,11 +80,11 @@ const SketchesPage = () => {
       </div>
 
       {loading && data.length === 0 ? (
-        <p style={{ textAlign: "center", padding: "2rem" }}>
+        <p style={{ textAlign: "center", padding: "2rem", color: "#ccc" }}>
           {search || tag ? t("sketches.searching") : t("sketches.loading")}
         </p>
       ) : data.length === 0 && (search || tag) ? (
-        <p style={{ textAlign: "center", padding: "2rem", color: "#666" }}>
+        <p style={{ textAlign: "center", padding: "2rem", color: "#aaa" }}>
           {t("sketches.noResults", { query: search || t(`tags.${tag}`) })}
         </p>
       ) : (
@@ -102,13 +100,13 @@ const SketchesPage = () => {
           <div ref={sentinelRef} style={{ height: "1px" }} />
 
           {loadingMore && (
-            <p style={{ textAlign: "center", padding: "1rem", color: "#666" }}>
+            <p style={{ textAlign: "center", padding: "1rem", color: "#aaa" }}>
               {t("sketches.loadingMore")}
             </p>
           )}
 
           {!hasMore && data.length > 0 && (
-            <p style={{ textAlign: "center", padding: "2rem", color: "#999" }}>
+            <p style={{ textAlign: "center", padding: "2rem", color: "#888" }}>
               {t("sketches.allLoaded", { count: data.length })}
             </p>
           )}

@@ -45,7 +45,7 @@ const UsersPage = () => {
   }, [observerCallback]);
 
   return (
-    <div>
+    <div className="users-container">
       <SubHomeNav />
 
       <SearchBar
@@ -54,11 +54,11 @@ const UsersPage = () => {
       />
 
       {loading && data.length === 0 ? (
-        <p style={{ textAlign: "center", padding: "2rem" }}>
+        <p style={{ textAlign: "center", padding: "2rem", color: "#ccc" }}>
           {search ? t("users.searching") : t("users.loading")}
         </p>
       ) : data.length === 0 && search ? (
-        <p style={{ textAlign: "center", padding: "2rem", color: "#666" }}>
+        <p style={{ textAlign: "center", padding: "2rem", color: "#aaa" }}>
           {t("users.noResults", { query: search })}
         </p>
       ) : (
@@ -72,13 +72,13 @@ const UsersPage = () => {
           <div ref={sentinelRef} style={{ height: "1px" }} />
 
           {loadingMore && (
-            <p style={{ textAlign: "center", padding: "1rem", color: "#666" }}>
+            <p style={{ textAlign: "center", padding: "1rem", color: "#aaa" }}>
               {t("users.loadingMore")}
             </p>
           )}
 
           {!hasMore && data.length > 0 && (
-            <p style={{ textAlign: "center", padding: "2rem", color: "#999" }}>
+            <p style={{ textAlign: "center", padding: "2rem", color: "#888" }}>
               {t("users.allLoaded", { count: data.length })}
             </p>
           )}
