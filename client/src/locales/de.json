@@ -162,7 +162,10 @@
     "forgotPasswordTitle": "Passwort vergessen...",
     "emailPlaceholder": "E-Mail-Adresse eingeben",
     "passwordMismatch": "Passwort und Bestätigung stimmen nicht überein",
-    "resetPasswordError": "Fehler beim Zurücksetzen des Passworts"
+    "resetPasswordError": "Fehler beim Zurücksetzen des Passworts",
+      "showPassword": "Passwort anzeigen",       
+  "hidePassword": "Passwort ausblenden",
+   "passwordTooShort": "La contraseña debe tener al menos 6 caracteres"
   },
   "profile": {
     "emailLabel": "E-Mail-Adresse",
@@ -171,7 +174,10 @@
     "required": "Erforderlich",
     "cancel": "Abbrechen",
     "save": "Speichern",
-    "updateError": "Etwas ist schiefgelaufen — versuche es erneut"
+    "updateError": "Etwas ist schiefgelaufen — versuche es erneut",
+     "passwordLabel": "Neues Passwort",
+  "passwordPlaceholder": "Leer lassen, um das aktuelle zu behalten",
+  "passwordHint": "Mindestens 6 Zeichen. Leer lassen, um das Passwort zu behalten."
   },
   "sketch": {
     "clickToOpen": "Klicken um Sketch anzusehen",
@@ -228,7 +234,8 @@
     "imageUnavailable": "Bild nicht verfügbar",
     "noTitle": "(kein Titel)",
     "noDescription": "(keine Beschreibung)",
-    "unknownUser": "unbekannter Nutzer"
+    "unknownUser": "unbekannter Nutzer",
+     "back": "Zurück" 
   },
   "mySketches": {
     "uploadTitle": "Sketch hochladen",

@@ -2,19 +2,22 @@ import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import DefaultImage from "../avatar-placeholder.gif";
 import { AuthContext } from "../contexts/AuthContext";
 import { serverURL } from "../serverURL";
+import PasswordInput from "./PasswordInput";
 
 /**
  * Combined login + register modal with tabs.
  *
  * Style: matches the underground/graffiti theme used in the sidebar
- * and notifications dropdown — graffiti title, yellow accents,
- * rotated for sticker vibe.
+ * and notifications dropdown.
+ *
+ * Password inputs use PasswordInput (with eye toggle):
+ *   - login → autoComplete="current-password"
+ *   - register → autoComplete="new-password"
  */
 function AuthModal({ show, onHide, initialTab = "login", onLoadingChange }) {
   const { t } = useTranslation();
@@ -102,7 +105,6 @@ function AuthModal({ show, onHide, initialTab = "login", onLoadingChange }) {
   };
 
   // ─── Inline styles for the graffiti coherence ────────────────────
-  // Defined here (not in CSS file) so the AuthModal stays self-contained.
   const graffitiTitleStyle = {
     fontFamily: "MiFuente2, MiFuente, cursive",
     fontSize: "1.6rem",
@@ -138,6 +140,13 @@ function AuthModal({ show, onHide, initialTab = "login", onLoadingChange }) {
     cursor: "pointer",
     transition: "all 0.2s ease",
   });
+
+  // Common dark input style (for non-password fields)
+  const darkInputStyle = {
+    backgroundColor: "#0d0d0d",
+    color: "#f0f0f0",
+    border: "1px solid #333",
+  };
 
   return (
     <Modal
@@ -176,10 +185,7 @@ function AuthModal({ show, onHide, initialTab = "login", onLoadingChange }) {
         }}
       >
         <Nav.Item>
-          <Nav.Link
-            eventKey="login"
-            style={tabStyle(activeTab === "login")}
-          >
+          <Nav.Link eventKey="login" style={tabStyle(activeTab === "login")}>
             {t("auth.login")}
           </Nav.Link>
         </Nav.Item>
@@ -210,23 +216,28 @@ function AuthModal({ show, onHide, initialTab = "login", onLoadingChange }) {
               name="email"
               placeholder={t("auth.email").toLowerCase()}
               onChange={handleLoginChange}
-              style={{ backgroundColor: "#0d0d0d", color: "#f0f0f0", border: "1px solid #333" }}
+              autoComplete="email"
+              style={darkInputStyle}
             />
             <Form.Label className="mt-2" style={{ color: "#ffcc00" }}>
               <i>{t("auth.password")}</i>
             </Form.Label>
-            <Form.Control
-              type="password"
+            <PasswordInput
               name="password"
               placeholder={t("auth.password")}
               onChange={handleLoginChange}
               onKeyDown={(e) => {
                 if (e.key === "Enter") handleLoginSubmit();
               }}
-              style={{ backgroundColor: "#0d0d0d", color: "#f0f0f0", border: "1px solid #333" }}
+              autoComplete="current-password"
+              style={darkInputStyle}
             />
             <Form.Label className="mt-2">
-              <Link to="/forgotPassword" onClick={onHide} style={{ color: "#00e5ff" }}>
+              <Link
+                to="/forgotPassword"
+                onClick={onHide}
+                style={{ color: "#00e5ff" }}
+              >
                 {t("auth.forgotPassword")}
               </Link>
             </Form.Label>
@@ -263,36 +274,46 @@ function AuthModal({ show, onHide, initialTab = "login", onLoadingChange }) {
             </div>
 
             <Form.Group>
-              <Form.Label style={{ color: "#ffcc00" }}>(*) {t("auth.email")}:</Form.Label>
+              <Form.Label style={{ color: "#ffcc00" }}>
+                (*) {t("auth.email")}:
+              </Form.Label>
               <Form.Control
                 type="email"
                 name="email"
                 placeholder={t("auth.email").toLowerCase()}
                 onChange={handleRegisterChange}
-                style={{ backgroundColor: "#0d0d0d", color: "#f0f0f0", border: "1px solid #333" }}
+                autoComplete="email"
+                style={darkInputStyle}
               />
-              <Form.Label className="mt-2" style={{ color: "#ffcc00" }}>(*) {t("auth.password")}:</Form.Label>
-              <Form.Control
-                type="password"
+              <Form.Label className="mt-2" style={{ color: "#ffcc00" }}>
+                (*) {t("auth.password")}:
+              </Form.Label>
+              <PasswordInput
                 name="password"
                 placeholder={t("auth.password")}
                 onChange={handleRegisterChange}
-                style={{ backgroundColor: "#0d0d0d", color: "#f0f0f0", border: "1px solid #333" }}
+                autoComplete="new-password"
+                style={darkInputStyle}
               />
-              <Form.Label className="mt-2" style={{ color: "#ffcc00" }}>(*) {t("auth.username")}:</Form.Label>
+              <Form.Label className="mt-2" style={{ color: "#ffcc00" }}>
+                (*) {t("auth.username")}:
+              </Form.Label>
               <Form.Control
                 name="username"
                 placeholder={t("auth.username").toLowerCase()}
                 onChange={handleRegisterChange}
-                style={{ backgroundColor: "#0d0d0d", color: "#f0f0f0", border: "1px solid #333" }}
+                autoComplete="username"
+                style={darkInputStyle}
               />
-              <Form.Label className="mt-2" style={{ color: "#ffcc00" }}>{t("auth.info")}</Form.Label>
+              <Form.Label className="mt-2" style={{ color: "#ffcc00" }}>
+                {t("auth.info")}
+              </Form.Label>
               <Form.Control
                 type="text"
                 name="info"
                 placeholder={t("auth.personalInfo")}
                 onChange={handleRegisterChange}
-                style={{ backgroundColor: "#0d0d0d", color: "#f0f0f0", border: "1px solid #333" }}
+                style={darkInputStyle}
               />
             </Form.Group>
           </>

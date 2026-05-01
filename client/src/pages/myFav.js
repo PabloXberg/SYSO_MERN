@@ -13,7 +13,11 @@ const MyFav = () => {
     userId ? `${serverURL}users/id/${userId}` : null
   );
 
-  const favorites = activeUser?.likes || [];
+  // Reverse the array so the most recently liked sketch shows first.
+  // The backend pushes new likes to the end of the array, so without
+  // .slice().reverse() the user sees their oldest like at the top.
+  // .slice() avoids mutating the source array (good practice).
+  const favorites = (activeUser?.likes || []).slice().reverse();
 
   return (
     <div className="myfav-container">

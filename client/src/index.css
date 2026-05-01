@@ -1571,3 +1571,36 @@ h6,
 .notif-dropdown-list:first-child {
   padding-top: 0.25rem;
 }
+
+/* =============================================================================
+   APPEND THIS to the end of client/src/index.css
+
+   Fix: UserModal and SketchModal were appearing BEHIND the SubNav
+   (the bar with "Bocetos / Usuarios"). Cause: the SubNav has
+   position: relative + a high z-index, creating a stacking context the
+   modals couldn't escape.
+
+   Solution: bump the modal z-index high enough to sit above any sub-navigation.
+   ============================================================================= */
+
+/* UserModal — the inline z-index 9999 isn't enough to clear the SubNav.
+   Override here with a much higher value. */
+div[style*="z-index: 9999"][style*="rgba(0,0,0,0.85)"] {
+  z-index: 99999 !important;
+}
+
+/* Generic .userModal class (the one SketchModal uses) — push above SubNav */
+.userModal,
+.modal-conta {
+  z-index: 99999 !important;
+}
+
+/* Backstop: make sure any react-bootstrap Modal stays on top too.
+   (it normally uses z-index 1050, way below our 99999 panels) */
+.modal-backdrop {
+  z-index: 99998 !important;
+}
+
+.modal {
+  z-index: 99999 !important;
+}

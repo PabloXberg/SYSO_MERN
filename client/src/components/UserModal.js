@@ -1,29 +1,36 @@
+import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import { useTranslation } from "react-i18next";
 import UserStats from "./UserStats";
 
 /**
- * UserModal — shows a user's profile in a modal.
+ * UserModal — compact, responsive, dark-themed user profile modal.
  *
- * Accepts the user data in TWO formats for backwards compatibility:
+ * Accepts user data in two formats for compatibility:
  *   1. props.userData      → direct user object (from /users page)
- *   2. props.character     → a sketch object whose .owner is the user
- *                            (legacy path from when this was opened from
- *                             SketchCard / sketch detail)
+ *   2. props.character     → a sketch whose .owner is the user (legacy)
  *
- * Whichever is provided, we end up with a `user` object containing
- * username, avatar, info, createdAt, and _id.
- *
- * The dark theme styles are inline because the .userModal CSS class in
- * index.css uses light backgrounds — overriding inline keeps changes
- * contained without touching the global CSS.
+ * Mobile behavior: uses an `isMobile` state hook to apply tighter padding
+ * and smaller avatar sizes on narrow viewports (< 600px). Inline styles
+ * make the responsive behavior self-contained — no CSS changes needed.
  */
 function UserModal(props) {
   const { t } = useTranslation();
 
+  // Track viewport width so we can render mobile-friendly sizes.
+  // Updates on resize so flipping orientation keeps the modal sized correctly.
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" && window.innerWidth < 600
+  );
+
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth < 600);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
   if (!props.show) return null;
 
-  // Accept either shape — pick whichever was passed in.
   const user = props.userData || props.character?.owner;
   if (!user) return null;
 
@@ -41,6 +48,13 @@ function UserModal(props) {
   const handleBackdropClick = () => props.onClose();
   const stopPropagation = (e) => e.stopPropagation();
 
+  // Responsive sizing — tighter everything on mobile
+  const padding = isMobile ? "0.9rem" : "1.5rem";
+  const gap = isMobile ? "0.7rem" : "1rem";
+  const avatarSize = isMobile ? "6rem" : "10rem";
+  const titleSize = isMobile ? "1.5rem" : "2rem";
+  const maxWidth = isMobile ? "calc(100vw - 1rem)" : "32rem";
+
   return (
     <div
       onClick={handleBackdropClick}
@@ -55,14 +69,14 @@ function UserModal(props) {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        padding: "1rem",
+        padding: isMobile ? "0.5rem" : "1rem",
         overflowY: "auto",
       }}
     >
       <div
         onClick={stopPropagation}
         style={{
-          maxWidth: "32rem",
+          maxWidth,
           width: "100%",
           maxHeight: "90vh",
           overflowY: "auto",
@@ -72,19 +86,19 @@ function UserModal(props) {
           boxShadow:
             "5px 5px 0 rgba(0,0,0,0.85), 0 0 20px rgba(255,204,0,0.25)",
           color: "#f0f0f0",
-          padding: "1.5rem",
+          padding,
           display: "flex",
           flexDirection: "column",
-          gap: "1rem",
+          gap,
         }}
       >
-        {/* HEADER — username in graffiti font */}
+        {/* USERNAME */}
         <h2
           style={{
             margin: 0,
             textAlign: "center",
             fontFamily: "MiFuente2, MiFuente, cursive",
-            fontSize: "2rem",
+            fontSize: titleSize,
             color: "#ffcc00",
             letterSpacing: "0.04em",
             textShadow: "2px 2px 0 rgba(0,0,0,0.7)",
@@ -99,8 +113,8 @@ function UserModal(props) {
           src={avatarSrc}
           alt={user.username || "user avatar"}
           style={{
-            width: "10rem",
-            height: "10rem",
+            width: avatarSize,
+            height: avatarSize,
             borderRadius: "50%",
             objectFit: "cover",
             alignSelf: "center",
@@ -115,9 +129,10 @@ function UserModal(props) {
           style={{
             display: "flex",
             flexDirection: "column",
-            gap: "0.5rem",
+            gap: "0.4rem",
             paddingTop: "0.5rem",
             borderTop: "1px solid #333",
+            fontSize: isMobile ? "0.85rem" : "1rem",
           }}
         >
           <div>
@@ -126,7 +141,7 @@ function UserModal(props) {
             </strong>
             <p
               style={{
-                margin: "0.25rem 0 0",
+                margin: "0.2rem 0 0",
                 color: user.info ? "#ddd" : "#888",
                 fontStyle: user.info ? "normal" : "italic",
               }}
@@ -143,7 +158,7 @@ function UserModal(props) {
           </div>
         </div>
 
-        {/* STATS GRID — fetched live from /users/id/:id/stats */}
+        {/* STATS GRID */}
         {user._id && <UserStats userId={user._id} />}
 
         {/* FOOTER */}
@@ -151,12 +166,13 @@ function UserModal(props) {
           style={{
             display: "flex",
             justifyContent: "center",
-            paddingTop: "0.5rem",
+            paddingTop: "0.4rem",
             borderTop: "1px solid #333",
           }}
         >
           <Button
             variant="warning"
+            size={isMobile ? "sm" : undefined}
             onClick={props.onClose}
             style={{
               fontFamily: "MiFuente2, MiFuente, cursive",

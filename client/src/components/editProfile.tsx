@@ -8,6 +8,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import { serverURL } from "../serverURL";
 import SubUserNav from "./SubUserNav";
 import DeleteAccountButton from "./DeleteAccountButton";
+import PasswordInput from "./PasswordInput";
 import "../index.css";
 
 interface UpdateFormData {
@@ -51,6 +52,18 @@ const EditProfile = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!user?._id) return;
+
+    // Validate password length only IF the user typed one (it's optional).
+    // The backend allows leaving password unchanged by not sending it.
+    if (formData.password && formData.password.length < 6) {
+      alert(
+        t(
+          "auth.passwordTooShort",
+          "La contraseña debe tener al menos 6 caracteres"
+        )
+      );
+      return;
+    }
 
     const myHeaders = new Headers();
     const token = localStorage.getItem("token");
@@ -113,6 +126,7 @@ const EditProfile = () => {
               name="email"
               placeholder={user?.email}
               onChange={handleChange}
+              autoComplete="email"
             />
             <Form.Text className="text-muted">
               <i>{t("profile.required")}</i>
@@ -126,9 +140,37 @@ const EditProfile = () => {
               name="username"
               placeholder={user?.username}
               onChange={handleChange}
+              autoComplete="username"
             />
             <Form.Text className="text-muted">
               <i>{t("profile.required")}</i>
+            </Form.Text>
+          </Form.Group>
+
+          {/* NEW — optional password change. The backend leaves the password
+              untouched if this field is empty, so users who don't want to
+              change it just leave it blank. */}
+          <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Label>
+              {t("profile.passwordLabel", "Nueva contraseña")}
+            </Form.Label>
+            <PasswordInput
+              name="password"
+              placeholder={t(
+                "profile.passwordPlaceholder",
+                "Dejá vacío para no cambiarla"
+              )}
+              value={formData.password}
+              onChange={handleChange}
+              autoComplete="new-password"
+            />
+            <Form.Text className="text-muted">
+              <i>
+                {t(
+                  "profile.passwordHint",
+                  "Mínimo 6 caracteres. Dejá vacío si no querés cambiarla."
+                )}
+              </i>
             </Form.Text>
           </Form.Group>
 
@@ -158,8 +200,6 @@ const EditProfile = () => {
           </div>
         </Form>
 
-        {/* Moved INSIDE the dark container so it inherits the dark background
-            instead of sitting on the white page underneath. */}
         <DeleteAccountButton />
       </div>
     </>

@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from "react";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Card from "react-bootstrap/Card";
 import { Button, Form, Modal } from "react-bootstrap";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
@@ -13,6 +13,7 @@ const SketchDetail = () => {
   const { t, i18n } = useTranslation();
   const { user } = useContext(AuthContext);
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [sketch, setSketch] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -22,6 +23,21 @@ const SketchDetail = () => {
   const [refresh, setRefresh] = useState(false);
   const [deleteStates, setDeleteStates] = useState({});
   const [editStates, setEditStates] = useState({});
+
+  /**
+   * Back-button handler.
+   * If there's history to go back to (the user navigated here from somewhere
+   * inside the app), use navigate(-1) which preserves scroll position.
+   * Otherwise fall back to /sketches so we never strand the user on an
+   * orphan tab they opened directly via URL.
+   */
+  const goBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate("/sketches");
+    }
+  };
 
   const formatDate = (dateStr, wasEdited) => {
     if (!dateStr) return "";
@@ -155,6 +171,47 @@ const SketchDetail = () => {
     }
   };
 
+  /**
+   * Reusable back-button styled to match the dark theme.
+   * Rendered at the top of every state (loading, error, normal) so the
+   * user always has a way out.
+   */
+  const BackButton = () => (
+    <button
+      onClick={goBack}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.4rem",
+        padding: "0.4rem 0.85rem",
+        margin: "0.75rem 0 0.5rem 0.75rem",
+        backgroundColor: "transparent",
+        color: "#ffcc00",
+        border: "2px solid #ffcc00",
+        borderRadius: "0.3rem",
+        fontFamily: "MiFuente2, MiFuente, cursive",
+        fontSize: "0.9rem",
+        letterSpacing: "0.05em",
+        textTransform: "uppercase",
+        cursor: "pointer",
+        transition: "all 0.15s ease",
+        touchAction: "manipulation",
+        WebkitTapHighlightColor: "transparent",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.backgroundColor = "#3a2a00";
+        e.currentTarget.style.boxShadow = "0 0 8px rgba(255,204,0,0.4)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.backgroundColor = "transparent";
+        e.currentTarget.style.boxShadow = "none";
+      }}
+      title={t("sketchDetail.back", "Volver")}
+    >
+      ← {t("sketchDetail.back", "Volver")}
+    </button>
+  );
+
   if (loading) {
     return (
       <div className="spinner-container">
@@ -168,6 +225,7 @@ const SketchDetail = () => {
   if (!sketch) {
     return (
       <div style={{ padding: "2rem", textAlign: "center", color: "#f0f0f0" }}>
+        <BackButton />
         <h3>{t("sketchDetail.unableToLoad")}</h3>
         {errorMsg && (
           <p style={{ color: "#aaa", fontStyle: "italic" }}>{errorMsg}</p>
@@ -182,7 +240,6 @@ const SketchDetail = () => {
   }
 
   const uploadDate = sketch.createdAt?.substring(0, 10) || "";
-
   const sketchUrl = `${window.location.origin}/sketchdetail/${sketch._id}`;
   const shareTitle = sketch.name
     ? `🎨 "${sketch.name}" by ${sketch.owner?.username || "?"} on Share Your Sketch`
@@ -190,6 +247,8 @@ const SketchDetail = () => {
 
   return (
     <div className="sketchDetails sketchDetailsBody">
+      <BackButton />
+
       <div className="detailsImage">
         <Card className="bg-light">
           {sketch.url ? (
@@ -323,7 +382,6 @@ const SketchDetail = () => {
                       marginBottom: "0.4rem",
                     }}
                   >
-                    {/* Username + date — light text on dark bg */}
                     <p style={{ color: "#f0f0f0", margin: 0 }}>
                       <b style={{ color: "#ffcc00" }}>
                         {comment.owner?.username || "?"}
@@ -374,7 +432,6 @@ const SketchDetail = () => {
                     )}
                   </div>
 
-                  {/* Comment text itself — light, slightly italic */}
                   <p
                     style={{
                       margin: 0,

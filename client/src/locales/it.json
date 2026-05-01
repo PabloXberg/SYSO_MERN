@@ -163,7 +163,10 @@
     "forgotPasswordTitle": "Password dimenticata...",
     "emailPlaceholder": "Inserisci il tuo indirizzo email",
     "passwordMismatch": "Password e conferma non corrispondono",
-    "resetPasswordError": "Errore nel reset della password"
+    "resetPasswordError": "Errore nel reset della password",
+    "showPassword": "Mostra password",         
+  "hidePassword": "Nascondi password",
+    "passwordTooShort": "La password deve avere almeno 6 caratteri"
   },
   "profile": {
     "emailLabel": "Indirizzo Email",
@@ -172,7 +175,10 @@
     "required": "Obbligatorio",
     "cancel": "Annulla",
     "save": "Salva",
-    "updateError": "Qualcosa è andato storto — riprova"
+    "updateError": "Qualcosa è andato storto — riprova",
+    "passwordLabel": "Nuova password",
+  "passwordPlaceholder": "Lascia vuoto per mantenere quella attuale",
+  "passwordHint": "Almeno 6 caratteri. Lascia vuoto per mantenere la password."
   },
   "sketch": {
     "clickToOpen": "Clicca per vedere lo sketch",
@@ -229,7 +235,8 @@
     "imageUnavailable": "Immagine non disponibile",
     "noTitle": "(senza titolo)",
     "noDescription": "(senza descrizione)",
-    "unknownUser": "utente sconosciuto"
+    "unknownUser": "utente sconosciuto",
+    "back": "Indietro" 
   },
   "mySketches": {
     "uploadTitle": "Carica uno Sketch",

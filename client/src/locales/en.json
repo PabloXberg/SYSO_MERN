@@ -163,7 +163,10 @@
     "forgotPasswordTitle": "Forgotten password...",
     "emailPlaceholder": "Enter your email address",
     "passwordMismatch": "Password and confirmation don't match",
-    "resetPasswordError": "Error resetting password"
+    "resetPasswordError": "Error resetting password",
+      "showPassword": "Show password",           
+  "hidePassword": "Hide password",
+  "passwordTooShort": "Password must be at least 6 characters"
   },
   "profile": {
     "emailLabel": "Email Address",
@@ -172,7 +175,10 @@
     "required": "Required",
     "cancel": "Cancel",
     "save": "Save",
-    "updateError": "Something went wrong — try again"
+    "updateError": "Something went wrong — try again",
+      "passwordLabel": "New password",
+  "passwordPlaceholder": "Leave empty to keep the current one",
+  "passwordHint": "At least 6 characters. Leave empty to keep the current password."
   },
   "sketch": {
     "clickToOpen": "Click to view sketch",
@@ -231,7 +237,8 @@
     "imageUnavailable": "Image unavailable",
     "noTitle": "(no title)",
     "noDescription": "(no description)",
-    "unknownUser": "unknown user"
+    "unknownUser": "unknown user",
+    "back": "Back"  
   },
   "mySketches": {
     "uploadTitle": "Upload a Sketch",

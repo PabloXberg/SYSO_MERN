@@ -138,7 +138,10 @@
     "forgotPasswordTitle": "Contraseña olvidada...",
     "emailPlaceholder": "Ingrese su cuenta de correo",
     "passwordMismatch": "La contraseña y la confirmación no coinciden",
-    "resetPasswordError": "Error al restablecer la contraseña"
+    "resetPasswordError": "Error al restablecer la contraseña",
+      "showPassword": "Mostrar contraseña",     
+  "hidePassword": "Ocultar contraseña",
+  "passwordTooShort": "La contraseña debe tener al menos 6 caracteres"
   },
   "profile": {
     "emailLabel": "Dirección de Correo",
@@ -147,7 +150,10 @@
     "required": "Requerido",
     "cancel": "Cancelar",
     "save": "Guardar",
-    "updateError": "Algo salió mal — inténtalo de nuevo"
+    "updateError": "Algo salió mal — inténtalo de nuevo",
+      "passwordLabel": "Nueva contraseña",
+  "passwordPlaceholder": "Dejá vacío para no cambiarla",
+  "passwordHint": "Mínimo 6 caracteres. Dejá vacío si no querés cambiarla."
   },
   "sketch": {
     "clickToOpen": "Click para ver el boceto",
@@ -207,7 +213,8 @@
     "imageUnavailable": "Imagen no disponible",
     "noTitle": "(sin título)",
     "noDescription": "(sin descripción)",
-    "unknownUser": "usuario desconocido"
+    "unknownUser": "usuario desconocido",
+     "back": "Volver"
   },
   "mySketches": {
     "uploadTitle": "Subir Boceto",

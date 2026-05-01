@@ -15,12 +15,17 @@ const AVATAR_PLACEHOLDER =
  *
  * Click flow:
  *   - Click anywhere on the card (except the pill) → UserModal with stats
- *   - Click the green pill (when logged in + has sketches) → SketchModal
+ *   - Click the green pill (when user has sketches) → SketchModal
+ *     (works for logged-in AND anonymous visitors — anyone can browse
+ *      a user's sketches)
  *
  * The pill uses stopPropagation() so it doesn't trigger UserModal as well.
  */
 function UserCard(props: any) {
   const { t } = useTranslation();
+  // We still grab `user` from context in case future logic needs it,
+  // but it's no longer required to open the sketches modal.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { user } = useContext(AuthContext);
   const [showSketchModal, setShowSketchModal] = useState(false);
   const [showUserModal, setShowUserModal] = useState(false);
@@ -36,7 +41,9 @@ function UserCard(props: any) {
       : userData.avatar;
 
   const sketchCount = userData.sketchs?.length || 0;
-  const canOpenSketchesModal = sketchCount > 0 && !!user;
+  // CHANGED: anyone can now open the sketches modal, not just logged-in users.
+  // Anonymous visitors can browse to see what an artist has uploaded.
+  const canOpenSketchesModal = sketchCount > 0;
 
   const openUserModal = () => setShowUserModal(true);
   const openSketchesModal = (e: React.MouseEvent) => {
@@ -66,7 +73,6 @@ function UserCard(props: any) {
           flexDirection: "column",
           gap: "1rem",
           cursor: "pointer",
-          // Mobile defenses (avoid double-tap zoom on the card click)
           touchAction: "manipulation",
           WebkitTapHighlightColor: "transparent",
           userSelect: "none",
@@ -129,7 +135,7 @@ function UserCard(props: any) {
             borderTop: "1px solid #333",
           }}
         >
-          {/* Sketches pill — only this small element handles its own click */}
+          {/* Sketches pill — clickable for everyone if the user has sketches */}
           <div
             onClick={canOpenSketchesModal ? openSketchesModal : undefined}
             style={{
@@ -170,14 +176,12 @@ function UserCard(props: any) {
         </div>
       </div>
 
-      {/* SketchModal — opened by green pill (sketch grid) */}
       <SketchModal
         onClose={() => setShowSketchModal(false)}
         show={showSketchModal}
         character={userData}
       />
 
-      {/* UserModal — opened by clicking anywhere on the card (full profile) */}
       <UserModal
         onClose={() => setShowUserModal(false)}
         show={showUserModal}
