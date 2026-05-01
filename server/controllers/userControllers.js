@@ -5,6 +5,7 @@ import UserModel from "../models/userModels.js";
 import SketchModel from "../models/sketchModel.js";
 import CommentModel from "../models/commentModel.js";
 import NotificationModel from "../models/notificationModel.js";
+import BattleModel from "../models/battleModel.js";
 import { createNotification } from "./notificationController.js";
 import imageUpload from "../utils/imageManagement.js";
 import { encryptPassword, verifyPassword } from "../utils/bcrypt.js";
@@ -103,15 +104,6 @@ export const resetPassword = async (req, res) => {
 // ==============================================================
 // USERS CRUD
 // ==============================================================
-//
-// PRIVACY NOTE on isAdmin:
-// - getUsers (lists everyone): we hide isAdmin — nobody else needs to know who's admin
-// - getUser  (any user by id): we hide isAdmin — same privacy reason
-// - getActiveUser (the logged-in user): we INCLUDE isAdmin — the user needs to know
-//   their own admin status so the frontend can show admin-only buttons
-// - loginUser: includes isAdmin in the response so AuthContext gets it from day one
-// - updateUser: includes isAdmin so the AuthContext stays correct after profile edits
-// ==============================================================
 
 const getUsers = async (req, res) => {
   try {
@@ -176,6 +168,91 @@ const getUser = async (req, res) => {
   }
 };
 
+/**
+ * GET /api/users/id/:id/stats
+ *
+ * Returns aggregate stats for a user, computed across collections:
+ *   - totalSketches:        # of sketches uploaded
+ *   - totalLikesReceived:   sum of likes across all their sketches
+ *   - totalCommentsReceived: sum of comments across all their sketches
+ *   - totalLikesGiven:      # of sketches they've liked
+ *   - totalCommentsMade:    # of comments they've authored
+ *   - battlesParticipated:  # of distinct battles they've participated in
+ *   - battlesWonPopular:    # of battles won by popular vote
+ *   - battlesWonJury:       # of battles won by jury
+ *
+ * All counts are non-private — anyone visiting a profile can see them.
+ * No auth required to read.
+ */
+const getUserStats = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    // Verify user exists first (returns 404 if not, instead of empty stats)
+    const userExists = await UserModel.exists({ _id: userId });
+    if (!userExists) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+
+    // All these queries run in parallel for speed
+    const [
+      sketches,
+      totalCommentsMade,
+      totalLikesGiven,
+      battlesWonPopular,
+      battlesWonJury,
+    ] = await Promise.all([
+      // Get all the user's sketches with their likes/comments arrays so we
+      // can aggregate without N+1 queries.
+      SketchModel.find({ owner: userId }, "_id likes comments battleId")
+        .lean(),
+      CommentModel.countDocuments({ owner: userId }),
+      // Count sketches this user has liked. We use the User document since
+      // the likes array lives there.
+      UserModel.findById(userId, "likes")
+        .lean()
+        .then((u) => (u?.likes?.length || 0)),
+      // Battles where this user has at least one sketch in popularWinners
+      BattleModel.countDocuments({
+        "popularWinners": { $in: await SketchModel.find({ owner: userId }).distinct("_id") },
+      }),
+      BattleModel.countDocuments({
+        "juryWinners": { $in: await SketchModel.find({ owner: userId }).distinct("_id") },
+      }),
+    ]);
+
+    const totalSketches = sketches.length;
+    const totalLikesReceived = sketches.reduce(
+      (sum, s) => sum + (s.likes?.length || 0),
+      0
+    );
+    const totalCommentsReceived = sketches.reduce(
+      (sum, s) => sum + (s.comments?.length || 0),
+      0
+    );
+
+    // Distinct battles the user has participated in (any sketch with a battleId)
+    const battleIds = sketches
+      .filter((s) => s.battleId)
+      .map((s) => String(s.battleId));
+    const battlesParticipated = new Set(battleIds).size;
+
+    res.status(200).json({
+      totalSketches,
+      totalLikesReceived,
+      totalCommentsReceived,
+      totalLikesGiven,
+      totalCommentsMade,
+      battlesParticipated,
+      battlesWonPopular,
+      battlesWonJury,
+    });
+  } catch (error) {
+    console.error("getUserStats error:", error);
+    res.status(500).json({ error: "Algo salió mal calculando las estadísticas" });
+  }
+};
+
 const createUser = async (req, res) => {
   if (!req.body.email || !req.body.password || !req.body.username) {
     return res.status(406).json({
@@ -192,8 +269,6 @@ const createUser = async (req, res) => {
     const avatar = await imageUpload(req.file, "user_avatar");
     const encryptedPassword = await encryptPassword(req.body.password);
 
-    // Whitelist only the fields a registrant is allowed to set. This prevents
-    // a malicious POST from sneaking `isAdmin: true` through the spread.
     const newUser = new UserModel({
       email: req.body.email,
       username: req.body.username,
@@ -204,7 +279,6 @@ const createUser = async (req, res) => {
 
     const registeredUser = await newUser.save();
 
-    // ───── Welcome notification ─────────────────────────────────
     await createNotification({
       recipient: registeredUser._id,
       actor: null,
@@ -237,11 +311,8 @@ const updateUser = async (req, res) => {
     const avatar = await imageUpload(req.file, "user_avatar");
     infoToUpdate.avatar = avatar;
   }
-  // NOTE: we deliberately do NOT copy req.body.isAdmin here — admin status can
-  // only be granted via direct DB edit, never through this endpoint.
 
   try {
-    // Include isAdmin in the response so the AuthContext stays in sync after edits.
     const updatedUser = await UserModel.findByIdAndUpdate(
       req.user._id,
       infoToUpdate,
@@ -329,7 +400,7 @@ const loginUser = async (req, res) => {
         comments: existingUser.comments,
         info: existingUser.info,
         avatar: existingUser.avatar,
-        isAdmin: !!existingUser.isAdmin, // ← needed for admin UI to appear
+        isAdmin: !!existingUser.isAdmin,
       },
     });
   } catch (error) {
@@ -340,7 +411,6 @@ const loginUser = async (req, res) => {
 
 const getActiveUser = async (req, res) => {
   try {
-    // Logged-in user fetching their own profile — they DO need to know their isAdmin
     const user = await UserModel.findById(req.user._id)
       .select("-password -resetPasswordToken -resetPasswordExpires")
       .populate({
@@ -365,6 +435,7 @@ export {
   testingRoute,
   getUsers,
   getUser,
+  getUserStats,
   createUser,
   updateUser,
   loginUser,

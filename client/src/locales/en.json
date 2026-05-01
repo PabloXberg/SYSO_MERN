@@ -84,8 +84,38 @@
     "noSubmissionsYet": "No sketches yet in this battle. Be the first!",
     "previousBattles": "Past Battles",
     "noPastBattles": "No finished battles yet. History is being written!",
-    "noWinnersAnnounced": "Winners not announced yet"
+    "noWinnersAnnounced": "Winners not announced yet",
+      "viewDetails": "View details",
+  "viewLive": "This is the current battle — go to the live page",
+  "backToHistory": "Back to history",
+  "notFound": "Battle not found",
+  "loadError": "Error loading battle"
   },
+
+  "share": {
+    "title": "Share",
+    "whatsapp": "Share on WhatsApp",
+    "telegram": "Share on Telegram",
+    "twitter": "Share on Twitter/X",
+    "copyLink": "Copy link",
+    "copyLinkTooltip": "Copy link to clipboard",
+    "copied": "Copied!",
+    "copyError": "Could not copy the link"
+  },
+
+  "stats": {
+    "title": "Stats",
+    "loading": "Loading stats...",
+    "error": "Could not load stats",
+    "unavailable": "No stats available",
+    "sketches": "Sketches",
+    "likesReceived": "Likes received",
+    "commentsReceived": "Comments received",
+    "battlesParticipated": "Battles",
+    "popularWins": "Popular wins",
+    "juryWins": "Jury wins"
+  },
+
   "sketches": {
     "searchPlaceholder": "Search sketches by name, description, or author...",
     "loading": "Loading sketches...",

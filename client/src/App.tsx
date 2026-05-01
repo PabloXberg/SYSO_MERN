@@ -12,6 +12,7 @@ import SketchDetail from "./pages/SketchDetail";
 import Battle from "./pages/battle";
 import ActualBattle from "./pages/actualbattle";
 import BattleHistory from "./pages/battlehistory";
+import BattlePage from "./pages/battlePage";
 import News from "./pages/news";
 import ForgotPassword from "./pages/forgotPassword";
 import ResetPassword from "./pages/resetPassword";
@@ -25,8 +26,6 @@ function App() {
     <div>
       <AuthContextProvider>
         <BrowserRouter>
-          {/* Banner sits between NavStrap and Routes — visible on every page
-              when an active battle exists, hidden otherwise. */}
           <NavStrap />
           <BattleBanner />
           <Routes>
@@ -41,14 +40,16 @@ function App() {
             <Route path="battle" element={<Battle />} />
             <Route path="battlehistory" element={<BattleHistory />} />
             <Route path="actualbattle" element={<ActualBattle />} />
+            {/* Individual battle page — works for any battle by id */}
+            <Route path="battle/:id" element={<BattlePage />} />
             <Route path="news" element={<News />} />
             <Route path="forgotPassword" element={<ForgotPassword />} />
             <Route path="resetPassword/:token" element={<ResetPassword />} />
             <Route path="notifications" element={<Notifications />} />
             <Route path="admin/battles" element={<BattleAdmin />} />
-            <Route path="*" element={<Navigate to="/sketches" replace />} />
             <Route path="sponsors" element={<Sponsors />} />
             <Route path="contact" element={<Contact />} />
+            <Route path="*" element={<Navigate to="/sketches" replace />} />
           </Routes>
         </BrowserRouter>
       </AuthContextProvider>

@@ -1513,3 +1513,61 @@ h6,
   box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.7),
     0 0 18px rgba(255, 204, 0, 0.2) !important;
 }
+
+/* =============================================================================
+   APPEND THIS to the end of client/src/index.css
+
+   Fix: notifications dropdown was being cut off at the top on mobile because
+   the `top: 3.5rem` value didn't account for the dynamic navbar height.
+   ============================================================================= */
+
+/* Notifications dropdown — override the inline top positioning on mobile
+   to make sure it always sits below the navbar with breathing room.
+   The selector uses the unique combo of fixed + max-height + the yellow
+   border that only the notifications dropdown panel has. */
+@media (max-width: 991px) {
+
+  /* Direct child of body that's a notifications dropdown */
+  body>div[style*="position: fixed"][style*="max-height: 70vh"] {
+    top: 4.2rem !important;
+  }
+}
+
+/* Make sure the dropdown content has padding inside so first row isn't
+   visually pressed against the header */
+.notif-dropdown-list:first-child {
+  padding-top: 0.25rem;
+}
+
+
+/* =============================================================================
+   APPEND THIS to the end of client/src/index.css
+
+   Fix: notifications dropdown was being cut off at the top on mobile,
+   especially on battle pages where the BattleBanner adds extra height
+   above the navbar.
+
+   New approach: use safe-area-inset offsets and a generous top margin
+   that accounts for both the navbar AND a potential BattleBanner. The
+   dropdown itself has max-height with overflow scroll, so even with
+   more top space, it still fits.
+   ============================================================================= */
+
+/* Notifications dropdown — make sure it never starts above the visible
+   area, regardless of which page we're on. The BattleBanner adds ~3rem
+   of extra header height on battle pages, so we use 5.5rem to clear it
+   on mobile. */
+@media (max-width: 991px) {
+  body>div[style*="position: fixed"][style*="max-height: 70vh"] {
+    /* Override the inline top: 3.5rem with a value that clears the
+       navbar (3.5rem) PLUS any banner above it (~3rem). */
+    top: 5.5rem !important;
+    /* Cap height tighter so the dropdown still fits with the bigger top */
+    max-height: calc(100vh - 7rem) !important;
+  }
+}
+
+/* Make sure the dropdown content has padding inside */
+.notif-dropdown-list:first-child {
+  padding-top: 0.25rem;
+}

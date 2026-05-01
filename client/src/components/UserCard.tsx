@@ -2,39 +2,34 @@ import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import DefaultImage from "../avatar-placeholder.gif";
 import SketchModal from "./SketchModal";
+import UserModal from "./UserModal";
 import { AuthContext } from "../contexts/AuthContext";
 
 const AVATAR_PLACEHOLDER =
   "https://res.cloudinary.com/dhaezmblt/image/upload/v1684921855/user_avatar/user-default_rhbk4i.png";
 
 /**
- * User card — rebuilt from scratch with the new dark theme.
+ * User card — dark theme, full-card click opens the user detail modal
+ * with stats. The "X sketches uploaded" pill is now a separate button
+ * that opens the SketchModal directly without going through UserModal.
  *
- * Design notes:
- * - Replaces bootstrap <Card> with a custom <div> so we have full styling
- *   control without fighting bootstrap defaults (white bg, light borders,
- *   text-muted that goes invisible on dark backgrounds, etc).
- * - Avatar shrunk from 20rem to 8rem — gives the card a much better
- *   proportion and lets us fit more cards per row.
- * - Hover state lifts the card and adds a yellow glow, consistent with
- *   the WinnerCard and BattleStateBadge styling.
- * - Sketch count is now a clickable green pill (visible affordance) when
- *   the user has any AND the viewer is logged in.
+ * Click flow:
+ *   - Click anywhere on the card (except the pill) → UserModal with stats
+ *   - Click the green pill (when logged in + has sketches) → SketchModal
  *
- * The outer .usercard wrapper is preserved so any existing flex layout
- * in the parent container keeps working.
+ * The pill uses stopPropagation() so it doesn't trigger UserModal as well.
  */
 function UserCard(props: any) {
   const { t } = useTranslation();
   const { user } = useContext(AuthContext);
-  const [show, setShow] = useState(false);
+  const [showSketchModal, setShowSketchModal] = useState(false);
+  const [showUserModal, setShowUserModal] = useState(false);
   const [hovered, setHovered] = useState(false);
 
   const userData = props.props;
   const datum =
     userData.createdAt?.substring(0, 10) || t("common.unknownDate");
 
-  // Use local placeholder GIF when avatar is empty or matches the cloud default
   const avatarFinal =
     userData.avatar === "" || userData.avatar === AVATAR_PLACEHOLDER
       ? DefaultImage
@@ -43,9 +38,16 @@ function UserCard(props: any) {
   const sketchCount = userData.sketchs?.length || 0;
   const canOpenSketchesModal = sketchCount > 0 && !!user;
 
+  const openUserModal = () => setShowUserModal(true);
+  const openSketchesModal = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowSketchModal(true);
+  };
+
   return (
     <div className="usercard">
       <div
+        onClick={openUserModal}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         style={{
@@ -63,9 +65,13 @@ function UserCard(props: any) {
           display: "flex",
           flexDirection: "column",
           gap: "1rem",
+          cursor: "pointer",
+          // Mobile defenses (avoid double-tap zoom on the card click)
+          touchAction: "manipulation",
+          WebkitTapHighlightColor: "transparent",
+          userSelect: "none",
         }}
       >
-        {/* AVATAR — circular with yellow ring, much smaller than before */}
         <img
           src={avatarFinal}
           alt={userData.username || "user"}
@@ -76,12 +82,12 @@ function UserCard(props: any) {
             objectFit: "cover",
             alignSelf: "center",
             border: "3px solid #ffcc00",
-            backgroundColor: "#0d0d0d", // for transparent avatars
+            backgroundColor: "#0d0d0d",
             boxShadow: "0 0 12px rgba(255,204,0,0.25)",
+            pointerEvents: "none",
           }}
         />
 
-        {/* USERNAME — graffiti-style heading, gold */}
         <h3
           style={{
             margin: 0,
@@ -92,12 +98,12 @@ function UserCard(props: any) {
             letterSpacing: "0.04em",
             textShadow: "2px 2px 0 rgba(0,0,0,0.7)",
             wordBreak: "break-word",
+            pointerEvents: "none",
           }}
         >
           {userData.username || t("auth.username")}
         </h3>
 
-        {/* INFO TEXT — italic + muted when there's no info */}
         <p
           style={{
             margin: 0,
@@ -108,12 +114,12 @@ function UserCard(props: any) {
             minHeight: "2.5rem",
             wordBreak: "break-word",
             lineHeight: 1.4,
+            pointerEvents: "none",
           }}
         >
           {userData.info || t("users.noInfo")}
         </p>
 
-        {/* STATS / FOOTER */}
         <div
           style={{
             display: "flex",
@@ -123,9 +129,9 @@ function UserCard(props: any) {
             borderTop: "1px solid #333",
           }}
         >
-          {/* Sketches count — green pill, clickable when logged in + has sketches */}
+          {/* Sketches pill — only this small element handles its own click */}
           <div
-            onClick={canOpenSketchesModal ? () => setShow(true) : undefined}
+            onClick={canOpenSketchesModal ? openSketchesModal : undefined}
             style={{
               alignSelf: "center",
               padding: "0.35rem 0.85rem",
@@ -150,13 +156,13 @@ function UserCard(props: any) {
             {t("users.sketchesUploaded", { count: sketchCount })}
           </div>
 
-          {/* Registration date */}
           <div
             style={{
               textAlign: "center",
               color: "#888",
               fontSize: "0.75rem",
               fontStyle: "italic",
+              pointerEvents: "none",
             }}
           >
             {t("users.registeredOn")}: {datum}
@@ -164,10 +170,18 @@ function UserCard(props: any) {
         </div>
       </div>
 
+      {/* SketchModal — opened by green pill (sketch grid) */}
       <SketchModal
-        onClose={() => setShow(false)}
-        show={show}
+        onClose={() => setShowSketchModal(false)}
+        show={showSketchModal}
         character={userData}
+      />
+
+      {/* UserModal — opened by clicking anywhere on the card (full profile) */}
+      <UserModal
+        onClose={() => setShowUserModal(false)}
+        show={showUserModal}
+        userData={userData}
       />
     </div>
   );

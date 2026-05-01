@@ -84,8 +84,38 @@
     "noSubmissionsYet": "Ancora nessun sketch in questo battle. Sii il primo!",
     "previousBattles": "Battles Passati",
     "noPastBattles": "Ancora nessun battle concluso. La storia si sta scrivendo!",
-    "noWinnersAnnounced": "Vincitori non ancora annunciati"
+    "noWinnersAnnounced": "Vincitori non ancora annunciati",
+      "viewDetails": "Vedi dettagli",
+  "viewLive": "Questo è il battle attuale — vai alla pagina live",
+  "backToHistory": "Torna alla cronologia",
+  "notFound": "Battle non trovato",
+  "loadError": "Errore nel caricamento del battle"
   },
+
+    "share": {
+    "title": "Condividi",
+    "whatsapp": "Condividi su WhatsApp",
+    "telegram": "Condividi su Telegram",
+    "twitter": "Condividi su Twitter/X",
+    "copyLink": "Copia link",
+    "copyLinkTooltip": "Copia link negli appunti",
+    "copied": "Copiato!",
+    "copyError": "Impossibile copiare il link"
+  },
+
+  "stats": {
+    "title": "Statistiche",
+    "loading": "Caricamento statistiche...",
+    "error": "Impossibile caricare le statistiche",
+    "unavailable": "Nessuna statistica disponibile",
+    "sketches": "Sketches",
+    "likesReceived": "Likes ricevuti",
+    "commentsReceived": "Commenti ricevuti",
+    "battlesParticipated": "Battles",
+    "popularWins": "Popular wins",
+    "juryWins": "Jury wins"
+  },
+
   "sketches": {
     "searchPlaceholder": "Cerca sketches per nome, descrizione o autore...",
     "loading": "Caricamento sketches...",

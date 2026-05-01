@@ -84,7 +84,12 @@
     "noSubmissionsYet": "Todavía no hay bocetos en esta batalla. ¡Sé el primero!",
       "previousBattles": "Batallas Anteriores",
     "noPastBattles": "Todavía no hay batallas finalizadas. ¡La historia se está escribiendo!",
-    "noWinnersAnnounced": "Ganadores no anunciados todavía"
+    "noWinnersAnnounced": "Ganadores no anunciados todavía",
+    "viewDetails": "Ver detalle",
+  "viewLive": "Este es el battle actual — entrá a la página en vivo",
+  "backToHistory": "Volver al historial",
+  "notFound": "Battle no encontrado",
+  "loadError": "Error al cargar el battle"
   },
   "sketches": {
     "searchPlaceholder": "Buscar bocetos por nombre, descripción o autor...",
@@ -219,6 +224,30 @@
     "missingFields": "Falta rellenar alguno de los campos",
     "uploadError": "Algo salió mal, boceto no subido",
      "participateInBattle": "Participar en la batalla actual"
+  },
+
+    "share": {
+    "title": "Compartir",
+    "whatsapp": "Compartir en WhatsApp",
+    "telegram": "Compartir en Telegram",
+    "twitter": "Compartir en Twitter/X",
+    "copyLink": "Copiar enlace",
+    "copyLinkTooltip": "Copiar enlace al portapapeles",
+    "copied": "¡Copiado!",
+    "copyError": "No se pudo copiar el enlace"
+  },
+
+  "stats": {
+    "title": "Estadísticas",
+    "loading": "Cargando estadísticas...",
+    "error": "No se pudieron cargar las estadísticas",
+    "unavailable": "Sin estadísticas disponibles",
+    "sketches": "Sketches",
+    "likesReceived": "Likes recibidos",
+    "commentsReceived": "Comentarios recibidos",
+    "battlesParticipated": "Battles",
+    "popularWins": "Popular wins",
+    "juryWins": "Jury wins"
   },
   "common": {
     "loading": "Cargando...",

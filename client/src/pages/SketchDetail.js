@@ -5,6 +5,7 @@ import Card from "react-bootstrap/Card";
 import { Button, Form, Modal } from "react-bootstrap";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import { AuthContext } from "../contexts/AuthContext";
+import ShareButtons from "../components/ShareButtons";
 import "../index.css";
 import { serverURL } from "../serverURL";
 
@@ -22,7 +23,6 @@ const SketchDetail = () => {
   const [deleteStates, setDeleteStates] = useState({});
   const [editStates, setEditStates] = useState({});
 
-  // Format a date using the current language's locale
   const formatDate = (dateStr, wasEdited) => {
     if (!dateStr) return "";
     const fecha = new Date(dateStr);
@@ -37,7 +37,9 @@ const SketchDetail = () => {
       minute: "2-digit",
       second: "2-digit",
     });
-    return `${wasEdited ? t("sketchDetail.editedOn") : t("sketchDetail.saidOn")} ${fechaStr} ${horaStr}`;
+    return `${
+      wasEdited ? t("sketchDetail.editedOn") : t("sketchDetail.saidOn")
+    } ${fechaStr} ${horaStr}`;
   };
 
   const getSketchById = async (sketchId) => {
@@ -165,19 +167,26 @@ const SketchDetail = () => {
 
   if (!sketch) {
     return (
-      <div style={{ padding: "2rem", textAlign: "center" }}>
+      <div style={{ padding: "2rem", textAlign: "center", color: "#f0f0f0" }}>
         <h3>{t("sketchDetail.unableToLoad")}</h3>
         {errorMsg && (
-          <p style={{ color: "#888", fontStyle: "italic" }}>{errorMsg}</p>
+          <p style={{ color: "#aaa", fontStyle: "italic" }}>{errorMsg}</p>
         )}
         <p>
-          <a href="/sketches">{t("sketchDetail.backToSketches")}</a>
+          <a href="/sketches" style={{ color: "#ffcc00" }}>
+            {t("sketchDetail.backToSketches")}
+          </a>
         </p>
       </div>
     );
   }
 
   const uploadDate = sketch.createdAt?.substring(0, 10) || "";
+
+  const sketchUrl = `${window.location.origin}/sketchdetail/${sketch._id}`;
+  const shareTitle = sketch.name
+    ? `🎨 "${sketch.name}" by ${sketch.owner?.username || "?"} on Share Your Sketch`
+    : `🎨 Share Your Sketch`;
 
   return (
     <div className="sketchDetails sketchDetailsBody">
@@ -253,6 +262,14 @@ const SketchDetail = () => {
             )}
           </div>
 
+          <div style={{ padding: "0.5rem" }}>
+            <ShareButtons
+              url={sketchUrl}
+              title={shareTitle}
+              description={sketch.comment}
+            />
+          </div>
+
           {user && (
             <FloatingLabel
               controlId="floatingTextarea2"
@@ -275,6 +292,7 @@ const SketchDetail = () => {
           )}
         </Card>
 
+        {/* COMMENTS SECTION — dark theme readable */}
         <div className="sketchDetailsBody">
           {[...(sketch.comments || [])].reverse().map((comment) => {
             const wasEdited = comment.createdAt !== comment.updatedAt;
@@ -284,12 +302,35 @@ const SketchDetail = () => {
             );
 
             return (
-              <div key={comment._id} style={{ padding: "3px" }}>
+              <div
+                key={comment._id}
+                style={{
+                  padding: "0.75rem",
+                  marginBottom: "0.5rem",
+                  backgroundColor: "#1a1a1a",
+                  border: "1px solid #333",
+                  borderRadius: "0.3rem",
+                  color: "#f0f0f0",
+                }}
+              >
                 <div className="commentFlex">
-                  <div className="commentOwner">
-                    <p style={{ color: "black", margin: 0 }}>
-                      <b>{comment.owner?.username || "?"}</b>{" "}
-                      <i style={{ fontSize: "0.8rem" }}>{textDatum}</i>
+                  <div
+                    className="commentOwner"
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      marginBottom: "0.4rem",
+                    }}
+                  >
+                    {/* Username + date — light text on dark bg */}
+                    <p style={{ color: "#f0f0f0", margin: 0 }}>
+                      <b style={{ color: "#ffcc00" }}>
+                        {comment.owner?.username || "?"}
+                      </b>{" "}
+                      <i style={{ fontSize: "0.8rem", color: "#aaa" }}>
+                        {textDatum}
+                      </i>
                     </p>
 
                     {comment.owner?._id === user?._id && (
@@ -302,7 +343,13 @@ const SketchDetail = () => {
                               [comment._id]: true,
                             }))
                           }
-                          style={{ cursor: "pointer" }}
+                          style={{
+                            cursor: "pointer",
+                            color: "#ffcc00",
+                            fontSize: "1.1rem",
+                            marginRight: "0.5rem",
+                          }}
+                          title={t("sketch.editTooltip")}
                         >
                           edit
                         </i>
@@ -314,7 +361,12 @@ const SketchDetail = () => {
                               [comment._id]: true,
                             }))
                           }
-                          style={{ cursor: "pointer" }}
+                          style={{
+                            cursor: "pointer",
+                            color: "#ff3b3b",
+                            fontSize: "1.1rem",
+                          }}
+                          title={t("sketch.deleteTooltip")}
                         >
                           delete_forever
                         </i>
@@ -322,12 +374,19 @@ const SketchDetail = () => {
                     )}
                   </div>
 
-                  <p style={{ margin: "0.25rem 0" }}>
-                    <i>{comment.comment}</i>
+                  {/* Comment text itself — light, slightly italic */}
+                  <p
+                    style={{
+                      margin: 0,
+                      color: "#ddd",
+                      lineHeight: 1.4,
+                      wordBreak: "break-word",
+                    }}
+                  >
+                    {comment.comment}
                   </p>
                 </div>
 
-                {/* Delete comment modal */}
                 <Modal
                   className="detailsEditModal"
                   show={deleteStates[comment._id] || false}
@@ -373,7 +432,6 @@ const SketchDetail = () => {
                   </Modal.Body>
                 </Modal>
 
-                {/* Edit comment modal */}
                 <Modal
                   className="detailsEditModal"
                   show={editStates[comment._id] || false}

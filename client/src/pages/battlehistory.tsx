@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import SubBattleNav from "../components/SubBattleNav";
 import BattleStateBadge from "../components/BattleStateBadge";
 import WinnerCard from "../components/WinnerCard";
@@ -40,12 +41,19 @@ const formatDate = (iso: string, locale: string) => {
 /**
  * /battlehistory — list of past (finished) battles with their winners.
  *
- * Fetches all battles, filters to state === "finished", newest first.
- * Each battle gets its own card with theme, dates, and the winner cards
- * (popular + jury) stacked side by side.
+ * IMPORTANT FIX (HTML validity):
+ * Earlier version wrapped the entire card in <Link>, but the WinnerCard
+ * component renders its own <Link> internally. Nesting <a> inside <a> is
+ * invalid HTML and React warns about it.
+ *
+ * Solution: keep the card as a plain <div> with a "Ver detalle" button
+ * that uses useNavigate(). The WinnerCard links keep working as expected
+ * (clicking a winner takes you to the sketch). Clicking the "Ver detalle"
+ * button takes you to the battle page.
  */
 const BattleHistory = () => {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const [battles, setBattles] = useState<Battle[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -55,7 +63,6 @@ const BattleHistory = () => {
       .then((r) => r.json())
       .then((data: Battle[]) => {
         if (cancelled) return;
-        // Only finished battles belong in history. Sort newest-first by votingDeadline.
         const finished = (Array.isArray(data) ? data : [])
           .filter((b) => b.state === "finished")
           .sort(
@@ -77,6 +84,10 @@ const BattleHistory = () => {
   if (loading) return <SpraySpinner />;
 
   const lang = i18n.resolvedLanguage?.split("-")[0] || "es";
+
+  const goToBattle = (battleId: string) => {
+    navigate(`/battle/${battleId}`);
+  };
 
   return (
     <>
@@ -121,14 +132,51 @@ const BattleHistory = () => {
                       display: "flex",
                       flexWrap: "wrap",
                       alignItems: "center",
+                      justifyContent: "space-between",
                       gap: "1rem",
                       marginBottom: "1rem",
                     }}
                   >
-                    <h3 className="tituloFuente" style={{ margin: 0 }}>
-                      ⚔ {battle.theme}
-                    </h3>
-                    <BattleStateBadge state={battle.state} size="sm" />
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "1rem",
+                        flexWrap: "wrap",
+                      }}
+                    >
+                      <h3 className="tituloFuente" style={{ margin: 0 }}>
+                        ⚔ {battle.theme}
+                      </h3>
+                      <BattleStateBadge state={battle.state} size="sm" />
+                    </div>
+                    <button
+                      onClick={() => goToBattle(battle._id)}
+                      style={{
+                        backgroundColor: "transparent",
+                        color: "#ffcc00",
+                        fontSize: "0.85rem",
+                        fontFamily: "MiFuente2, MiFuente, cursive",
+                        letterSpacing: "0.05em",
+                        border: "2px solid #ffcc00",
+                        borderRadius: "0.3rem",
+                        padding: "0.35rem 0.9rem",
+                        cursor: "pointer",
+                        textTransform: "uppercase",
+                        transition: "all 0.15s ease",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = "#3a2a00";
+                        e.currentTarget.style.boxShadow =
+                          "0 0 8px rgba(255,204,0,0.4)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = "transparent";
+                        e.currentTarget.style.boxShadow = "none";
+                      }}
+                    >
+                      {t("battle.viewDetails", "Ver detalle")} →
+                    </button>
                   </div>
 
                   {battle.description && (
@@ -147,7 +195,6 @@ const BattleHistory = () => {
                     📅 {formatDate(battle.votingDeadline, lang)}
                   </div>
 
-                  {/* Winners side by side */}
                   {(popular || jury) ? (
                     <div
                       style={{

@@ -4,6 +4,7 @@ import {
   testingRoute,
   getUsers,
   getUser,
+  getUserStats,
   createUser,
   updateUser,
   loginUser,
@@ -24,6 +25,7 @@ const userRouter = express.Router();
 userRouter.get("/test", testingRoute);
 userRouter.get("/all", getUsers);
 userRouter.get("/id/:id", getUser);
+userRouter.get("/id/:id/stats", getUserStats);
 userRouter.get("/active", jwtAuth, getActiveUser);
 
 // Auth endpoints — rate limited against brute force
@@ -34,7 +36,7 @@ userRouter.post("/login", authLimiter, loginUser);
 userRouter.post("/update/:id", jwtAuth, multerUploads.single("avatar"), updateUser);
 userRouter.delete("/delete/:id", jwtAuth, deleteUser);
 
-// Password reset — strictly rate limited (email cost + spam prevention)
+// Password reset — strictly rate limited
 userRouter.post("/forgotpassword", passwordResetLimiter, forgotPassword);
 userRouter.post("/resetpassword/:token", passwordResetLimiter, resetPassword);
 
