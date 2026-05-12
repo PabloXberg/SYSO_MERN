@@ -29,7 +29,7 @@ function App() {
           <NavStrap />
           <BattleBanner />
           <Routes>
-            <Route path="/" element={<Navigate to="/sketches" />} />
+            <Route path="/" element={<Navigate to="/homepage" />} />
             <Route path="/homepage" element={<Homepage />} />
             <Route path="sketchdetail/:id" element={<SketchDetail />} />
             <Route path="sketches" element={<Sketches />} />

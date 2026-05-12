@@ -124,7 +124,15 @@ function NavStrap() {
         </div>
       </nav>
 
-      {/* SIDEBAR */}
+      {/* SIDEBAR — reorganized:
+            - Auth section (login button or user info) lives AT THE TOP for
+              quick access. It's what people want first when they open the
+              sidebar.
+            - Then the main navigation links.
+            - Disabled future-page placeholders below.
+            - Sign-out pushed to the BOTTOM with margin-top: auto so it's
+              well separated from the navigation links (avoids accidental
+              clicks while reaching for "Inicio"). */}
       <div
         className={`sidebar-overlay ${sidebarOpen ? "open" : ""}`}
         onClick={closeSidebar}
@@ -145,7 +153,50 @@ function NavStrap() {
           </button>
         </div>
 
-        <nav className="sidebar__nav">
+        <nav
+          className="sidebar__nav"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            flexGrow: 1,
+            minHeight: 0,
+          }}
+        >
+          {/* ─── TOP: Auth section (user info OR login button) ─── */}
+          {user ? (
+            <Link
+              to="/mysketchs"
+              className="sidebar__link sidebar__link--user"
+              onClick={closeSidebar}
+            >
+              <img
+                src={userAvatar}
+                alt="Avatar"
+                style={{
+                  height: "2rem",
+                  width: "2rem",
+                  borderRadius: "50%",
+                  marginRight: "0.6rem",
+                  flexShrink: 0,
+                }}
+              />
+              <span className="sidebar__username">{user.username}</span>
+            </Link>
+          ) : (
+            <button
+              className="sidebar__link entrar"
+              onClick={() => {
+                openAuth("login");
+                closeSidebar();
+              }}
+            >
+              {t("nav.login")} / {t("nav.register")}
+            </button>
+          )}
+
+          <div className="sidebar__divider" />
+
+          {/* ─── MIDDLE: Main navigation ─── */}
           <Link
             to="/homepage"
             className="sidebar__link news"
@@ -166,49 +217,9 @@ function NavStrap() {
 
           <div className="sidebar__divider" />
 
-          {/* Notifications removed — accessible via the bell in the navbar.
-              Keeping the username + sign-out section compact. */}
-          {user ? (
-            <>
-              <Link
-                to="/mysketchs"
-                className="sidebar__link sidebar__link--user"
-                onClick={closeSidebar}
-              >
-                <img
-                  src={userAvatar}
-                  alt="Avatar"
-                  style={{
-                    height: "2rem",
-                    width: "2rem",
-                    borderRadius: "50%",
-                    marginRight: "0.6rem",
-                    flexShrink: 0,
-                  }}
-                />
-                <span className="sidebar__username">{user.username}</span>
-              </Link>
-              <button
-                className="sidebar__link sidebar__link--logout"
-                onClick={handleLogout}
-              >
-                {t("nav.logout")}
-              </button>
-            </>
-          ) : (
-            <button
-              className="sidebar__link entrar"
-              onClick={() => {
-                openAuth("login");
-                closeSidebar();
-              }}
-            >
-              {t("nav.login")} / {t("nav.register")}
-            </button>
-          )}
-
-          <div className="sidebar__divider" />
-
+          {/* ─── FUTURE pages — disabled placeholders ───
+              When the info for these pages is ready, swap each <span> for
+              a real <Link to="/sponsors|/contact|/shop">. */}
           <span className="sidebar__link sidebar__link--disabled">
             {t("subNav.supporters")}
           </span>
@@ -219,14 +230,21 @@ function NavStrap() {
             {t("subNav.shop")}
           </span>
 
-  {/* <Link to="/sponsors" className="sidebar__link" onClick={closeSidebar}>
-    {t("subNav.supporters")}
-  </Link>
-  <Link to="/contact" className="sidebar__link" onClick={closeSidebar}>
-    {t("subNav.contact")}
-  </Link> */}
-
-
+          {/* ─── BOTTOM: Sign out (logged-in only) ───
+              `marginTop: auto` pushes this block to the bottom of the flex
+              column, so the user has clear visual separation from the
+              navigation links above. Less chance of mis-tapping logout. */}
+          {user && (
+            <div style={{ marginTop: "auto" }}>
+              <div className="sidebar__divider" />
+              <button
+                className="sidebar__link sidebar__link--logout"
+                onClick={handleLogout}
+              >
+                {t("nav.logout")}
+              </button>
+            </div>
+          )}
         </nav>
       </aside>
 

@@ -1604,3 +1604,43 @@ div[style*="z-index: 9999"][style*="rgba(0,0,0,0.85)"] {
 .modal {
   z-index: 99999 !important;
 }
+
+
+/* =============================================================================
+   APPEND THIS to the end of client/src/index.css
+
+   Supports the reorganized NavTrap sidebar where the sign-out button is
+   pushed to the bottom via `margin-top: auto` on its container.
+
+   The flex grow on .sidebar__nav only works if the aside itself is a flex
+   column with a defined height. Most sidebar layouts already are, but this
+   block makes it explicit so the bottom-anchored signout always works.
+   ============================================================================= */
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar__nav {
+  /* These properties are also set inline on the element so the layout
+     works even if the CSS file isn't reloaded. Duplicating them here
+     keeps the source of truth in CSS for future maintenance. */
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  min-height: 0;
+}
+
+/* The user pill at the top of the sidebar — slightly highlighted so it
+   stands out as the "entry point" for the logged-in user. */
+.sidebar__link--user {
+  background-color: rgba(255, 204, 0, 0.08);
+  border-radius: 0.3rem;
+  padding: 0.5rem 0.7rem;
+  margin: 0.25rem 0;
+}
+
+.sidebar__link--user:hover {
+  background-color: rgba(255, 204, 0, 0.15);
+}
